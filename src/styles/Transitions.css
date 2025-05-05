@@ -1,0 +1,39 @@
+/* For upward transitions */
+.page-up-enter {
+  opacity: 0;
+  transform: translateY(100%);
+}
+.page-up-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-up-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-up-exit-active {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* For downward transitions */
+.page-down-enter {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.page-down-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-down-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-down-exit-active {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 300ms, transform 300ms;
+}

@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "animal-tracking-01-5969a",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

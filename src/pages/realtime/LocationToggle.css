@@ -1,0 +1,17 @@
+.location-toggle-container {
+    position: fixed;
+    top: 74px; /* Positioned below navbar */
+    right: 20px;
+    z-index: 1000;
+    background-color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .location-toggle-container:hover {
+    background-color: #f5f5f5;
+  }  

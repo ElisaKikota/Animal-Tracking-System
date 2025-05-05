@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c6d4812a.css",
+    "main.js": "/static/js/main.4901494a.js",
+    "static/js/453.78ea8ba2.chunk.js": "/static/js/453.78ea8ba2.chunk.js",
+    "static/media/CT_Icon_Sighting.png": "/static/media/CT_Icon_Sighting.3e4ae8001392126b8210.png",
+    "static/media/3d.png": "/static/media/3d.6ab09e09693d0321f9c4.png",
+    "static/media/Rainfall.png": "/static/media/Rainfall.0c8e5aef69fcba827e2a.png",
+    "static/media/Invasive_Species_Sighting.png": "/static/media/Invasive_Species_Sighting.01281dd7715e757d5851.png",
+    "static/media/logo.png": "/static/media/logo.a88ec86e3934a021d877.png",
+    "static/media/Fire.png": "/static/media/Fire.a652f75208b6eb24d3db.png",
+    "static/media/heatmap.png": "/static/media/heatmap.edce778712670149221e.png",
+    "static/media/giraffe.png": "/static/media/giraffe.f7786d81dd01d94a476e.png",
+    "static/media/lion.png": "/static/media/lion.8a5aa224f86c99b3dc25.png",
+    "static/media/elephant.png": "/static/media/elephant.fd59b9edfb1223bf510d.png",
+    "static/media/Remote Control Tag.png": "/static/media/Remote Control Tag.566a11ab396cea665af7.png",
+    "static/media/Rhino_Sighting.png": "/static/media/Rhino_Sighting.38842e6f01eb0fb9b47f.png",
+    "static/media/rhino.png": "/static/media/rhino.38842e6f01eb0fb9b47f.png",
+    "static/media/Human_Wildlife_Contact.png": "/static/media/Human_Wildlife_Contact.4049ebb8ce09d22ba566.png",
+    "static/media/leopard.png": "/static/media/leopard.0239ee6c0a80afea02b0.png",
+    "static/media/Injured_Animal.png": "/static/media/Injured_Animal.4b6f109e52a205877e21.png",
+    "static/media/Wildlife_Sighting.png": "/static/media/Wildlife_Sighting.1ee825f31a5a18e8cdd3.png",
+    "static/media/animal.png": "/static/media/animal.1ee825f31a5a18e8cdd3.png",
+    "static/media/layers.png": "/static/media/layers.d5d1e55788e132120da6.png",
+    "static/media/patrols.png": "/static/media/patrols.a3963c841ed391c6c9f8.png",
+    "static/media/location.png": "/static/media/location.e5a92986ecc76edeb21e.png",
+    "index.html": "/index.html",
+    "main.c6d4812a.css.map": "/static/css/main.c6d4812a.css.map",
+    "main.4901494a.js.map": "/static/js/main.4901494a.js.map",
+    "453.78ea8ba2.chunk.js.map": "/static/js/453.78ea8ba2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c6d4812a.css",
+    "static/js/main.4901494a.js"
+  ]
+}

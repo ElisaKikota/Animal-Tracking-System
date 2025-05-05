@@ -1,0 +1,921 @@
+{
+  "Animals": {
+    "Elephants": [
+      null,
+      {
+        "age": 40,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.945002,
+              "Long": 34.16382,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.7
+            },
+            "13:37": {
+              "Lat": -1.945102,
+              "Long": 34.16392,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 35.8
+            },
+            "13:42": {
+              "Lat": -1.945202,
+              "Long": 34.16402,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.9
+            }
+          }
+        },
+        "name": "Dady Elephany",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 38,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.945002,
+              "Long": 34.16382,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36
+            },
+            "13:37": {
+              "Lat": -1.9452,
+              "Long": 34.1637,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.004
+              },
+              "temperature": 36.1
+            },
+            "13:42": {
+              "Lat": -1.9454,
+              "Long": 34.1636,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.2
+            }
+          }
+        },
+        "name": "Big Tusk",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 35,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.94553,
+              "Long": 34.16401,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 35.5
+            },
+            "13:37": {
+              "Lat": -1.9456,
+              "Long": 34.1642,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.6
+            },
+            "13:42": {
+              "Lat": -1.9457,
+              "Long": 34.1643,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.7
+            }
+          }
+        },
+        "name": "Mama Ellie",
+        "sex": "female",
+        "upload_interval":1
+      },
+      {
+        "age": 45,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.944996,
+              "Long": 34.164437,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:37": {
+              "Lat": -1.945096,
+              "Long": 34.164537,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            },
+            "13:42": {
+              "Lat": -1.945196,
+              "Long": 34.164637,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            }
+          }
+        },
+        "name": "Uncle Jumbo",
+        "sex": "male",
+        "upload_interval":1
+      }
+    ],
+    "Giraffes": [
+      null,
+      {
+        "age": 15,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9458,
+              "Long": 34.1649,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.1
+            },
+            "13:37": {
+              "Lat": -1.946,
+              "Long": 34.165,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.2
+            },
+            "13:42": {
+              "Lat": -1.9462,
+              "Long": 34.1681,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.3
+            }
+          }
+        },
+        "name": "Graceful Giraffe",
+        "sex": "female",
+        "upload_interval":1
+      },
+      {
+        "age": 12,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9463,
+              "Long": 34.1652,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.4
+            },
+            "13:37": {
+              "Lat": -1.9464,
+              "Long": 34.1653,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.5
+            },
+            "13:42": {
+              "Lat": -1.9465,
+              "Long": 34.1654,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.6
+            }
+          }
+        },
+        "name": "Tall George",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 60,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.952,
+              "Long": 34.172,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.7
+            }
+          }
+        },
+        "name": "Granny Gira",
+        "sex": "female",
+        "upload_interval":1
+      }
+    ],
+    "Leopards": [
+      null,
+      {
+        "age": 6,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.949,
+              "Long": 34.1671,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36
+            },
+            "13:37": {
+              "Lat": -1.9492,
+              "Long": 34.1672,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.1
+            },
+            "13:42": {
+              "Lat": -1.9494,
+              "Long": 34.1673,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.2
+            }
+          }
+        },
+        "name": "Spotty Sam",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 5,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9495,
+              "Long": 34.1674,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.3
+            },
+            "13:37": {
+              "Lat": -1.9497,
+              "Long": 34.1675,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            },
+            "13:42": {
+              "Lat": -1.9499,
+              "Long": 34.1676,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.5
+            }
+          }
+        },
+        "name": "Luna the Leopard",
+        "sex": "female",
+        "upload_interval":1
+      }
+    ],
+    "Lions": [
+      null,
+      {
+        "age": 8,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.948,
+              "Long": 34.1665,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.1
+            },
+            "13:37": {
+              "Lat": -1.9482,
+              "Long": 34.1666,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:42": {
+              "Lat": -1.9484,
+              "Long": 34.1667,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            }
+          }
+        },
+        "name": "King Leo",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 7,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9485,
+              "Long": 34.1668,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.4
+            },
+            "13:37": {
+              "Lat": -1.9487,
+              "Long": 34.1669,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.5
+            },
+            "13:42": {
+              "Lat": -1.9489,
+              "Long": 34.167,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.6
+            }
+          }
+        },
+        "name": "Queen Nala",
+        "sex": "female",
+        "upload_interval":1
+      }
+    ],
+    "Rhinos": [
+      null,
+      {
+        "age": 20,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.95,
+              "Long": 34.1677,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:37": {
+              "Lat": -1.9502,
+              "Long": 34.1678,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            },
+            "13:42": {
+              "Lat": -1.9504,
+              "Long": 34.1679,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            }
+          }
+        },
+        "name": "Faru John",
+        "sex": "male",
+        "upload_interval":1
+      },
+      {
+        "age": 18,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9505,
+              "Long": 34.168,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.5
+            },
+            "13:37": {
+              "Lat": -1.9507,
+              "Long": 34.1681,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.6
+            },
+            "13:42": {
+              "Lat": -1.9509,
+              "Long": 34.1682,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.7
+            }
+          }
+        },
+        "name": "Rhonda Rhino",
+        "sex": "female",
+        "upload_interval":1
+      }
+    ]
+  },
+  "PatrolOfficers": {
+    "0001": {
+      "active": "false",
+      "email": "ellykikota@gmail.com",
+      "last_report_time": "",
+      "name": "Elisa Kikota",
+      "on_patrol": false,
+      "phone": "0748485183",
+      "role": "Ranger"
+    }
+  },
+  "Reports": {
+    "CT_Icon_Sighting": [
+      null,
+      {
+        "day": "2024-08-26",
+        "description": "CT Icon observed near park.",
+        "location": {
+          "Lat": -6.7708,
+          "Long": 39.2397
+        },
+        "notes": "Icon was spotted on a tree trunk.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer H",
+        "time": "19:45"
+      }
+    ],
+    "Fire": [
+      null,
+      {
+        "action_taken": "Extinguishing",
+        "attended": false,
+        "cause_of_fire": "Human-induced",
+        "day": "2024-09-02",
+        "fire_status": "Active",
+        "location": {
+          "Lat": "-6.7710064",
+          "Long": "39.23993"
+        },
+        "notes": "need immediate assistance ",
+        "pictures": [
+          "https://firebasestorage.googleapis.com/v0/b/animal-tracking-01.appspot.com/o/Reports%2FFire%2F1%2F0.jpg?alt=media&token=d5ff9be3-d7d8-453a-a712-ddb6ccae389c"
+        ],
+        "reportID": 1,
+        "reported_by": "Officer A",
+        "size_hectares": 2,
+        "time": "14:29:51"
+      },
+      {
+        "action_taken": "Extinguishing",
+        "attended": false,
+        "cause_of_fire": "Natural",
+        "day": "2024-09-03",
+        "fire_status": "Active",
+        "location": {
+          "Lat": "-6.7709948",
+          "Long": "39.2399175"
+        },
+        "notes": "need immediate assistance ",
+        "pictures": [
+          "https://firebasestorage.googleapis.com/v0/b/animal-tracking-01.appspot.com/o/Reports%2FFire%2F2%2F0.jpg?alt=media&token=cc46ad4c-e0ce-4f16-b5e5-d06b26c08c69"
+        ],
+        "reportID": 2,
+        "reported_by": "Officer A",
+        "size_hectares": 2,
+        "time": "10:45:08"
+      }
+    ],
+    "Human_Wildlife_Contact": [
+      null,
+      {
+        "action_taken": "Reported to authorities",
+        "contact_type": "Aggressive",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7712,
+          "Long": 39.2401
+        },
+        "notes": "Elephant was seen destroying crops.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer B",
+        "species": "Elephant",
+        "time": "13:15"
+      }
+    ],
+    "Injured_Animal": [
+      null,
+      {
+        "action_taken": "Treated",
+        "cause_of_injury": "Shot",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77115,
+          "Long": 39.23985
+        },
+        "notes": "Lion is in stable condition after treatment.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer C",
+        "species": "Lion",
+        "time": "14:30",
+        "type_of_injury": "Gunshot wound"
+      }
+    ],
+    "Invasive_Species_Sighting": [
+      null,
+      {
+        "action_taken": "Reported for eradication",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7713,
+          "Long": 39.24
+        },
+        "location_description": "Near riverbank",
+        "notes": "Species found in large quantities.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer D",
+        "species": "Kudzu",
+        "time": "15:45"
+      }
+    ],
+    "Rainfall": [
+      null,
+      {
+        "amount_mm": 25.4,
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7709,
+          "Long": 39.24005
+        },
+        "notes": "Heavy rainfall expected to continue.",
+        "reported_by": "Officer E",
+        "time": "16:00"
+      }
+    ],
+    "Rhino_Sighting": [
+      null,
+      {
+        "action_taken": "Monitored",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77095,
+          "Long": 39.23975
+        },
+        "notes": "Rhinos were seen grazing peacefully.",
+        "number_of_rhinos": 3,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer F",
+        "time": "17:15"
+      }
+    ],
+    "Wildlife_Sighting": [
+      null,
+      {
+        "action_taken": "Noted",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7711,
+          "Long": 39.23995
+        },
+        "notes": "Giraffes were observed in their natural habitat.",
+        "number_of_animals": 5,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer G",
+        "species": "Giraffe",
+        "time": "18:30"
+      }
+    ]
+  }
+}

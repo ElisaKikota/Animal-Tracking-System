@@ -1,0 +1,245 @@
+{
+  "Animals": {
+    "Elephants": [
+      null,
+      {
+        "age": 40,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.945002,
+              "Long": 34.16382,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.7
+            },
+            "13:37": {
+              "Lat": -1.945102,
+              "Long": 34.16392,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 35.8
+            },
+            "13:42": {
+              "Lat": -1.945202,
+              "Long": 34.16402,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.9
+            }
+          }
+        },
+        "name": "Dady Elephany",
+        "sex": "male",
+        "upload_interval":1
+      }
+    ]
+  },
+  "PatrolOfficers": {
+    "0001": {
+      "active": "false",
+      "email": "ellykikota@gmail.com",
+      "last_report_time": "",
+      "name": "Elisa Kikota",
+      "on_patrol": false,
+      "phone": "0748485183",
+      "role": "Ranger"
+    }
+  },
+  "Reports": {
+    "CT_Icon_Sighting": [
+      null,
+      {
+        "day": "2024-08-26",
+        "description": "CT Icon observed near park.",
+        "location": {
+          "Lat": -6.7708,
+          "Long": 39.2397
+        },
+        "notes": "Icon was spotted on a tree trunk.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer H",
+        "time": "19:45"
+      }
+    ],
+    "Fire": [
+      null,
+      {
+        "action_taken": "Extinguishing",
+        "attended": false,
+        "cause_of_fire": "Human-induced",
+        "day": "2024-09-02",
+        "fire_status": "Active",
+        "location": {
+          "Lat": "-6.7710064",
+          "Long": "39.23993"
+        },
+        "notes": "need immediate assistance ",
+        "pictures": [
+          "https://firebasestorage.googleapis.com/v0/b/animal-tracking-01.appspot.com/o/Reports%2FFire%2F1%2F0.jpg?alt=media&token=d5ff9be3-d7d8-453a-a712-ddb6ccae389c"
+        ],
+        "reportID": 1,
+        "reported_by": "Officer A",
+        "size_hectares": 2,
+        "time": "14:29:51"
+      },
+      {
+        "action_taken": "Extinguishing",
+        "attended": false,
+        "cause_of_fire": "Natural",
+        "day": "2024-09-03",
+        "fire_status": "Active",
+        "location": {
+          "Lat": "-6.7709948",
+          "Long": "39.2399175"
+        },
+        "notes": "need immediate assistance ",
+        "pictures": [
+          "https://firebasestorage.googleapis.com/v0/b/animal-tracking-01.appspot.com/o/Reports%2FFire%2F2%2F0.jpg?alt=media&token=cc46ad4c-e0ce-4f16-b5e5-d06b26c08c69"
+        ],
+        "reportID": 2,
+        "reported_by": "Officer A",
+        "size_hectares": 2,
+        "time": "10:45:08"
+      }
+    ],
+    "Human_Wildlife_Contact": [
+      null,
+      {
+        "action_taken": "Reported to authorities",
+        "contact_type": "Aggressive",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7712,
+          "Long": 39.2401
+        },
+        "notes": "Elephant was seen destroying crops.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer B",
+        "species": "Elephant",
+        "time": "13:15"
+      }
+    ],
+    "Injured_Animal": [
+      null,
+      {
+        "action_taken": "Treated",
+        "cause_of_injury": "Shot",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77115,
+          "Long": 39.23985
+        },
+        "notes": "Lion is in stable condition after treatment.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer C",
+        "species": "Lion",
+        "time": "14:30",
+        "type_of_injury": "Gunshot wound"
+      }
+    ],
+    "Invasive_Species_Sighting": [
+      null,
+      {
+        "action_taken": "Reported for eradication",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7713,
+          "Long": 39.24
+        },
+        "location_description": "Near riverbank",
+        "notes": "Species found in large quantities.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer D",
+        "species": "Kudzu",
+        "time": "15:45"
+      }
+    ],
+    "Rainfall": [
+      null,
+      {
+        "amount_mm": 25.4,
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7709,
+          "Long": 39.24005
+        },
+        "notes": "Heavy rainfall expected to continue.",
+        "reported_by": "Officer E",
+        "time": "16:00"
+      }
+    ],
+    "Rhino_Sighting": [
+      null,
+      {
+        "action_taken": "Monitored",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77095,
+          "Long": 39.23975
+        },
+        "notes": "Rhinos were seen grazing peacefully.",
+        "number_of_rhinos": 3,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer F",
+        "time": "17:15"
+      }
+    ],
+    "Wildlife_Sighting": [
+      null,
+      {
+        "action_taken": "Noted",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7711,
+          "Long": 39.23995
+        },
+        "notes": "Giraffes were observed in their natural habitat.",
+        "number_of_animals": 5,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer G",
+        "species": "Giraffe",
+        "time": "18:30"
+      }
+    ]
+  }
+}

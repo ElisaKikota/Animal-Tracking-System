@@ -1,0 +1,227 @@
+.historical-patterns-container {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(100vh - 64px);
+  margin-top: 0;
+  overflow: hidden;
+  background-color: white;
+}
+
+/* Remove fixed margins and use absolute positioning relative to sidebar width */
+.historical-map {
+  position: absolute;
+  top: 0;
+  left: 60px; /* width of historical sidebar */
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  z-index: 0;
+  background-color: white;
+  transition: left 0.3s;
+}
+
+.sidebar-open .historical-map {
+  left: 60px; /* Keep the same regardless of main sidebar state */
+}
+
+.historical-sidebar {
+  position: absolute;
+  top: 0;
+  left: 60px; /* Position after collapsed main sidebar */
+  height: 100%;
+  width: 70px;
+  background-color: rgba(31, 118, 206, 0.6);
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 900;
+  transition: left 0.3s;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust when main sidebar is open */
+.sidebar-open .historical-sidebar {
+  left: 60px; /* Match your main sidebar's open width */
+}
+
+.historical-sidebar .sidebar-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  padding: 8px 0;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.historical-sidebar .sidebar-button:hover {
+  background-color: rgba(21, 126, 231, 0.5);
+  color: white;
+}
+
+.historical-sidebar .sidebar-button.active {
+  background-color: rgba(21, 126, 231, 0.7);
+  color: white;
+  border-left: 3px solid white;
+}
+
+.historical-sidebar .sidebar-button span {
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+}
+
+.controls-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 350px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  z-index: 950;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.controls-panel h2 {
+  color: #1F76CE;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+/* Fix for leaflet container to fill available space */
+.historical-patterns-container .leaflet-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+/* Fix for when no background appears */
+.leaflet-container {
+  background-color: #f8f8f8 !important;
+}
+
+.section-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+  color: #1F76CE !important;
+  font-size: 16px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Date Range Selector */
+.date-range-selector {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.date-input {
+  flex: 1;
+}
+
+/* Animal Selector */
+.animal-selector {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.species-filter {
+  width: 120px;
+}
+
+.search-filter {
+  flex: 1;
+}
+
+/* Timeline Control */
+.timeline-control {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.current-time {
+  margin: 10px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.timeline-slider {
+  margin: 15px 0;
+  padding: 0 10px;
+}
+
+.playback-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.speed-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.speed-controls .MuiButtonGroup-root {
+  margin-top: 8px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .historical-sidebar,
+  .sidebar-open .historical-sidebar {
+    left: 0;
+  }
+  
+  .historical-map {
+    left: 70px;
+  }
+  
+  .controls-panel {
+    width: calc(100% - 90px);
+  }
+}

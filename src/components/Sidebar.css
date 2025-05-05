@@ -1,0 +1,70 @@
+.sidebar {
+  position: fixed;
+  top: 60px; /* Adjust based on your navbar height */
+  left: 0;
+  height: calc(100vh - 60px);
+  background-color: rgb(31, 118, 206);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  width: 60px; /* Width when closed */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.open {
+  width: 220px; /* Width when open */
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: rgba(255, 255, 255, 0.7); /* Slightly dimmed for non-active links */
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: #157ee7;
+  color: white;
+}
+
+/* Active link styling */
+.sidebar a.active {
+  background-color: #157ee7;
+  color: white;
+  font-weight: 500;
+  border-left: 3px solid white;
+}
+
+.sidebar a.active svg {
+  color: white;
+}
+
+.sidebar a.active span {
+  color: white;
+}
+
+.sidebar svg {
+  min-width: 24px;
+  margin-right: 15px;
+}
+
+.sidebar span {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.open span {
+  opacity: 1;
+}

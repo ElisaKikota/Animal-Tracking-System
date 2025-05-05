@@ -1,0 +1,64 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden; /* Prevents scrolling on the body */
+}
+
+.app-container {
+  display: flex;
+  transition: margin-left 0.3s;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sidebar-open .content-container {
+  margin-left: 160px; /* Width of the sidebar */
+}
+
+.navbar {
+  flex-shrink: 0; /* Prevents navbar from shrinking */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100; /* Highest z-index to stay on top */
+}
+
+.content-container {
+  flex: 1;
+  transition: margin-left 0.3s;
+  margin-top: 64px; /* Adjust based on your navbar height */
+  overflow: hidden;
+  position: relative;
+}
+
+.content-container.shifted {
+  margin-left: 200px; /* Should match the open width of your sidebar */
+}
+
+/* Fix for sidebar layering */
+.sidebar {
+  z-index: 1000; /* Below navbar but above most content */
+}
+
+/* Ensure pages fit properly */
+.page-up-enter, .page-up-exit, 
+.page-down-enter, .page-down-exit {
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+/* Fix for historical page */
+.historical-patterns-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

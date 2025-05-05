@@ -1,0 +1,34 @@
+/* Ensure the entire container fills the viewport */
+.welcome-container {
+  background: url('../assets/background.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+.welcome-content {
+  background: rgba(0, 0, 0, 0.5); /* Optional: adds a dark overlay for better text visibility */
+  /* padding: 20px; */
+  border-radius: 10px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0px;
+}
+
+.feature {
+  width: 200px;
+  text-align: center;
+}
+
+.feature img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}

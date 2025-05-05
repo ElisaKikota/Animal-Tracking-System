@@ -1,0 +1,35 @@
+.map-controls-container {
+  position: fixed;
+  top: 74px;
+  right: 10px;
+  z-index: 1000;
+  background-color: rgba(31, 118, 206, 0.6);
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 220px;
+}
+
+.map-controls-container .MuiFormGroup-root {
+  gap: 8px;
+}
+
+.map-controls-container .MuiFormControlLabel-root {
+  margin: 0;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.map-controls-container .MuiSwitch-root {
+  margin-left: 8px;
+}
+
+/* Adjust zoom controls position to avoid overlap */
+.mapboxgl-control-container .mapboxgl-ctrl-top-right {
+  top: 240px !important;
+} 

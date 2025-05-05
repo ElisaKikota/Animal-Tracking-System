@@ -1,0 +1,32 @@
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--navbar-sidebar-color);
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+  }
+  
+  .navbar .menu-icon {
+    cursor: pointer;
+  }
+  
+  .navbar .logo img {
+    height: 40px; /* Adjust based on your logo size */
+  }
+  
+  .navbar .nav-icons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar .nav-icons img {
+    height: 30px; /* Adjust based on your icon size */
+    margin-left: 20px;
+  }
+  
