@@ -5,13 +5,14 @@ import {
 } from '@mui/material';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../firebase';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import Sidebar from './Sidebar';
+import 'leaflet/dist/leaflet.css';
 import DateRangeSelector from './DateRangeSelector';
 import AnimalSelector from './AnimalSelector';
 import TimelineControl from './TimelineControl';
+import AnalysisFeatures from './AnalysisFeatures';
 import './HistoricalPatterns.css';
+import { MapContainer, TileLayer, Polyline, ZoomControl, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 
 // Import animal icons
 import elephantIcon from '../../assets/elephant.png';
@@ -20,17 +21,11 @@ import giraffeIcon from '../../assets/giraffe.png';
 import rhinoIcon from '../../assets/rhino.png';
 import leopardIcon from '../../assets/leopard.png';
 
-// Replace with your Mapbox access token
-mapboxgl.accessToken = 'pk.eyJ1IjoiZWxpc2FraWtvdGEiLCJhIjoiY2x6MTkwYWRiMnE0ZTJpcjR5bzFjMzNrZyJ9.HRBoAER-bGLPEcdhbUsW_A';
-
 function HistoricalPatterns() {
   const [selectedSpecies, setSelectedSpecies] = useState('');
   const [selectedTimeRange, setSelectedTimeRange] = useState('week');
   const [historicalData, setHistoricalData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const markers = useRef([]);
   const [animalData, setAnimalData] = useState([]);
   const [selectedAnimals, setSelectedAnimals] = useState([]);
   const [dateRange, setDateRange] = useState({
@@ -44,6 +39,7 @@ function HistoricalPatterns() {
   const [pathData, setPathData] = useState([]);
   const [mapKey, setMapKey] = useState('initial');
   const [mapReady, setMapReady] = useState(false);
+  const [animalSelectorCollapsed, setAnimalSelectorCollapsed] = useState(false);
   
   // Get main sidebar state from App's CSS classes
   const [isMainSidebarOpen, setIsMainSidebarOpen] = useState(false);
@@ -92,71 +88,6 @@ function HistoricalPatterns() {
     };
   }, [isMainSidebarOpen, mapReady]);
 
-  useEffect(() => {
-    if (map.current) return;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/outdoors-v11',
-      center: [-1.948, 34.1665],
-      zoom: 13
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-    // Cleanup on unmount
-    return () => {
-      map.current.remove();
-      map.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!map.current || !historicalData.length) return;
-
-    // Remove existing markers
-    markers.current.forEach(marker => marker.remove());
-    markers.current = [];
-
-    // Add new markers
-    historicalData.forEach(data => {
-      const el = document.createElement('div');
-      el.className = 'marker';
-      
-      // Set icon based on species, handling both singular and plural forms
-      const speciesLower = data.species.toLowerCase();
-      const iconUrl = speciesLower.includes('elephant') ? elephantIcon :
-                     speciesLower.includes('lion') ? lionIcon :
-                     speciesLower.includes('rhino') ? rhinoIcon :
-                     speciesLower.includes('leopard') ? leopardIcon :
-                     speciesLower.includes('giraffe') ? giraffeIcon :
-                     giraffeIcon; // Default to giraffe if no match
-
-      el.style.backgroundImage = `url(${iconUrl})`;
-      el.style.width = '38px';
-      el.style.height = '38px';
-      el.style.backgroundSize = 'cover';
-
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat([data.location.Lng, data.location.Lat])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`
-              <div style="padding: 10px;">
-                <strong>${data.name}</strong><br>
-                Species: ${data.species}<br>
-                Date: ${data.date}<br>
-                Time: ${data.time}
-              </div>
-            `)
-        )
-        .addTo(map.current);
-
-      markers.current.push(marker);
-    });
-  }, [historicalData]);
-
   // Load all animal data
   useEffect(() => {
     const animalSpecies = ['Elephants', 'Giraffes', 'Lions', 'Leopards', 'Rhinos'];
@@ -201,11 +132,88 @@ function HistoricalPatterns() {
             fetchedData.push(animalObj);
           });
         }
+        setAnimalData(fetchedData);
       });
     });
-
-    setAnimalData(fetchedData);
   }, []);
+
+  const toggleMenu = (menuName) => {
+    setActiveMenu(activeMenu === menuName ? null : menuName);
+  };
+
+  const handleAnimalSelection = (selectedIds) => {
+    setSelectedAnimals(selectedIds);
+  };
+
+  const handleDateRangeChange = (newRange) => {
+    setDateRange(newRange);
+  };
+
+  const handleTimelineChange = (timestamp) => {
+    setCurrentTimestamp(timestamp);
+  };
+
+  const togglePlayback = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSpeedChange = (speed) => {
+    setPlaybackSpeed(speed);
+  };
+
+  const getAnimalIcon = (species) => {
+    const iconUrl = species.toLowerCase().includes('elephant') ? elephantIcon :
+                   species.toLowerCase().includes('lion') ? lionIcon :
+                   species.toLowerCase().includes('rhino') ? rhinoIcon :
+                   species.toLowerCase().includes('leopard') ? leopardIcon :
+                   species.toLowerCase().includes('giraffe') ? giraffeIcon :
+                   giraffeIcon; // Default to giraffe if no match
+
+    return L.icon({
+      iconUrl,
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+      popupAnchor: [0, -19]
+    });
+  };
+
+  const getPathColor = (species) => {
+    return species.toLowerCase().includes('elephant') ? '#FF6B6B' :
+           species.toLowerCase().includes('lion') ? '#4ECDC4' :
+           species.toLowerCase().includes('rhino') ? '#45B7D1' :
+           species.toLowerCase().includes('leopard') ? '#96CEB4' :
+           species.toLowerCase().includes('giraffe') ? '#FFEEAD' :
+           '#FF6B6B'; // Default color
+  };
+
+  const getCurrentPositions = () => {
+    if (!currentTimestamp) return [];
+
+    return selectedAnimals.map(animalId => {
+      const animal = animalData.find(a => a.id === animalId);
+      if (!animal) return null;
+
+      const position = animal.locationHistory.find(
+        loc => loc.timestamp <= currentTimestamp
+      );
+
+      if (!position) return null;
+
+      return {
+        id: animal.id,
+        name: animal.name,
+        species: animal.species,
+        position: [position.lat, position.lng],
+        timestamp: position.timestamp,
+        temperature: position.temperature,
+        activity: position.activity
+      };
+    }).filter(Boolean);
+  };
+
+  const handleMapLoad = () => {
+    setMapReady(true);
+  };
 
   // Update path data when selected animals or date range changes
   useEffect(() => {
@@ -248,104 +256,60 @@ function HistoricalPatterns() {
     }
   }, [selectedAnimals, animalData, dateRange, currentTimestamp]);
 
-  const toggleMenu = (menuName) => {
-    setActiveMenu(activeMenu === menuName ? null : menuName);
-  };
-
-  const handleAnimalSelection = (selectedIds) => {
-    setSelectedAnimals(selectedIds);
-  };
-
-  const handleDateRangeChange = (newRange) => {
-    setDateRange(newRange);
-    setCurrentTimestamp(null); // Reset timestamp when date range changes
-  };
-
-  const handleTimelineChange = (timestamp) => {
-    setCurrentTimestamp(timestamp);
-  };
-
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleSpeedChange = (speed) => {
-    setPlaybackSpeed(speed);
-  };
-
-  const getAnimalIcon = (species) => {
-    const iconUrl = 
-      species.toLowerCase() === 'elephant' ? elephantIcon :
-      species.toLowerCase() === 'lion' ? lionIcon :
-      species.toLowerCase() === 'giraffe' ? giraffeIcon :
-      species.toLowerCase() === 'rhino' ? rhinoIcon :
-      species.toLowerCase() === 'leopard' ? leopardIcon :
-      elephantIcon; // Default
-
-    return {
-      url: iconUrl,
-      size: [38, 38],
-      anchor: [19, 38]
-    };
-  };
-
-  const getPathColor = (species) => {
-    switch(species.toLowerCase()) {
-      case 'elephant': return '#4a7c59';
-      case 'lion': return '#f39237';
-      case 'giraffe': return '#d63230';
-      case 'rhino': return '#5b85aa';
-      case 'leopard': return '#8b5fbf';
-      default: return '#3f88c5';
-    }
-  };
-
-  // Get current positions based on the timeline
-  const getCurrentPositions = () => {
-    if (!currentTimestamp) return [];
-    
-    return pathData.map(animal => {
-      // Find the location closest to current timestamp (before or equal)
-      const locationsBeforeTimestamp = animal.locations.filter(
-        loc => loc.timestamp <= currentTimestamp
-      );
-      
-      if (locationsBeforeTimestamp.length === 0) return null;
-      
-      const currentLocation = locationsBeforeTimestamp[locationsBeforeTimestamp.length - 1];
-      return {
-        id: animal.id,
-        name: animal.name,
-        species: animal.species,
-        position: [currentLocation.lat, currentLocation.lng],
-        timestamp: currentLocation.timestamp,
-        temperature: currentLocation.temperature,
-        activity: currentLocation.activity
-      };
-    }).filter(position => position !== null);
-  };
-
-  const currentPositions = getCurrentPositions();
-  
-  // Safely handle map loading
-  const handleMapLoad = () => {
-    setMapReady(true);
-  };
+  // When animal selection changes, collapse if one animal is selected
+  useEffect(() => {
+    if (selectedAnimals.length === 1) setAnimalSelectorCollapsed(true);
+    else setAnimalSelectorCollapsed(false);
+  }, [selectedAnimals]);
 
   return (
-    <Container maxWidth="xl">
-      <div 
-        className={isMainSidebarOpen ? 'historical-patterns-container sidebar-open' : 'historical-patterns-container'} 
-        ref={containerRef}
-      >
-        <Sidebar 
-          onMenuSelect={toggleMenu} 
-          activeMenu={activeMenu}
-          isMainSidebarOpen={isMainSidebarOpen}
-        />
-        
-        <div className="controls-panel">
-          <h2>Historical Movement Patterns</h2>
+    <div 
+      className={isMainSidebarOpen ? 'analysis-container sidebar-open' : 'analysis-container'} 
+      ref={containerRef}
+    >
+      <div className="analysis-map" style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <MapContainer
+          center={[-1.948, 34.1665]}
+          zoom={13}
+          style={{ height: '100%', width: '100%' }}
+          key={mapKey}
+          whenReady={handleMapLoad}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          {mapReady && pathData.map(animal => (
+            <Polyline
+              key={animal.id}
+              positions={animal.path}
+              color={getPathColor(animal.species)}
+              weight={3}
+              opacity={0.7}
+            />
+          ))}
+          {mapReady && getCurrentPositions().map(animal => (
+            <Marker
+              key={animal.id}
+              position={animal.position}
+              icon={getAnimalIcon(animal.species)}
+            >
+              <Popup>
+                <div>
+                  <strong>{animal.name}</strong><br />
+                  Species: {animal.species}<br />
+                  Date: {new Date(animal.timestamp).toLocaleDateString()}<br />
+                  Time: {new Date(animal.timestamp).toLocaleTimeString()}<br />
+                  Temperature: {animal.temperature}°C<br />
+                  Activity: {animal.activity}
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+          <ZoomControl position="bottomright" />
+        </MapContainer>
+        <div className="controls-panel unified-panel" style={{ position: 'absolute', top: 0, right: 0, width: 400, maxWidth: '95vw', margin: 24, zIndex: 1000, background: 'rgba(255,255,255,0.95)', borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+          <h2>Analysis</h2>
           <DateRangeSelector 
             startDate={dateRange.startDate} 
             endDate={dateRange.endDate}
@@ -354,7 +318,13 @@ function HistoricalPatterns() {
           <AnimalSelector 
             animals={animalData}
             selectedAnimals={selectedAnimals}
-            onAnimalSelection={handleAnimalSelection}
+            onAnimalSelection={ids => {
+              setSelectedAnimals(ids.slice(0, 1));
+              setAnimalSelectorCollapsed(ids.length === 1);
+            }}
+            collapsed={animalSelectorCollapsed && selectedAnimals.length === 1}
+            onExpand={() => setAnimalSelectorCollapsed(false)}
+            singleSelect // Pass a prop to render as single select if needed
           />
           {pathData.length > 0 && (
             <TimelineControl
@@ -367,13 +337,19 @@ function HistoricalPatterns() {
               onSpeedChange={handleSpeedChange}
             />
           )}
-        </div>
-
-        <div className="historical-map">
-          <div ref={mapContainer} className="map" style={{ height: '500px', width: '100%', marginTop: '20px' }} />
+          {/* Advanced Analysis: Only show if one animal is selected */}
+          {selectedAnimals.length === 1 && (
+            <div style={{ marginTop: 24 }}>
+              <AnalysisFeatures
+                animalData={animalData}
+                selectedAnimals={selectedAnimals}
+                dateRange={dateRange}
+              />
+            </div>
+          )}
         </div>
       </div>
-    </Container>
+    </div>
   );
 }
 

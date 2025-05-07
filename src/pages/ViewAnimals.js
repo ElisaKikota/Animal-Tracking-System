@@ -21,6 +21,13 @@ import leopardIcon from '../assets/leopard.png';
 // Replace with your Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxpc2FraWtvdGEiLCJhIjoiY2x6MTkwYWRiMnE0ZTJpcjR5bzFjMzNrZyJ9.HRBoAER-bGLPEcdhbUsW_A';
 
+// Pie chart color palette to match the chart
+const PIE_COLORS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+
+function getPieColor(idx) {
+  return PIE_COLORS[idx % PIE_COLORS.length];
+}
+
 function ViewAnimals() {
   const [animals, setAnimals] = useState([]);
   const [filteredAnimals, setFilteredAnimals] = useState([]);
@@ -35,7 +42,8 @@ function ViewAnimals() {
   const markers = useRef([]);
 
   useEffect(() => {
-    if (map.current) return;
+    // Only initialize if the container is available, showMap is true, and map is not already initialized
+    if (!showMap || !mapContainer.current || map.current) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -44,15 +52,15 @@ function ViewAnimals() {
       zoom: 13
     });
 
-    // Add navigation controls
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Cleanup on unmount
     return () => {
-      map.current.remove();
-      map.current = null;
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
     };
-  }, []);
+  }, [showMap]);
 
   useEffect(() => {
     if (!map.current || !filteredAnimals.length) return;
@@ -63,6 +71,9 @@ function ViewAnimals() {
 
     // Add new markers
     filteredAnimals.forEach(animal => {
+      // Skip animals without valid location data
+      if (!animal.location || !animal.location.Lng || !animal.location.Lat) return;
+      
       const el = document.createElement('div');
       el.className = 'marker';
       
@@ -86,10 +97,10 @@ function ViewAnimals() {
               <div style="padding: 10px;">
                 <strong>${animal.name}</strong><br>
                 Species: ${animal.species}<br>
-                Sex: ${animal.sex}<br>
-                Age: ${animal.age} years<br>
-                Temperature: ${animal.temperature}°C<br>
-                Activity: ${animal.activity}
+                Sex: ${animal.sex || 'Unknown'}<br>
+                Age: ${animal.age ? `${animal.age} years` : 'Unknown'}<br>
+                Temperature: ${animal.temperature ? `${animal.temperature}°C` : 'Unknown'}<br>
+                Activity: ${animal.activity || 'Unknown'}
               </div>
             `)
         )
@@ -103,17 +114,51 @@ function ViewAnimals() {
     const animalsRef = ref(database, 'Animals');
     onValue(animalsRef, (snapshot) => {
       const data = snapshot.val();
-      const animalList = data ? Object.entries(data).flatMap(([species, animals]) => 
-        Object.entries(animals).map(([id, animal]) => ({
-          id,
-          species,
-          ...animal,
-          location: animal.location ? Object.values(animal.location).pop() : null
-        }))
-      ) : [];
-      setAnimals(animalList);
-      setFilteredAnimals(animalList);
-      updateAnimalStats(animalList);
+      
+      // Handle empty data case
+      if (!data) {
+        setAnimals([]);
+        setFilteredAnimals([]);
+        updateAnimalStats([]);
+        return;
+      }
+      
+      try {
+        const animalList = Object.entries(data).flatMap(([species, animals]) => {
+          // Check if animals is an object
+          if (!animals || typeof animals !== 'object') return [];
+          
+          return Object.entries(animals).map(([id, animal]) => {
+            // Extract location data safely
+            let locationData = null;
+            try {
+              if (animal.location && typeof animal.location === 'object') {
+                // Get the most recent location entry
+                const locations = Object.values(animal.location);
+                locationData = locations.length > 0 ? locations[locations.length - 1] : null;
+              }
+            } catch (err) {
+              console.error('Error processing location data:', err);
+            }
+            
+            return {
+              id,
+              species,
+              ...animal,
+              location: locationData
+            };
+          });
+        });
+        
+        setAnimals(animalList);
+        setFilteredAnimals(animalList);
+        updateAnimalStats(animalList);
+      } catch (error) {
+        console.error('Error processing animal data:', error);
+        setAnimals([]);
+        setFilteredAnimals([]);
+        updateAnimalStats([]);
+      }
     });
   }, []);
 
@@ -164,7 +209,7 @@ function ViewAnimals() {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" className="standard-page">
       <Typography variant="h4" component="h1" gutterBottom>
         Animal Management
       </Typography>
@@ -188,10 +233,87 @@ function ViewAnimals() {
 
       <Grid container spacing={3} mb={3}>
         <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16, height: 300 }}>
-            {animalStats.species && Object.keys(animalStats.species).length > 0 && (
-              <PieChart data={animalStats.species} />
-            )}
+          <Paper
+            elevation={3}
+            sx={{
+              p: 2,
+              height: 320,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              overflow: 'hidden',
+              position: 'relative',
+              minWidth: 500,
+            }}
+          >
+            {/* Title at the top left */}
+            <Box sx={{ position: 'absolute', top: 16, left: 24, zIndex: 2 }}>
+              <Typography variant="h6">Species Distribution</Typography>
+            </Box>
+            {/* Legend on the left */}
+            <Box
+              sx={{
+                minWidth: 180,
+                mr: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                height: '100%',
+                gap: 1,
+                mt: 4, // add margin-top to push below the title
+              }}
+            >
+              {Object.entries(animalStats.species).map(([species, count], idx) => (
+                <Box key={species} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                  <Box
+                    sx={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: '50%',
+                      backgroundColor: getPieColor(idx),
+                      mr: 1.5,
+                      border: '1px solid #ccc',
+                    }}
+                  />
+                  <Typography variant="body2">{species} ({count})</Typography>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Pie chart on the right */}
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                minWidth: 0,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 200,
+                  height: 200,
+                  p: 1,
+                  background: '#fff',
+                  borderRadius: '50%',
+                  boxShadow: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <PieChart
+                  data={animalStats.species}
+                  style={{ width: '100%', height: '100%' }}
+                  legend={false}
+                  hideTitle={true}
+                />
+              </Box>
+            </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -253,7 +375,9 @@ function ViewAnimals() {
                 <TableCell>{animal.age}</TableCell>
                 <TableCell>{animal.sex}</TableCell>
                 <TableCell>
-                  {animal.location ? new Date(animal.location.timestamp).toLocaleString() : 'Unknown'}
+                  {animal.location && animal.location.timestamp 
+                    ? new Date(animal.location.timestamp).toLocaleString() 
+                    : 'Unknown'}
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleOpenDialog(animal)}><Edit /></IconButton>

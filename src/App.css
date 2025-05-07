@@ -16,7 +16,8 @@ body {
 }
 
 .sidebar-open .content-container {
-  margin-left: 160px; /* Width of the sidebar */
+  margin-left: 220px; /* Width of the open sidebar */
+  width: calc(100% - 220px);
 }
 
 .navbar {
@@ -32,12 +33,28 @@ body {
   flex: 1;
   transition: margin-left 0.3s;
   margin-top: 64px; /* Adjust based on your navbar height */
+  margin-left: 60px; /* Width of the closed sidebar */
+  width: calc(100% - 60px); /* Adjust width to account for sidebar */
   overflow: hidden;
   position: relative;
+  box-sizing: border-box;
+  background: #fff;
 }
 
-.content-container.shifted {
-  margin-left: 200px; /* Should match the open width of your sidebar */
+.content-container > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Universal fix for all page roots */
+.main-content-root, .MuiContainer-root, .standard-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+  position: relative !important;
+  left: 0 !important;
 }
 
 /* Fix for sidebar layering */
@@ -54,11 +71,17 @@ body {
   overflow: hidden;
 }
 
-/* Fix for historical page */
-.historical-patterns-container {
+/* Fix for analysis page */
+.analysis-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+/* Remove left margin for real time page */
+.no-left-margin {
+  margin-left: 0 !important;
+  width: 100% !important;
 }

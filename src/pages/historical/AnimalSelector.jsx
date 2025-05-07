@@ -9,11 +9,12 @@ import {
   Chip,
   OutlinedInput,
   Checkbox,
-  ListItemText
+  ListItemText,
+  Button
 } from '@mui/material';
 import { PawPrint } from 'lucide-react';
 
-const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection }) => {
+const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed, onExpand }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState('');
 
@@ -42,6 +43,22 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection }) => {
     const animal = animals.find(a => a.id === id);
     return animal ? animal.name : id;
   };
+
+  if (collapsed && selectedAnimals.length === 1) {
+    const animal = animals.find(a => a.id === selectedAnimals[0]);
+    return (
+      <Box className="animal-selector" sx={{ mb: 2, p: 2, background: '#f8f9fa', borderRadius: 2 }}>
+        <Typography variant="h6" className="section-title">
+          <PawPrint size={20} /> Selected Animal
+        </Typography>
+        <Chip
+          label={animal ? animal.name : selectedAnimals[0]}
+          sx={{ mr: 1 }}
+        />
+        <Button size="small" onClick={onExpand}>Edit</Button>
+      </Box>
+    );
+  }
 
   return (
     <Box className="animal-selector">

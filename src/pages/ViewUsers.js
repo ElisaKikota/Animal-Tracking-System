@@ -83,7 +83,7 @@ function ViewUsers() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" className="standard-page">
       <Typography variant="h4" component="h1" gutterBottom>
         User Management
       </Typography>

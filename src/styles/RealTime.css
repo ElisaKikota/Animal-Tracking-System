@@ -4,7 +4,7 @@
   position: relative;
   margin-top: 0px;
   height: calc(100vh - 64px);
-  margin-left: 60px; 
+  margin-left: 0px; 
   width: calc(100vw - 60px);
   overflow:hidden; 
   /* Prevent scrolling */

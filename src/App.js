@@ -5,10 +5,10 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Welcome from './pages/Welcome';
 import RealTime from './pages/realtime/index';
-import HistoricalPatterns from './pages/historical/HistoricalPatterns';
+import Analysis from './pages/historical/HistoricalPatterns';
+import AnalysisData from './pages/Analysis';
 import ViewUsers from './pages/ViewUsers';
 import ViewAnimals from './pages/ViewAnimals';
-import Analysis from './pages/Analysis';
 import ChangePassword from './pages/ChangePassword';
 import './App.css';
 import './styles/Transitions.css';
@@ -16,10 +16,10 @@ import './styles/Transitions.css';
 const pageOrder = [
   '/welcome',
   '/real_time',
-  '/historical_patterns',
+  '/analysis',
+  '/analysis_data',
   '/view_users',
   '/view_animals',
-  '/analysis',
   '/change_password',
   '/signout'
 ];
@@ -55,17 +55,17 @@ const AppContent = () => {
       case '/real_time':
         title = 'Real Time Tracking | Animal Tracking';
         break;
-      case '/historical_patterns':
-        title = 'Historical Patterns | Animal Tracking';
+      case '/analysis':
+        title = 'Analysis Data | Animal Tracking';
+        break;
+      case '/analysis_data':
+        title = 'Analysis Data | Animal Tracking';
         break;
       case '/view_users':
         title = 'View Users | Animal Tracking';
         break;
       case '/view_animals':
         title = 'View Animals | Animal Tracking';
-        break;
-      case '/analysis':
-        title = 'Analysis Data | Animal Tracking';
         break;
       case '/change_password':
         title = 'Change Password | Animal Tracking';
@@ -90,10 +90,10 @@ const AppContent = () => {
         <Routes location={location}>
           <Route path="/" element={<Welcome />} />
           <Route path="/real_time" element={<RealTime />} />
-          <Route path="/historical_patterns" element={<HistoricalPatterns />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/analysis_data" element={<AnalysisData />} />
           <Route path="/view_users" element={<ViewUsers />} />
           <Route path="/view_animals" element={<ViewAnimals />} />
-          <Route path="/analysis" element={<Analysis />} />
           <Route path="/change_password" element={<ChangePassword />} />
           <Route path="/signout" element={<div>Signout Page</div>} />
         </Routes>
@@ -114,7 +114,7 @@ function App() {
       <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <Navbar toggleSidebar={toggleSidebar} />
         <Sidebar isSidebarOpen={isSidebarOpen} />
-        <div className="content-container">
+        <div className={`content-container ${isSidebarOpen ? 'sidebar-open-content' : ''}`}>
           <AppContent />
         </div>
       </div>

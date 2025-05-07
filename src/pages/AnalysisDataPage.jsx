@@ -256,7 +256,7 @@ const AnalysisDataPage = () => {
   }, [activeStep, headerRow, parsedData]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" className="standard-page">
       <Typography variant="h4" component="h1" gutterBottom sx={{ mt: 4 }}>
         Analysis Data Upload
       </Typography>

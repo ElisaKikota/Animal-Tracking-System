@@ -28,14 +28,16 @@ function PieChart({ data }) {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
   };
 
   return (
-    <>
-      <Typography variant="h6">Species Distribution</Typography>
-      <Pie ref={chartRef} data={chartData} options={options} />
-    </>
+    <Pie ref={chartRef} data={chartData} options={options} />
   );
 }
 

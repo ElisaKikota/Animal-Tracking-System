@@ -10,10 +10,10 @@ const Sidebar = ({ isSidebarOpen, setCurrentPage }) => {
   const menuItems = [
     { path: '/', text: 'Welcome', icon: Home },
     { path: '/real_time', text: 'Real Time', icon: Clock },
-    { path: '/historical_patterns', text: 'Historical Patterns', icon: History },
+    { path: '/analysis', text: 'Analysis', icon: History },
+    { path: '/analysis_data', text: 'Analysis Data', icon: Database },
     { path: '/view_users', text: 'View Users', icon: Users },
     { path: '/view_animals', text: 'View Animals', icon: PawPrint },
-    { path: '/analysis', text: 'Analysis Data', icon: Database },
     { path: '/change_password', text: 'Change Password', icon: Lock },
     { path: '/signout', text: 'Signout', icon: LogOut },
   ];

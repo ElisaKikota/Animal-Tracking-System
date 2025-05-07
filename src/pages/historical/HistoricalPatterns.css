@@ -1,4 +1,4 @@
-.historical-patterns-container {
+.analysis-container {
   display: flex;
   position: absolute;
   top: 0;
@@ -12,10 +12,10 @@
 }
 
 /* Remove fixed margins and use absolute positioning relative to sidebar width */
-.historical-map {
+.analysis-map {
   position: absolute;
   top: 0;
-  left: 60px; /* width of historical sidebar */
+  left: 0px; /* width of historical sidebar */
   right: 0;
   bottom: 0;
   height: 100%;
@@ -25,17 +25,15 @@
   transition: left 0.3s;
 }
 
-.sidebar-open .historical-map {
-  left: 60px; /* Keep the same regardless of main sidebar state */
-}
 
-.historical-sidebar {
+
+.analysis-sidebar {
   position: absolute;
   top: 0;
   left: 60px; /* Position after collapsed main sidebar */
   height: 100%;
   width: 70px;
-  background-color: rgba(31, 118, 206, 0.6);
+  background-color: rgba(31, 118, 206, 0.92); /* More visible */
   padding: 10px 0;
   display: flex;
   flex-direction: column;
@@ -43,15 +41,16 @@
   gap: 20px;
   z-index: 900;
   transition: left 0.3s;
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0px 8px rgba(0,0,0,0.18); /* Stronger shadow */
+  border-right: 1px solid #1976d2; /* Optional: subtle border */
 }
 
 /* Adjust when main sidebar is open */
-.sidebar-open .historical-sidebar {
+.sidebar-open .analysis-sidebar {
   left: 60px; /* Match your main sidebar's open width */
 }
 
-.historical-sidebar .sidebar-button {
+.analysis-sidebar .sidebar-button {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.7);
@@ -66,18 +65,18 @@
   transition: all 0.2s ease;
 }
 
-.historical-sidebar .sidebar-button:hover {
+.analysis-sidebar .sidebar-button:hover {
   background-color: rgba(21, 126, 231, 0.5);
   color: white;
 }
 
-.historical-sidebar .sidebar-button.active {
+.analysis-sidebar .sidebar-button.active {
   background-color: rgba(21, 126, 231, 0.7);
   color: white;
   border-left: 3px solid white;
 }
 
-.historical-sidebar .sidebar-button span {
+.analysis-sidebar .sidebar-button span {
   font-size: 12px;
   margin-top: 5px;
   display: none;
@@ -108,7 +107,7 @@
 }
 
 /* Fix for leaflet container to fill available space */
-.historical-patterns-container .leaflet-container {
+.analysis-container .leaflet-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -212,12 +211,12 @@
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .historical-sidebar,
-  .sidebar-open .historical-sidebar {
+  .analysis-sidebar,
+  .sidebar-open .analysis-sidebar {
     left: 0;
   }
   
-  .historical-map {
+  .analysis-map {
     left: 70px;
   }
   
