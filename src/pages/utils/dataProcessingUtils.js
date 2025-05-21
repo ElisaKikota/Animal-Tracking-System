@@ -1,5 +1,9 @@
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as dbRef, push, set } from 'firebase/database';
+import { getDatabase, ref as dbRef, push, set, get, update } from 'firebase/database';
+import { getFirestore, collection, doc, setDoc, writeBatch } from 'firebase/firestore';
+
+// Cache for column detection results
+const columnDetectionCache = new Map();
 
 /**
  * Auto-detect column mappings based on headers and sample data
@@ -10,6 +14,17 @@ import { getDatabase, ref as dbRef, push, set } from 'firebase/database';
  * @returns {Object} Detected mappings and timestamp configuration
  */
 export const autoDetectColumns = (headers, data, currentMappings, currentTimestampConfig) => {
+  const cacheKey = JSON.stringify({
+    headers,
+    dataLength: data.length,
+    currentMappings,
+    currentTimestampConfig
+  });
+
+  if (columnDetectionCache.has(cacheKey)) {
+    return columnDetectionCache.get(cacheKey);
+  }
+
   const mapping = {...currentMappings};
   const timestampConf = {...currentTimestampConfig};
   
@@ -116,10 +131,12 @@ export const autoDetectColumns = (headers, data, currentMappings, currentTimesta
     timestampConf.hasTime = false;
   }
   
-  return { 
+  const result = { 
     detectedMappings: mapping,
     detectedTimestampConfig: timestampConf
   };
+  columnDetectionCache.set(cacheKey, result);
+  return result;
 };
 
 /**
@@ -127,19 +144,21 @@ export const autoDetectColumns = (headers, data, currentMappings, currentTimesta
  * @param {Object[]} parsedData - Parsed CSV data
  * @param {Object} columnMappings - Column mappings
  * @param {Object} timestampConfig - Timestamp configuration
+ * @param {boolean} checkRequiredColumns - Whether to check for required column mappings (default: true)
  * @returns {Object} Validation results
  */
-export const validateData = (parsedData, columnMappings, timestampConfig) => {
+export const validateData = (parsedData, columnMappings, timestampConfig, checkRequiredColumns = true) => {
   const errors = [];
   const warnings = [];
   
-  // Check if required fields are mapped
-  if (!columnMappings.latitude) {
-    errors.push('Latitude column must be selected');
-  }
-  
-  if (!columnMappings.longitude) {
-    errors.push('Longitude column must be selected');
+  // Check if required fields are mapped (only if requested)
+  if (checkRequiredColumns) {
+    if (!columnMappings.latitude) {
+      errors.push('Latitude column must be selected');
+    }
+    if (!columnMappings.longitude) {
+      errors.push('Longitude column must be selected');
+    }
   }
   
   // Validate data if mappings are provided
@@ -254,45 +273,86 @@ export const validateData = (parsedData, columnMappings, timestampConfig) => {
  */
 export const generatePreviewData = (data, timestampConfig, columnMappings) => {
   if (!data || data.length === 0) return [];
-  
   return data.map((row, index) => {
-    const processed = {...row};
-    
-    // Process timestamp based on configuration
+    const processed = { ...row };
     let timestamp;
     
-    if (timestampConfig.format === 'auto' && columnMappings.timestamp) {
-      timestamp = new Date(row[columnMappings.timestamp]);
+    // Handle combined date and time columns
+    if (columnMappings.dateColumn && columnMappings.timeColumn && row[columnMappings.dateColumn] && row[columnMappings.timeColumn]) {
+      const date = row[columnMappings.dateColumn];
+      const time = row[columnMappings.timeColumn];
+      // Ensure proper date format (YYYY-MM-DD)
+      const formattedDate = date.includes('-') ? date : date.split('/').reverse().join('-');
+      // Ensure proper time format (HH:mm:ss)
+      const formattedTime = time.includes(':') ? time : `${time}:00`;
+      processed._processedTimestamp = `${formattedDate}T${formattedTime}`;
+    } else if (timestampConfig.format === 'auto' && columnMappings.timestamp) {
+      const ts = row[columnMappings.timestamp];
+      const match = ts && ts.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})/);
+      if (match) {
+        processed._processedTimestamp = `${match[1]}T${match[2]}`;
+      } else {
+        timestamp = new Date(ts);
+        processed._processedTimestamp = isNaN(timestamp) ? 'Invalid date' : timestamp.toISOString();
+      }
     } else if (timestampConfig.format === 'custom') {
       let dateStr = '';
       let timeStr = '';
-      
       if (timestampConfig.hasDate && timestampConfig.dateColumn) {
         dateStr = row[timestampConfig.dateColumn] || timestampConfig.startDate;
       } else {
         dateStr = timestampConfig.startDate;
       }
-      
       if (timestampConfig.hasTime && timestampConfig.timeColumn) {
         timeStr = row[timestampConfig.timeColumn] || timestampConfig.startTime;
       } else {
         timeStr = timestampConfig.startTime;
       }
-      
-      timestamp = new Date(`${dateStr}T${timeStr}`);
+      processed._processedTimestamp = `${dateStr}T${timeStr}`;
     } else if (timestampConfig.format === 'interval') {
-      // Calculate timestamp based on row index and interval
       const startDateTime = new Date(`${timestampConfig.startDate}T${timestampConfig.startTime}`);
-      const intervalMs = timestampConfig.interval * 60 * 1000; // convert minutes to ms
+      const intervalMs = timestampConfig.interval * 60 * 1000;
       timestamp = new Date(startDateTime.getTime() + index * intervalMs);
+      processed._processedTimestamp = isNaN(timestamp) ? 'Invalid date' : timestamp.toISOString();
     }
-    
-    // Add processed timestamp to the data
-    processed._processedTimestamp = isNaN(timestamp) ? 'Invalid date' : timestamp.toISOString();
-    
     return processed;
   });
 };
+
+// Utility to sanitize object keys for Firebase
+function sanitizeKeys(obj) {
+  const forbidden = /[.#$/\[\]]/g;
+  const newObj = {};
+  for (const key in obj) {
+    const cleanKey = key.replace(forbidden, '_');
+    newObj[cleanKey] = obj[key];
+  }
+  return newObj;
+}
+
+// Utility to group data by date and time
+function groupDataByDateTime(data) {
+  const grouped = {};
+  data.forEach(row => {
+    let date = row.date;
+    let time = row.time;
+    if (!date || !time) {
+      const ts = row.timestamp || row.Timestamp;
+      if (ts) {
+        const [d, t] = ts.split('T');
+        date = date || d;
+        time = time || (t ? t.substring(0, 8) : undefined);
+      }
+    }
+    if (!date || !time) return;
+    if (!grouped[date]) grouped[date] = {};
+    grouped[date][time] = {
+      Latitude: row.Latitude !== undefined ? row.Latitude : row.latitude,
+      Longitude: row.Longitude !== undefined ? row.Longitude : row.longitude
+    };
+  });
+  return grouped;
+}
 
 /**
  * Process and upload data to Firebase
@@ -301,6 +361,7 @@ export const generatePreviewData = (data, timestampConfig, columnMappings) => {
  * @param {Object} columnMappings - Column mappings
  * @param {Object} timestampConfig - Timestamp configuration
  * @param {Function} setUploadProgress - Function to update upload progress
+ * @param {Object} animalDetails - Animal details
  * @returns {Promise<void>}
  */
 export const processAndUploadData = async (
@@ -308,101 +369,213 @@ export const processAndUploadData = async (
   selectedFile,
   columnMappings,
   timestampConfig,
-  setUploadProgress
+  setUploadProgress,
+  animalDetails
 ) => {
-  // Process data for upload
-  const processedData = parsedData.map((row, index) => {
-    // Get coordinates
-    const lat = parseFloat(row[columnMappings.latitude]);
-    const lng = parseFloat(row[columnMappings.longitude]);
+  try {
+    // Upload file to Firebase Storage
+    const storage = getStorage();
+    const timestamp = new Date().getTime();
+    const fileName = `analysis_data/${timestamp}_${selectedFile.name}`;
+    const fileRef = storageRef(storage, fileName);
+
+    const uploadTask = await uploadBytes(fileRef, selectedFile);
+    setUploadProgress(50);
+
+    // Get download URL
+    const downloadURL = await getDownloadURL(uploadTask.ref);
     
-    // Process timestamp
-    let timestamp;
-    if (timestampConfig.format === 'auto' && columnMappings.timestamp) {
-      timestamp = new Date(row[columnMappings.timestamp]);
-    } else if (timestampConfig.format === 'custom') {
-      let dateStr = '';
-      let timeStr = '';
-      
-      if (timestampConfig.hasDate && timestampConfig.dateColumn) {
-        dateStr = row[timestampConfig.dateColumn] || timestampConfig.startDate;
-      } else {
-        dateStr = timestampConfig.startDate;
+    // Preprocess: add 'date' and 'time' fields if missing, using timestamp/Timestamp
+    const preprocessed = parsedData.map(row => {
+      let date = row.date;
+      let time = row.time;
+      const ts = row.timestamp || row.Timestamp;
+      if ((!date || !time) && ts) {
+        const [d, t] = ts.split('T');
+        date = date || d;
+        time = time || (t ? t.substring(0, 8) : undefined);
       }
-      
-      if (timestampConfig.hasTime && timestampConfig.timeColumn) {
-        timeStr = row[timestampConfig.timeColumn] || timestampConfig.startTime;
-      } else {
-        timeStr = timestampConfig.startTime;
-      }
-      
-      timestamp = new Date(`${dateStr}T${timeStr}`);
-    } else if (timestampConfig.format === 'interval') {
-      const startDateTime = new Date(`${timestampConfig.startDate}T${timestampConfig.startTime}`);
-      const intervalMs = timestampConfig.interval * 60 * 1000;
-      timestamp = new Date(startDateTime.getTime() + index * intervalMs);
-    }
-    
-    // Format the data
-    const dataPoint = {
-      location: {
-        Lat: lat,
-        Long: lng
-      },
-      timestamp: timestamp.toISOString(),
-      date: timestamp.toISOString().split('T')[0],
-      time: timestamp.toISOString().split('T')[1].substring(0, 8)
+      return { ...row, date, time };
+    });
+
+    // Store processed data (optionally chunked by date, or as flat array)
+    // Here, store as nested by date and time
+    const sanitized = preprocessed.map(sanitizeKeys);
+    const groupedData = groupDataByDateTime(sanitized);
+    console.log("Grouped data to be saved:", groupedData);
+    const animalData = {
+      ...animalDetails,
+      data: groupedData,
+      columnMappings,
+      timestampConfig
     };
-    
-    // Add optional fields if available
-    if (columnMappings.temperature && row[columnMappings.temperature]) {
-      dataPoint.temperature = parseFloat(row[columnMappings.temperature]);
+
+    // --- NEW LOGIC: Use species as grouping key ---
+    const database = getDatabase();
+    // Prefer animalDetails.species, fallback to columnMappings.species, fallback to 'UnknownSpecies'
+    const species = (animalDetails.species || columnMappings.species || 'UnknownSpecies').replace(/\s+/g, '_');
+    const speciesRef = dbRef(database, `AnalysisData/${species}`);
+
+    // Get next available ID for this species
+    let nextId = 1;
+    const snapshot = await get(speciesRef);
+    if (snapshot.exists()) {
+      const ids = Object.keys(snapshot.val()).map(Number).filter(n => !isNaN(n));
+      if (ids.length > 0) nextId = Math.max(...ids) + 1;
     }
+    const animalId = String(nextId);
+
+    // Write to AnalysisData/{species}/{animalId}
+    const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
+    await set(animalRef, animalData);
+    setUploadProgress(100);
     
-    if (columnMappings.heartRate && row[columnMappings.heartRate]) {
-      dataPoint.heartRate = parseFloat(row[columnMappings.heartRate]);
-    }
-    
-    if (columnMappings.animalId && row[columnMappings.animalId]) {
-      dataPoint.animalId = row[columnMappings.animalId];
-    }
-    
-    if (columnMappings.species && row[columnMappings.species]) {
-      dataPoint.species = row[columnMappings.species];
-    }
-    
-    return dataPoint;
-  });
-  
-  setUploadProgress(20);
-  
-  // Upload original file to Firebase Storage
-  const storage = getStorage();
-  const timestamp = new Date().getTime();
-  const fileName = `analysis_data/${timestamp}_${selectedFile.name}`;
-  const fileRef = storageRef(storage, fileName);
-  
-  await uploadBytes(fileRef, selectedFile);
-  setUploadProgress(50);
-  
-  const downloadURL = await getDownloadURL(fileRef);
-  setUploadProgress(70);
-  
-  // Store processed data in Realtime Database
+    return { success: true, downloadURL };
+  } catch (error) {
+    console.error('Upload error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Upload rows individually to Firebase, show progress, and verify upload.
+ * @param {Object[]} rows - Array of data rows to upload
+ * @param {string} species - Animal species (used in path)
+ * @param {string} animalId - Animal ID (used in path)
+ * @param {Function} setUploadProgress - Function to update upload progress
+ * @param {Function} setUploadStatus - Function to update upload status
+ * @param {Function} setUploadMessage - Function to update upload message
+ */
+export const uploadRowsIndividually = async (
+  rows,
+  species,
+  animalId,
+  setUploadProgress,
+  setUploadStatus,
+  setUploadMessage
+) => {
   const database = getDatabase();
-  const analysisRef = dbRef(database, 'analysis_data');
-  const newAnalysisRef = push(analysisRef);
-  
-  await set(newAnalysisRef, {
-    fileName: selectedFile.name,
-    originalFileURL: downloadURL,
-    uploadDate: timestamp,
-    columnMappings,
-    timestampConfig,
-    rowCount: processedData.length,
-    data: processedData,
-    status: 'processed'
-  });
-  
-  return true;
+  const dataRef = dbRef(database, `AnalysisData/${species}/${animalId}/data`);
+  let count = 0;
+
+  setUploadStatus && setUploadStatus('uploading');
+
+  for (const row of rows) {
+    await push(dataRef, row);
+    count++;
+    if (setUploadProgress) setUploadProgress(Math.round((count / rows.length) * 100));
+    if (setUploadMessage) setUploadMessage(`Uploading row ${count} of ${rows.length}`);
+  }
+
+  setUploadStatus && setUploadStatus('verifying');
+  setUploadMessage && setUploadMessage('Verifying uploaded data...');
+
+  // Read back the uploaded data to confirm
+  const snapshot = await get(dataRef);
+  if (snapshot.exists()) {
+    const uploadedCount = Object.keys(snapshot.val()).length;
+    setUploadMessage && setUploadMessage(`Upload complete! ${uploadedCount} rows uploaded and verified.`);
+    setUploadStatus && setUploadStatus('success');
+  } else {
+    setUploadMessage && setUploadMessage('Upload failed: No data found after upload.');
+    setUploadStatus && setUploadStatus('error');
+  }
+};
+
+/**
+ * Upload rows in chunks to Firebase, show progress, and verify upload.
+ * @param {Object[]} rows - Array of data rows to upload
+ * @param {string} species - Animal species (used in path)
+ * @param {string} animalId - Animal ID (used in path)
+ * @param {Function} setUploadProgress - Function to update upload progress
+ * @param {Function} setUploadStatus - Function to update upload status
+ * @param {Function} setUploadMessage - Function to update upload message
+ * @param {number} chunkSize - Number of rows per chunk (default: 500)
+ */
+export const uploadRowsInChunks = async (
+  rows,
+  species,
+  animalId,
+  setUploadProgress,
+  setUploadStatus,
+  setUploadMessage,
+  chunkSize = 500
+) => {
+  const database = getDatabase();
+  const dataRef = dbRef(database, `AnalysisData/${species}/${animalId}/data`);
+  let count = 0;
+  setUploadStatus && setUploadStatus('uploading');
+
+  for (let i = 0; i < rows.length; i += chunkSize) {
+    const chunk = rows.slice(i, i + chunkSize);
+    const updates = {};
+    chunk.forEach(row => {
+      // Use push-like keys for uniqueness
+      const newKey = dbRef(database).push().key;
+      updates[newKey] = row;
+    });
+    await update(dataRef, updates);
+    count += chunk.length;
+    if (setUploadProgress) setUploadProgress(Math.round((count / rows.length) * 100));
+    if (setUploadMessage) setUploadMessage(`Uploaded ${count} of ${rows.length} rows`);
+  }
+
+  setUploadStatus && setUploadStatus('verifying');
+  setUploadMessage && setUploadMessage('Verifying uploaded data...');
+
+  // Read back the uploaded data to confirm
+  const snapshot = await get(dataRef);
+  if (snapshot.exists()) {
+    const uploadedCount = Object.keys(snapshot.val()).length;
+    setUploadMessage && setUploadMessage(`Upload complete! ${uploadedCount} rows uploaded and verified.`);
+    setUploadStatus && setUploadStatus('success');
+  } else {
+    setUploadMessage && setUploadMessage('Upload failed: No data found after upload.');
+    setUploadStatus && setUploadStatus('error');
+  }
+};
+
+/**
+ * Upload rows in batches to Firestore and store animal details.
+ * @param {Object[]} rows - Array of data rows to upload
+ * @param {string} species - Animal species (used in path)
+ * @param {string} animalId - Animal ID (used in path)
+ * @param {Object} animalDetails - Animal details to store as a document
+ * @param {Function} setUploadProgress
+ * @param {Function} setUploadStatus
+ * @param {Function} setUploadMessage
+ * @param {number} batchSize
+ */
+export const uploadRowsToFirestore = async (
+  rows,
+  species,
+  animalId,
+  animalDetails,
+  setUploadProgress,
+  setUploadStatus,
+  setUploadMessage,
+  batchSize = 100
+) => {
+  const db = getFirestore();
+  // Store animal details as a document
+  await setDoc(doc(db, 'AnalysisData', species, animalId), animalDetails);
+  const dataCol = collection(db, 'AnalysisData', species, animalId, 'data');
+  let count = 0;
+  setUploadStatus && setUploadStatus('uploading');
+
+  for (let i = 0; i < rows.length; i += batchSize) {
+    const batch = writeBatch(db);
+    const chunk = rows.slice(i, i + batchSize);
+    chunk.forEach((row) => {
+      const docRef = doc(dataCol); // auto-ID
+      batch.set(docRef, row);
+    });
+    await batch.commit();
+    count += chunk.length;
+    if (setUploadProgress) setUploadProgress(Math.round((count / rows.length) * 100));
+    if (setUploadMessage) setUploadMessage(`Uploaded ${count} of ${rows.length} rows`);
+  }
+
+  setUploadStatus && setUploadStatus('success');
+  setUploadMessage && setUploadMessage(`Upload complete! ${rows.length} rows uploaded to Firestore.`);
 };

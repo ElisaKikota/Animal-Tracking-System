@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Container, 
   Typography, 
@@ -22,6 +22,7 @@ import ColumnMappingStep from './steps/ColumnMappingStep';
 import TimestampConfigStep from './steps/TimestampConfigStep';
 import PreviewAndUploadStep from './steps/PreviewAndUploadStep';
 import UploadCompleteStep from './steps/UploadCompleteStep';
+import AnimalDetailsStep from './steps/AnimalDetailsStep';
 
 // Import utility functions
 import { 
@@ -30,6 +31,18 @@ import {
   
   processAndUploadData 
 } from './utils/dataProcessingUtils';
+
+// Cache for processed data
+const dataCache = new Map();
+
+// Utility to remove rows with any empty/null/undefined cell
+function removeRowsWithEmptyCells(data) {
+  return data.filter(row =>
+    Object.values(row).every(
+      value => value !== null && value !== undefined && String(value).trim() !== ''
+    )
+  );
+}
 
 const AnalysisDataPage = () => {
   // File and data states
@@ -48,6 +61,8 @@ const AnalysisDataPage = () => {
     latitude: '',
     longitude: '',
     timestamp: '',
+    dateColumn: '',
+    timeColumn: '',
     temperature: '',
     heartRate: '',
     animalId: '',
@@ -75,45 +90,101 @@ const AnalysisDataPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [previewData, setPreviewData] = useState([]);
 
+  const [animalDetails, setAnimalDetails] = useState({
+    category: '',
+    name: '',
+    age: '',
+    sex: '',
+    upload_interval: 60
+  });
+
+  const [skipErrors, setSkipErrors] = useState(false);
+  const [allRowsInvalid, setAllRowsInvalid] = useState(false);
+  const [removedRowsCount, setRemovedRowsCount] = useState(0);
+  const [originalRowsCount, setOriginalRowsCount] = useState(0);
+
+  const [hasBlockingErrors, setHasBlockingErrors] = useState(false);
+
   const steps = [
     'Upload CSV',
     'Validate Data',
     'Map Columns',
     'Configure Timestamps',
+    'Animal Details',
     'Preview & Upload'
   ];
 
-  // Handle file selection
-  const handleFileUpload = (event) => {
+  // Memoize the processed data to prevent unnecessary recalculations
+  const processedData = useMemo(() => {
+    if (!parsedData) return null;
+    
+    const cacheKey = JSON.stringify({
+      data: parsedData,
+      mappings: columnMappings,
+      config: timestampConfig
+    });
+    
+    if (dataCache.has(cacheKey)) {
+      return dataCache.get(cacheKey);
+    }
+    
+    const { processedPreviewData } = validateData(
+      parsedData,
+      columnMappings,
+      timestampConfig
+    );
+    
+    dataCache.set(cacheKey, processedPreviewData);
+    return processedPreviewData;
+  }, [parsedData, columnMappings, timestampConfig]);
+
+  // Update preview data when processed data changes
+  useEffect(() => {
+    if (processedData) {
+      setPreviewData(processedData);
+    }
+  }, [processedData]);
+
+  // Handle file upload with optimized parsing
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
     setSelectedFile(file);
+    setIsValidating(true);
     setValidationErrors([]);
     setValidationWarnings([]);
-    setUploadStatus('');
-    setUploadProgress(0);
-    setActiveStep(0);
+    setParsedData(null);
+    setHeaderRow([]);
+    setOriginalRowsCount(0);
+    setRemovedRowsCount(0);
 
-    // Parse the CSV file
-    setIsValidating(true);
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      dynamicTyping: true, // Automatically convert strings to numbers where appropriate
+      transformHeader: header => header.trim(), // Clean up header names
       complete: (results) => {
-        const headers = results.meta.fields || [];
+        const headers = results.meta.fields;
         setHeaderRow(headers);
-        setParsedData(results.data || []);
-        setPreviewData(results.data?.slice(0, 5) || []);
-        setIsValidating(false);
         
-        // Auto-detect possible column mappings
-        if (headers.length > 0 && results.data && results.data.length > 0) {
-          const { detectedMappings, detectedTimestampConfig } = 
-            autoDetectColumns(headers, results.data, columnMappings, timestampConfig);
-          setColumnMappings(detectedMappings);
-          setTimestampConfig(detectedTimestampConfig);
+        // Process data in chunks to prevent UI blocking
+        const chunkSize = 1000;
+        const chunks = [];
+        for (let i = 0; i < results.data.length; i += chunkSize) {
+          chunks.push(results.data.slice(i, i + chunkSize));
         }
+
+        let processedData = [];
+        chunks.forEach(chunk => {
+          const validRows = removeRowsWithEmptyCells(chunk);
+          processedData = processedData.concat(validRows);
+        });
+
+        setOriginalRowsCount(results.data.length);
+        setRemovedRowsCount(results.data.length - processedData.length);
+        setParsedData(processedData);
+        setIsValidating(false);
       },
       error: (error) => {
         setValidationErrors([`Error parsing file: ${error.message}`]);
@@ -126,17 +197,29 @@ const AnalysisDataPage = () => {
   const handleValidation = () => {
     if (!parsedData || parsedData.length === 0) {
       setValidationErrors(['No data to validate']);
+      setHasBlockingErrors(true);
       return false;
     }
     
+    // Do NOT check for required columns in Validate Data step
     const { isValid, errors, warnings, processedPreviewData } = validateData(
       parsedData,
       columnMappings,
-      timestampConfig
+      timestampConfig,
+      false // <--- do not check required columns here
     );
     
     setValidationErrors(errors || []);
     setValidationWarnings(warnings || []);
+    
+    // Only treat file/data issues as blocking in validation step
+    const blockingErrorPatterns = [
+      /No data found/i
+    ];
+    const hasBlocking = (errors || []).some(err => blockingErrorPatterns.some(pat => pat.test(err)));
+    setHasBlockingErrors(hasBlocking);
+    
+    // Update the preview data with processed data
     if (processedPreviewData && processedPreviewData.length > 0) {
       setPreviewData(processedPreviewData);
     }
@@ -160,7 +243,8 @@ const AnalysisDataPage = () => {
         selectedFile,
         columnMappings,
         timestampConfig,
-        setUploadProgress
+        setUploadProgress,
+        animalDetails
       );
       
       setUploadProgress(100);
@@ -172,21 +256,39 @@ const AnalysisDataPage = () => {
     }
   };
 
-  // Step navigation handlers
-  const handleNext = () => {
+  // Handle next step
+  const handleNext = async () => {
     if (activeStep === 1) {
-      const isValid = handleValidation();
-      if (!isValid) return;
+      // Validate data before proceeding
+      if (!handleValidation()) {
+        return;
+      }
+      // If skipErrors is true, filter parsedData and update it
+      if (skipErrors && validationErrors.length > 0) {
+        // Extract row numbers from error messages
+        const errorRows = validationErrors
+          .map(err => {
+            const match = err.match(/Row\s*(\d+)/i);
+            return match ? parseInt(match[1], 10) - 1 : null;
+          })
+          .filter(idx => idx !== null);
+        const uniqueErrorRows = Array.from(new Set(errorRows));
+        const filtered = parsedData.filter((row, idx) => !uniqueErrorRows.includes(idx));
+        setParsedData(filtered);
+        // Also update preview data to maintain consistency
+        setPreviewData(filtered.slice(0, 5));
+      }
     }
-    
-    if (activeStep === 4) {
-      handleDataUpload();
+    if (activeStep === 5) {
+      // Upload to database on Preview & Upload step
+      await handleDataUpload();
+      setActiveStep((prevStep) => prevStep + 1);
       return;
     }
-    
     setActiveStep((prevStep) => prevStep + 1);
   };
-  
+
+  // Handle back step
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
   };
@@ -209,37 +311,64 @@ const AnalysisDataPage = () => {
             validationErrors={validationErrors}
             validationWarnings={validationWarnings}
             previewData={previewData.slice(0, 3)}
+            setParsedData={setParsedData}
+            parsedData={parsedData}
+            skipErrors={skipErrors}
+            setSkipErrors={setSkipErrors}
+            setAllRowsInvalid={setAllRowsInvalid}
+            columnMappings={columnMappings}
+            removedRowsCount={removedRowsCount}
+            originalRowsCount={originalRowsCount}
           />
         );
       case 2:
+        // In Map Columns step, check for required columns
         return (
           <ColumnMappingStep 
             headerRow={headerRow}
             columnMappings={columnMappings}
             setColumnMappings={setColumnMappings}
             previewData={previewData}
+            validateData={validateData}
+            parsedData={parsedData}
+            timestampConfig={timestampConfig}
           />
         );
       case 3:
+        // If both dateColumn and timeColumn are mapped, preselect custom format
+        const autoCustomFormat = columnMappings.dateColumn && columnMappings.timeColumn ? 'custom' : timestampConfig.format;
         return (
           <TimestampConfigStep 
-            timestampConfig={timestampConfig}
+            timestampConfig={{ ...timestampConfig, format: autoCustomFormat, dateColumn: columnMappings.dateColumn, timeColumn: columnMappings.timeColumn }}
             setTimestampConfig={setTimestampConfig}
             headerRow={headerRow}
             columnMappings={columnMappings}
+            previewData={previewData}
           />
         );
       case 4:
+        return (
+          <AnimalDetailsStep
+            animalDetails={animalDetails}
+            setAnimalDetails={setAnimalDetails}
+          />
+        );
+      case 5:
         return (
           <PreviewAndUploadStep 
             previewData={previewData}
             uploadStatus={uploadStatus}
             uploadProgress={uploadProgress}
             columnMappings={columnMappings}
+            animalDetails={animalDetails}
           />
         );
-      case 5:
-        return <UploadCompleteStep />;
+      case 6:
+        return <UploadCompleteStep 
+          originalRows={originalRowsCount}
+          removedRows={removedRowsCount}
+          remainingRows={originalRowsCount - removedRowsCount}
+        />;
       default:
         return <div>Unknown step</div>;
     }
@@ -254,6 +383,10 @@ const AnalysisDataPage = () => {
       steps
     });
   }, [activeStep, headerRow, parsedData]);
+
+  // Add this before the return statement
+  const requiredColumnsMapped = columnMappings.latitude && columnMappings.longitude &&
+    (columnMappings.timestamp || (columnMappings.dateColumn && columnMappings.timeColumn));
 
   return (
     <Container maxWidth="lg" className="standard-page">
@@ -282,17 +415,25 @@ const AnalysisDataPage = () => {
             >
               Back
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleNext}
-              endIcon={activeStep === steps.length - 1 ? <Save /> : <ChevronRight />}
-              disabled={!selectedFile || isValidating || 
-                      (activeStep === 4 && uploadStatus === 'uploading') || 
-                      (activeStep === 4 && uploadStatus === 'success')}
-            >
-              {activeStep === steps.length - 1 ? 'Upload to Database' : 'Next'}
-            </Button>
+            {/* Only show Next/Upload button if not on or past the last step */}
+            {activeStep < steps.length && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                endIcon={activeStep === steps.length - 1 ? <Save /> : <ChevronRight />}
+                disabled={
+                  !selectedFile || 
+                  isValidating || 
+                  (activeStep === 5 && uploadStatus === 'uploading') || 
+                  (activeStep === 5 && uploadStatus === 'success') ||
+                  (activeStep === 1 && (allRowsInvalid || hasBlockingErrors)) ||
+                  (activeStep === 2 && !requiredColumnsMapped)
+                }
+              >
+                {activeStep === steps.length - 1 ? 'Upload to Database' : 'Next'}
+              </Button>
+            )}
           </Box>
         </Box>
       </Paper>

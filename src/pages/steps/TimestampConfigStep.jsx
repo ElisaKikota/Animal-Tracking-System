@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Box,
@@ -14,11 +14,25 @@ import {
   FormControlLabel,
   Checkbox,
   Alert,
-  AlertTitle
+  AlertTitle,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
 } from '@mui/material';
+import { generatePreviewData } from '../utils/dataProcessingUtils';
 
+const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, columnMappings, previewData }) => {
+  const [livePreview, setLivePreview] = useState([]);
 
-const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, columnMappings }) => {
+  useEffect(() => {
+    if (previewData && previewData.length > 0) {
+      const processed = generatePreviewData(previewData, timestampConfig, columnMappings);
+      setLivePreview(processed);
+    }
+  }, [timestampConfig, previewData, columnMappings]);
+
   const handleConfigChange = (field, value) => {
     setTimestampConfig({
       ...timestampConfig,
@@ -256,6 +270,46 @@ const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, c
         </Paper>
       )}
       
+      <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>
+        Live Timestamp Preview
+      </Typography>
+      <Paper sx={{ maxWidth: 600, mb: 2 }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              {columnMappings.timestamp && <TableCell>Original Timestamp</TableCell>}
+              <TableCell>Day</TableCell>
+              <TableCell>Time</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {livePreview.length > 0 ? (
+              livePreview.map((row, idx) => {
+                let day = '';
+                let time = '';
+                if (row._processedTimestamp && row._processedTimestamp !== 'Invalid date') {
+                  const [d, t] = row._processedTimestamp.split('T');
+                  day = d;
+                  time = t ? t.substring(0, 8) : '';
+                }
+                return (
+                  <TableRow key={idx}>
+                    {columnMappings.timestamp && <TableCell>{row[columnMappings.timestamp]}</TableCell>}
+                    <TableCell>{day}</TableCell>
+                    <TableCell>{time}</TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columnMappings.timestamp ? 3 : 2} align="center">
+                  No data to preview. Please upload a file and map columns.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Paper>
       <Alert severity="info">
         <AlertTitle>Timestamp Information</AlertTitle>
         <Typography variant="body2" paragraph>

@@ -7,12 +7,20 @@ import {
   AlertTitle,
   Button,
   CircularProgress,
-  LinearProgress
+  LinearProgress,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TextField
 } from '@mui/material';
 import Papa from 'papaparse';
 import { Upload, Save } from 'lucide-react';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as dbRef, push, set } from 'firebase/database';
+import { getDatabase, ref as dbRef, push, set, get } from 'firebase/database';
+import { processAndUploadData, uploadRowsToFirestore } from './utils/dataProcessingUtils';
 
 const expectedColumns = [
   'event-id',
@@ -38,6 +46,12 @@ const AnalysisInput = () => {
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [animalName, setAnimalName] = useState('');
+  const [animalAge, setAnimalAge] = useState('');
+  const [animalSex, setAnimalSex] = useState('');
+  const [uploadInterval, setUploadInterval] = useState('60');
+  const [animalSpecies, setAnimalSpecies] = useState('');
+  const [uploadMessage, setUploadMessage] = useState('');
 
   const validateDataTypes = (results) => {
     const errors = [];
@@ -121,39 +135,69 @@ const AnalysisInput = () => {
     try {
       setUploadStatus('uploading');
       setUploadProgress(0);
-
-      // Upload file to Firebase Storage
-      const storage = getStorage();
-      const timestamp = new Date().getTime();
-      const fileName = `analysis_data/${timestamp}_${selectedFile.name}`;
-      const fileRef = storageRef(storage, fileName);
-
-      // Upload the file
-      const uploadTask = await uploadBytes(fileRef, selectedFile);
-      setUploadProgress(50);
-
-      // Get the download URL
-      const downloadURL = await getDownloadURL(uploadTask.ref);
+      setUploadMessage('Preparing upload...');
       
-      // Store metadata in Realtime Database
+      // Compose animal details object
+      const animalDetails = {
+        name: animalName,
+        age: animalAge,
+        sex: animalSex,
+        upload_interval: uploadInterval,
+        species: animalSpecies
+      };
+
+      // Map the columns based on the expected structure
+      const columnMappings = {
+        latitude: 'location-lat',
+        longitude: 'location-long',
+        timestamp: 'timestamp',
+        temperature: 'eobs:temperature',
+        animalId: 'individual-local-identifier',
+        species: 'individual-taxon-canonical-name'
+      };
+
+      // Configure timestamp settings
+      const timestampConfig = {
+        format: 'auto',  // Use auto format since we have a timestamp column
+        hasDate: true,
+        hasTime: true
+      };
+
+      // --- Create animal node and get animalId ---
       const database = getDatabase();
-      const analysisRef = dbRef(database, 'analysis_data');
-      const newAnalysisRef = push(analysisRef);
-      
-      await set(newAnalysisRef, {
-        fileName: selectedFile.name,
-        uploadDate: timestamp,
-        fileURL: downloadURL,
-        rowCount: fileData.length,
-        status: 'uploaded'
+      const speciesKey = animalSpecies.replace(/\s+/g, '_') || 'UnknownSpecies';
+      const speciesRef = dbRef(database, `AnalysisData/${speciesKey}`);
+      let nextId = 1;
+      const snapshot = await get(speciesRef);
+      if (snapshot.exists()) {
+        const ids = Object.keys(snapshot.val()).map(Number).filter(n => !isNaN(n));
+        if (ids.length > 0) nextId = Math.max(...ids) + 1;
+      }
+      const animalId = String(nextId);
+      const animalRef = dbRef(database, `AnalysisData/${speciesKey}/${animalId}`);
+      await set(animalRef, {
+        ...animalDetails,
+        columnMappings,
+        timestampConfig
       });
+      setUploadMessage('Animal details uploaded. Uploading data rows...');
 
-      setUploadProgress(100);
-      setUploadStatus('success');
+      // --- Upload data rows to Firestore in batches of 100 ---
+      await uploadRowsToFirestore(
+        fileData,
+        speciesKey,
+        animalId,
+        animalDetails,
+        setUploadProgress,
+        setUploadStatus,
+        setUploadMessage,
+        100
+      );
     } catch (error) {
       console.error('Upload error:', error);
       setUploadStatus('error');
       setValidationErrors([...validationErrors, `Upload error: ${error.message}`]);
+      setUploadMessage('Upload failed due to an error.');
     }
   };
 
@@ -218,7 +262,114 @@ const AnalysisInput = () => {
             <AlertTitle>Success</AlertTitle>
             File validation successful! {fileData?.length} rows loaded.
           </Alert>
-          
+
+          {/* Animal Details Preview */}
+          <Paper sx={{ p: 2, mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Animal Details to be Uploaded
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
+              <Box>
+                <Typography variant="subtitle2" color="textSecondary">Name</Typography>
+                <Typography>{animalName || 'Not specified'}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2" color="textSecondary">Species</Typography>
+                <Typography>{animalSpecies || 'Not specified'}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2" color="textSecondary">Age</Typography>
+                <Typography>{animalAge || 'Not specified'}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2" color="textSecondary">Sex</Typography>
+                <Typography>{animalSex || 'Not specified'}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2" color="textSecondary">Upload Interval</Typography>
+                <Typography>{uploadInterval} minutes</Typography>
+              </Box>
+            </Box>
+          </Paper>
+
+          {/* Data Preview */}
+          <Paper sx={{ p: 2, mb: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Data Preview (First 5 rows)
+            </Typography>
+            <Box sx={{ maxHeight: '200px', overflow: 'auto' }}>
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      {Object.keys(fileData[0] || {}).map((header) => (
+                        <TableCell key={header}>{header}</TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {fileData.slice(0, 5).map((row, index) => (
+                      <TableRow key={index}>
+                        {Object.values(row).map((value, i) => (
+                          <TableCell key={i}>{value}</TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+            <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+              Total rows to upload: {fileData.length}
+            </Typography>
+          </Paper>
+
+          {/* Input Fields */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, mx: 'auto', mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Animal Name"
+              value={animalName}
+              onChange={e => setAnimalName(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Age"
+              type="number"
+              value={animalAge}
+              onChange={e => setAnimalAge(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Sex"
+              value={animalSex}
+              onChange={e => setAnimalSex(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Upload Interval (minutes)"
+              type="number"
+              value={uploadInterval}
+              onChange={e => setUploadInterval(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Species"
+              value={animalSpecies}
+              onChange={e => setAnimalSpecies(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+          </Box>
+
           <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Button
               variant="contained"
@@ -232,26 +383,71 @@ const AnalysisInput = () => {
         </>
       )}
 
-      {uploadStatus === 'uploading' && (
-        <Box sx={{ mt: 2 }}>
-          <LinearProgress variant="determinate" value={uploadProgress} />
-          <Typography variant="body2" color="textSecondary" align="center" sx={{ mt: 1 }}>
-            Uploading... {uploadProgress}%
-          </Typography>
+      {/* Upload Progress Section */}
+      {(uploadStatus === 'uploading' || uploadStatus === 'verifying') && (
+        <Box sx={{ mt: 3 }}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Upload Progress
+            </Typography>
+            
+            {/* Overall Progress */}
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Overall Progress
+              </Typography>
+              <LinearProgress 
+                variant="determinate" 
+                value={uploadProgress} 
+                sx={{ height: 10, borderRadius: 5 }}
+              />
+              <Typography variant="body2" color="textSecondary" align="center" sx={{ mt: 1 }}>
+                {uploadProgress}% Complete
+              </Typography>
+            </Box>
+
+            {/* Data Upload Progress */}
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Data Upload Progress
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={uploadProgress} 
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
+                </Box>
+                <Typography variant="body2" color="textSecondary">
+                  {uploadProgress}%
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                {uploadMessage}
+              </Typography>
+            </Box>
+
+            {/* Status Message */}
+            <Alert severity="info" sx={{ mt: 2 }}>
+              <AlertTitle>Upload in Progress</AlertTitle>
+              {uploadMessage}
+            </Alert>
+          </Paper>
         </Box>
       )}
 
       {uploadStatus === 'success' && (
         <Alert severity="success" sx={{ mt: 2 }}>
           <AlertTitle>Upload Complete</AlertTitle>
-          File successfully uploaded to database!
+          {uploadMessage}
         </Alert>
       )}
 
       {uploadStatus === 'error' && (
         <Alert severity="error" sx={{ mt: 2 }}>
           <AlertTitle>Upload Failed</AlertTitle>
-          There was an error uploading the file. Please try again.
+          {uploadMessage}
         </Alert>
       )}
     </Paper>

@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { BarChart } from 'lucide-react';
 
-const PreviewAndUploadStep = ({ previewData, uploadStatus, uploadProgress, columnMappings }) => {
+const PreviewAndUploadStep = ({ previewData, uploadStatus, uploadProgress, columnMappings, animalDetails }) => {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -27,6 +27,35 @@ const PreviewAndUploadStep = ({ previewData, uploadStatus, uploadProgress, colum
         Review your processed data before uploading it to the database. 
         The following shows how your data will be stored.
       </Typography>
+      
+      {/* Animal Details Preview */}
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Typography variant="subtitle1" gutterBottom>
+          Animal Details to be Uploaded
+        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2 }}>
+          <Box>
+            <Typography variant="subtitle2" color="textSecondary">Name</Typography>
+            <Typography>{animalDetails?.name || 'Not specified'}</Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="textSecondary">Species</Typography>
+            <Typography>{animalDetails?.species || 'Not specified'}</Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="textSecondary">Age</Typography>
+            <Typography>{animalDetails?.age || 'Not specified'}</Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="textSecondary">Sex</Typography>
+            <Typography>{animalDetails?.sex || 'Not specified'}</Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="textSecondary">Upload Interval</Typography>
+            <Typography>{animalDetails?.upload_interval ? animalDetails.upload_interval + ' minutes' : 'Not specified'}</Typography>
+          </Box>
+        </Box>
+      </Paper>
       
       <TableContainer component={Paper} sx={{ mb: 4, maxHeight: 300, overflow: 'auto' }}>
         <Table stickyHeader size="small">
