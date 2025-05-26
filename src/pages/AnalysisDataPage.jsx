@@ -26,10 +26,9 @@ import AnimalDetailsStep from './steps/AnimalDetailsStep';
 
 // Import utility functions
 import { 
-  autoDetectColumns, 
   validateData, 
-  
-  processAndUploadData 
+  processAndUploadData,
+  uploadRowsToFirestore 
 } from './utils/dataProcessingUtils';
 
 // Cache for processed data
@@ -74,7 +73,6 @@ const AnalysisDataPage = () => {
     format: 'auto', // 'auto', 'custom', 'interval'
     startDate: new Date().toISOString().split('T')[0],
     startTime: '00:00',
-    interval: 60, // in minutes
     hasDate: true,
     hasTime: true,
     dateColumn: '',
@@ -94,8 +92,7 @@ const AnalysisDataPage = () => {
     category: '',
     name: '',
     age: '',
-    sex: '',
-    upload_interval: 60
+    sex: ''
   });
 
   const [skipErrors, setSkipErrors] = useState(false);
@@ -238,13 +235,26 @@ const AnalysisDataPage = () => {
       setUploadStatus('uploading');
       setUploadProgress(0);
       
-      await processAndUploadData(
+      const result = await processAndUploadData(
         parsedData,
         selectedFile,
         columnMappings,
         timestampConfig,
         setUploadProgress,
         animalDetails
+      );
+      
+      // Also upload to Firestore with the same structure
+      const species = (animalDetails.species || columnMappings.species || 'UnknownSpecies').replace(/\s+/g, '_');
+      const animalId = String(Math.floor(Math.random() * 1000)); // Generate a random ID for Firestore
+      await uploadRowsToFirestore(
+        parsedData,
+        species,
+        animalId,
+        animalDetails,
+        setUploadProgress,
+        setUploadStatus,
+        (msg) => console.log(msg)
       );
       
       setUploadProgress(100);
@@ -382,6 +392,7 @@ const AnalysisDataPage = () => {
       parsedData: parsedData?.length,
       steps
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep, headerRow, parsedData]);
 
   // Add this before the return statement

@@ -4,6 +4,10 @@ import { CalendarIcon } from 'lucide-react';
 
 const DateRangeSelector = ({ startDate, endDate, onDateRangeChange }) => {
   const formatDateForInput = (date) => {
+    if (!date || !(date instanceof Date) || isNaN(date)) {
+      // Return today's date as fallback
+      return new Date().toISOString().split('T')[0];
+    }
     return date.toISOString().split('T')[0];
   };
 

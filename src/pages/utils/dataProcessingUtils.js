@@ -1,6 +1,7 @@
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push, set, get, update } from 'firebase/database';
 import { getFirestore, collection, doc, setDoc, writeBatch } from 'firebase/firestore';
+import Papa from 'papaparse';
 
 // Cache for column detection results
 const columnDetectionCache = new Map();
@@ -321,7 +322,7 @@ export const generatePreviewData = (data, timestampConfig, columnMappings) => {
 
 // Utility to sanitize object keys for Firebase
 function sanitizeKeys(obj) {
-  const forbidden = /[.#$/\[\]]/g;
+  const forbidden = /[.#$/[\]]/g;
   const newObj = {};
   for (const key in obj) {
     const cleanKey = key.replace(forbidden, '_');
@@ -373,18 +374,6 @@ export const processAndUploadData = async (
   animalDetails
 ) => {
   try {
-    // Upload file to Firebase Storage
-    const storage = getStorage();
-    const timestamp = new Date().getTime();
-    const fileName = `analysis_data/${timestamp}_${selectedFile.name}`;
-    const fileRef = storageRef(storage, fileName);
-
-    const uploadTask = await uploadBytes(fileRef, selectedFile);
-    setUploadProgress(50);
-
-    // Get download URL
-    const downloadURL = await getDownloadURL(uploadTask.ref);
-    
     // Preprocess: add 'date' and 'time' fields if missing, using timestamp/Timestamp
     const preprocessed = parsedData.map(row => {
       let date = row.date;
@@ -398,21 +387,13 @@ export const processAndUploadData = async (
       return { ...row, date, time };
     });
 
-    // Store processed data (optionally chunked by date, or as flat array)
-    // Here, store as nested by date and time
+    // Sanitize keys and group data by date and time
     const sanitized = preprocessed.map(sanitizeKeys);
     const groupedData = groupDataByDateTime(sanitized);
     console.log("Grouped data to be saved:", groupedData);
-    const animalData = {
-      ...animalDetails,
-      data: groupedData,
-      columnMappings,
-      timestampConfig
-    };
 
     // --- NEW LOGIC: Use species as grouping key ---
     const database = getDatabase();
-    // Prefer animalDetails.species, fallback to columnMappings.species, fallback to 'UnknownSpecies'
     const species = (animalDetails.species || columnMappings.species || 'UnknownSpecies').replace(/\s+/g, '_');
     const speciesRef = dbRef(database, `AnalysisData/${species}`);
 
@@ -427,10 +408,23 @@ export const processAndUploadData = async (
 
     // Write to AnalysisData/{species}/{animalId}
     const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
-    await set(animalRef, animalData);
+    await set(animalRef, animalDetails);
+    setUploadProgress(50);
+
+    // --- NEW LOGIC: Produce CSV file and upload to Firebase Storage ---
+    const csv = Papa.unparse(parsedData);
+    const csvBlob = new Blob([csv], { type: 'text/csv' });
+    const storage = getStorage();
+    const csvFileName = `PredictiveData/${species}/${animalId}.csv`;
+    const csvFileRef = storageRef(storage, csvFileName);
+    const csvUploadTask = await uploadBytes(csvFileRef, csvBlob);
+    const csvDownloadURL = await getDownloadURL(csvUploadTask.ref);
+
+    // Store the CSV download URL in the Realtime Database
+    await set(animalRef, { ...animalDetails, csvDownloadURL });
     setUploadProgress(100);
-    
-    return { success: true, downloadURL };
+
+    return { success: true, downloadURL: csvDownloadURL };
   } catch (error) {
     console.error('Upload error:', error);
     throw error;

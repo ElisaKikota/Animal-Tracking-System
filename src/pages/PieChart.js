@@ -1,7 +1,6 @@
 // src/pages/PieChart.js
 import React, { useRef, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { Typography } from '@mui/material';
 import './chartConfig';  // Remove the unused import and just import the file
 
 function PieChart({ data }) {

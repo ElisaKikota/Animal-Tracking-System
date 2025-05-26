@@ -441,7 +441,7 @@ const Map = ({
       console.log('Cleaning up animal data listeners');
       unsubscribes.forEach(unsubscribe => unsubscribe());
     };
-  }, [database]);
+  }, []);
 
   // Fetch patrol data
   useEffect(() => {

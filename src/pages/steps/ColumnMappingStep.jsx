@@ -21,7 +21,6 @@ import {
 import { 
   HelpCircle,
   MapPin,
-  Clock,
   ThermometerIcon,
   Heart,
   BarChart

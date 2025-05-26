@@ -17,8 +17,6 @@ import * as tf from '@tensorflow/tfjs';
 import { IsolationForest } from 'isolation-forest';
 
 const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
-  const [anomalies, setAnomalies] = useState([]);
-  const [predictions, setPredictions] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState(null);
   const [modelType, setModelType] = useState('lstm'); // 'lstm' or 'rf'
@@ -102,8 +100,6 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
         .filter(({ score }) => score < 0)
         .map(({ index }) => locationMap.get(index));
 
-      setAnomalies(detectedAnomalies);
-
       // Add markers to map
       detectedAnomalies.forEach(anomaly => {
         const circle = L.circle([anomaly.lat, anomaly.lng], {
@@ -149,8 +145,6 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
         }
       });
       markersRef.current = [];
-
-      const predictions = [];
 
       for (const animalId of selectedAnimals) {
         const animal = animalData.find(a => a.id === animalId);
@@ -224,8 +218,6 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
           }
         };
 
-        predictions.push(predictionData);
-
         // Add markers to map
         const lastKnownCircle = L.circle([predictionData.lastKnownPosition.lat, predictionData.lastKnownPosition.lng], {
           radius: 50,
@@ -277,8 +269,6 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
         prediction.dispose();
         model.dispose();
       }
-
-      setPredictions(predictions);
     } catch (err) {
       setError(err.message);
     } finally {
