@@ -7,13 +7,25 @@ import {
   Button,
   Stepper,
   Step,
-  StepLabel
+  StepLabel,
+  Tabs,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material';
-import { ChevronRight, ChevronLeft, Save } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Save, Trash } from 'lucide-react';
 import Papa from 'papaparse';
-
-
-
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // Important: Import each component with explicit path
 import UploadStep from './steps/UploadStep';
@@ -29,7 +41,9 @@ import {
   validateData, 
   processAndUploadData,
   uploadRowsToFirestore,
-  autoDetectColumns
+  autoDetectColumns,
+  fetchAllUploadedDatasets,
+  deleteUploadedDataset
 } from './utils/dataProcessingUtils';
 
 // Cache for processed data
@@ -104,6 +118,14 @@ const AnalysisDataPage = () => {
   const [hasBlockingErrors, setHasBlockingErrors] = useState(false);
 
   const [renamedHeaders, setRenamedHeaders] = useState({});
+
+  const [tab, setTab] = useState(0); // 0 = Upload, 1 = Management
+  const [uploadedDatasets, setUploadedDatasets] = useState([]);
+  const [loadingDatasets, setLoadingDatasets] = useState(false);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null); // {species, animalId, csvDownloadURL}
+  const [deleting, setDeleting] = useState(false);
 
   const steps = [
     'Upload CSV',
@@ -378,6 +400,7 @@ const AnalysisDataPage = () => {
             headerRow={headerRow}
             columnMappings={columnMappings}
             previewData={previewData}
+            renamedHeaders={renamedHeaders}
           />
         );
       case 4:
@@ -423,54 +446,160 @@ const AnalysisDataPage = () => {
   const requiredColumnsMapped = columnMappings.latitude && columnMappings.longitude &&
     (columnMappings.timestamp || (columnMappings.dateColumn && columnMappings.timeColumn));
 
+  useEffect(() => {
+    if (tab === 1) {
+      setLoadingDatasets(true);
+      fetchAllUploadedDatasets().then(data => {
+        setUploadedDatasets(data);
+        setLoadingDatasets(false);
+      });
+    }
+  }, [tab]);
+
+  const handleDeleteClick = (row) => {
+    setDeleteTarget(row);
+    setDeleteDialogOpen(true);
+  };
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setDeleteTarget(null);
+  };
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    await deleteUploadedDataset(deleteTarget.species, deleteTarget.animalId, deleteTarget.csvDownloadURL);
+    setDeleting(false);
+    setDeleteDialogOpen(false);
+    setDeleteTarget(null);
+    // Refresh table
+    setLoadingDatasets(true);
+    fetchAllUploadedDatasets().then(data => {
+      setUploadedDatasets(data);
+      setLoadingDatasets(false);
+    });
+  };
+
   return (
     <Container maxWidth="lg" className="standard-page">
       <Typography variant="h4" component="h1" gutterBottom sx={{ mt: 4 }}>
-        Analysis Data Upload
+        Analysis Data Upload & Management
       </Typography>
       
       <Paper sx={{ p: 4, mb: 4 }}>
-        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-          {steps.map((label, index) => (
-            <Step key={index}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 4 }}>
+          <Tab label="Upload Data" />
+          <Tab label="Manage Uploaded Data" />
+        </Tabs>
         
-        <Box>
-          {getStepContent(activeStep)}
-          
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-            <Button
-              variant="outlined"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              startIcon={<ChevronLeft />}
-            >
-              Back
-            </Button>
-            {/* Only show Next/Upload button if not on or past the last step */}
-            {activeStep < steps.length && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                endIcon={activeStep === steps.length - 1 ? <Save /> : <ChevronRight />}
-                disabled={
-                  !selectedFile || 
-                  isValidating || 
-                  (activeStep === 5 && uploadStatus === 'uploading') || 
-                  (activeStep === 5 && uploadStatus === 'success') ||
-                  (activeStep === 1 && (allRowsInvalid || hasBlockingErrors)) ||
-                  (activeStep === 2 && !requiredColumnsMapped)
-                }
-              >
-                {activeStep === steps.length - 1 ? 'Upload to Database' : 'Next'}
-              </Button>
+        {tab === 0 && (
+          <>
+            <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+              {steps.map((label, index) => (
+                <Step key={index}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            
+            <Box>
+              {getStepContent(activeStep)}
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                <Button
+                  variant="outlined"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  startIcon={<ChevronLeft />}
+                >
+                  Back
+                </Button>
+                {/* Only show Next/Upload button if not on or past the last step */}
+                {activeStep < steps.length && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    endIcon={activeStep === steps.length - 1 ? <Save /> : <ChevronRight />}
+                    disabled={
+                      !selectedFile || 
+                      isValidating || 
+                      (activeStep === 5 && uploadStatus === 'uploading') || 
+                      (activeStep === 5 && uploadStatus === 'success') ||
+                      (activeStep === 1 && (allRowsInvalid || hasBlockingErrors)) ||
+                      (activeStep === 2 && !requiredColumnsMapped)
+                    }
+                  >
+                    {activeStep === steps.length - 1 ? 'Upload to Database' : 'Next'}
+                  </Button>
+                )}
+              </Box>
+            </Box>
+          </>
+        )}
+        {tab === 1 && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>Uploaded Datasets</Typography>
+            {loadingDatasets ? (
+              <Typography>Loading...</Typography>
+            ) : uploadedDatasets.length === 0 ? (
+              <Typography>No datasets found.</Typography>
+            ) : (
+              <TableContainer component={Paper}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Species</TableCell>
+                      <TableCell>Animal ID</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Sex</TableCell>
+                      <TableCell>Age</TableCell>
+                      <TableCell>Data Points</TableCell>
+                      <TableCell>CSV File</TableCell>
+                      <TableCell align="center">Delete</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {uploadedDatasets.map((row, i) => (
+                      <TableRow key={row.species + '-' + row.animalId + '-' + i}>
+                        <TableCell>{row.species}</TableCell>
+                        <TableCell>{row.animalId}</TableCell>
+                        <TableCell>{row.name || '-'}</TableCell>
+                        <TableCell>{row.sex || '-'}</TableCell>
+                        <TableCell>{row.age || '-'}</TableCell>
+                        <TableCell>{row.dataPoints ?? '-'}</TableCell>
+                        <TableCell>
+                          {row.csvDownloadURL ? (
+                            <a href={row.csvDownloadURL} target="_blank" rel="noopener noreferrer">Download</a>
+                          ) : '-'}
+                        </TableCell>
+                        <TableCell align="center">
+                          <IconButton size="small" onClick={() => handleDeleteClick(row)} color="error">
+                            <Trash size={18} />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             )}
+            {/* Delete confirmation dialog */}
+            <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+              <DialogTitle>Confirm Delete</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to delete this dataset? This will remove all details and the CSV file from storage. This action cannot be undone.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleDeleteCancel} disabled={deleting}>Cancel</Button>
+                <Button onClick={handleDeleteConfirm} color="error" disabled={deleting} startIcon={deleting ? <CircularProgress size={16} /> : <Trash size={16} />}>
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Box>
-        </Box>
+        )}
       </Paper>
     </Container>
   );

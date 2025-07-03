@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { generatePreviewData } from '../utils/dataProcessingUtils';
 
-const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, columnMappings, previewData }) => {
+const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, columnMappings, previewData, renamedHeaders }) => {
   const [livePreview, setLivePreview] = useState([]);
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, c
                       </MenuItem>
                       {headerRow.map((header) => (
                         <MenuItem key={header} value={header}>
-                          {header}
+                          {renamedHeaders && renamedHeaders[header] ? renamedHeaders[header] : header}
                         </MenuItem>
                       ))}
                     </Select>
@@ -194,7 +194,7 @@ const TimestampConfigStep = ({ timestampConfig, setTimestampConfig, headerRow, c
                       </MenuItem>
                       {headerRow.map((header) => (
                         <MenuItem key={header} value={header}>
-                          {header}
+                          {renamedHeaders && renamedHeaders[header] ? renamedHeaders[header] : header}
                         </MenuItem>
                       ))}
                     </Select>

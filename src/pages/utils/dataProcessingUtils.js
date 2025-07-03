@@ -1,4 +1,4 @@
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push, set, get, update } from 'firebase/database';
 import { getFirestore, collection, doc, setDoc, writeBatch } from 'firebase/firestore';
 import Papa from 'papaparse';
@@ -430,7 +430,7 @@ export const processAndUploadData = async (
 
     // Write to AnalysisData/{species}/{animalId}
     const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
-    await set(animalRef, animalDetails);
+    await set(animalRef, { ...animalDetails, dataPoints: renamedData.length });
     setUploadProgress(50);
 
     // --- NEW LOGIC: Produce CSV file and upload to Firebase Storage ---
@@ -443,8 +443,8 @@ export const processAndUploadData = async (
     const csvUploadTask = await uploadBytes(csvFileRef, csvBlob);
     const csvDownloadURL = await getDownloadURL(csvUploadTask.ref);
 
-    // Store the CSV download URL in the Realtime Database
-    await set(animalRef, { ...animalDetails, csvDownloadURL });
+    // Store the CSV download URL and dataPoints in the Realtime Database
+    await set(animalRef, { ...animalDetails, csvDownloadURL, dataPoints: renamedData.length });
     setUploadProgress(100);
 
     return { success: true, downloadURL: csvDownloadURL };
@@ -595,4 +595,69 @@ export const uploadRowsToFirestore = async (
 
   setUploadStatus && setUploadStatus('success');
   setUploadMessage && setUploadMessage(`Upload complete! ${rows.length} rows uploaded to Firestore.`);
+};
+
+/**
+ * Fetch all uploaded datasets from the AnalysisData node in Firebase Realtime Database.
+ * Returns an array of { species, animalId, ...animalDetails }
+ */
+export const fetchAllUploadedDatasets = async () => {
+  const database = getDatabase();
+  const analysisDataRef = dbRef(database, 'AnalysisData');
+  const snapshot = await get(analysisDataRef);
+  const result = [];
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    Object.entries(data).forEach(([species, animals]) => {
+      Object.entries(animals).forEach(([animalId, animalDetails]) => {
+        // Prefer dataPoints property if present
+        let dataPoints = 0;
+        if (typeof animalDetails.dataPoints === 'number') {
+          dataPoints = animalDetails.dataPoints;
+        } else if (animalDetails.data && typeof animalDetails.data === 'object') {
+          dataPoints = Object.keys(animalDetails.data).length;
+        }
+        result.push({
+          species,
+          animalId,
+          ...animalDetails,
+          dataPoints
+        });
+      });
+    });
+  }
+  return result;
+};
+
+/**
+ * Delete a dataset from Realtime Database and its CSV file from Firebase Storage.
+ * @param {string} species
+ * @param {string} animalId
+ * @param {string} csvDownloadURL (optional)
+ */
+export const deleteUploadedDataset = async (species, animalId, csvDownloadURL) => {
+  const database = getDatabase();
+  const storage = getStorage();
+  // Remove from Realtime Database
+  const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
+  await set(animalRef, null);
+  // Remove from Storage if URL is provided
+  if (csvDownloadURL) {
+    try {
+      // Convert download URL to storage path
+      const url = new URL(csvDownloadURL);
+      const pathMatch = url.pathname.match(/\/o\/(.+)$/);
+      let storagePath = null;
+      if (pathMatch && pathMatch[1]) {
+        storagePath = decodeURIComponent(pathMatch[1]);
+      }
+      if (storagePath) {
+        const fileRef = storageRef(storage, storagePath);
+        await deleteObject(fileRef);
+      }
+    } catch (err) {
+      // Ignore storage errors, but log
+      console.error('Error deleting file from storage:', err);
+    }
+  }
 };
