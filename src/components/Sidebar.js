@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Clock, Users, PawPrint, Database, Lock, LogOut, History } from 'lucide-react';
+import { Home, Clock, Users, PawPrint, Database, Lock, LogOut, History, Brain } from 'lucide-react';
 import './Sidebar.css';
 
 const Sidebar = ({ isSidebarOpen, setCurrentPage }) => {
@@ -12,6 +12,7 @@ const Sidebar = ({ isSidebarOpen, setCurrentPage }) => {
     { path: '/real_time', text: 'Real Time', icon: Clock },
     { path: '/analysis', text: 'Analysis', icon: History },
     { path: '/analysis_data', text: 'Analysis Data', icon: Database },
+    { path: '/models', text: 'Models', icon: Brain },
     { path: '/view_users', text: 'View Users', icon: Users },
     { path: '/view_animals', text: 'View Animals', icon: PawPrint },
     { path: '/change_password', text: 'Change Password', icon: Lock },

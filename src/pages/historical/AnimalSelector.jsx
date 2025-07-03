@@ -6,15 +6,16 @@ import {
   InputLabel, 
   Select, 
   MenuItem, 
-  Chip,
   OutlinedInput,
-  Checkbox,
-  ListItemText,
-  Button
+  Button,
+  Paper,
+  Fade,
+  Grid,
+  Chip
 } from '@mui/material';
 import { PawPrint } from 'lucide-react';
 
-const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed, onExpand }) => {
+const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed, onToggleCollapse }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState('');
 
@@ -34,14 +35,8 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
     setSearchTerm(event.target.value);
   };
 
-  const handleAnimalChange = (event) => {
-    const value = event.target.value;
-    onAnimalSelection(value);
-  };
-
-  const getAnimalName = (id) => {
-    const animal = animals.find(a => a.id === id);
-    return animal ? animal.name : id;
+  const handleSelectAnimal = (id) => {
+    onAnimalSelection([id]);
   };
 
   if (collapsed && selectedAnimals.length === 1) {
@@ -55,78 +50,91 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
           label={animal ? animal.name : selectedAnimals[0]}
           sx={{ mr: 1 }}
         />
-        <Button size="small" onClick={onExpand}>Edit</Button>
+        <Button size="small" onClick={onToggleCollapse}>Edit</Button>
       </Box>
     );
   }
 
   return (
-    <Box className="animal-selector">
-      <Typography variant="h6" className="section-title">
-        <PawPrint size={20} />
-        Select Animals to Track
-      </Typography>
-      
-      <Box className="filter-controls">
-        <FormControl className="species-filter" sx={{ minWidth: 120 }}>
-          <InputLabel>Species</InputLabel>
-          <Select
-            value={selectedSpecies}
-            onChange={handleSpeciesChange}
-            label="Species"
-          >
-            <MenuItem value="">All Species</MenuItem>
-            {speciesList.map(species => (
-              <MenuItem key={species} value={species}>{species}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        
-        <FormControl className="search-filter" sx={{ flex: 1 }}>
-          <InputLabel>Search Animals</InputLabel>
-          <OutlinedInput
-            value={searchTerm}
-            onChange={handleSearchChange}
-            label="Search Animals"
-          />
-        </FormControl>
-      </Box>
-      
-      <FormControl className="animal-multi-select" sx={{ width: '100%', mt: 2 }}>
-        <InputLabel>Select Animals</InputLabel>
-        <Select
-          multiple
-          value={selectedAnimals}
-          onChange={handleAnimalChange}
-          input={<OutlinedInput label="Select Animals" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={getAnimalName(value)} />
+    <Fade in timeout={400}>
+      <Paper elevation={1} sx={{ p: 1.5, borderRadius: 2, background: '#fff', width: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}>
+        <Typography variant="subtitle2" className="section-title" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600, fontSize: 15 }}>
+          <PawPrint size={18} /> Select Animal to Track
+        </Typography>
+        <Box className="filter-controls" sx={{ display: 'flex', gap: 1, mb: 1, width: '100%' }}>
+          <FormControl className="species-filter" sx={{ minWidth: 80 }} size="small">
+            <InputLabel>Species</InputLabel>
+            <Select
+              value={selectedSpecies}
+              onChange={handleSpeciesChange}
+              label="Species"
+              size="small"
+            >
+              <MenuItem value="">All</MenuItem>
+              {speciesList.map(species => (
+                <MenuItem key={species} value={species}>{species}</MenuItem>
               ))}
-            </Box>
+            </Select>
+          </FormControl>
+          <FormControl className="search-filter" sx={{ flex: 1, minWidth: 0 }} size="small">
+            <InputLabel>Search</InputLabel>
+            <OutlinedInput
+              value={searchTerm}
+              onChange={handleSearchChange}
+              label="Search"
+              size="small"
+            />
+          </FormControl>
+        </Box>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 320, overflowY: 'auto' }}>
+          {filteredAnimals.length === 0 && (
+            <Typography variant="body2" color="textSecondary" sx={{ fontSize: 13, textAlign: 'center' }}>No animals found.</Typography>
           )}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 48 * 4.5,
-                width: 250,
-              },
-            },
-          }}
-        >
-          {filteredAnimals.map((animal) => (
-            <MenuItem key={animal.id} value={animal.id}>
-              <Checkbox checked={selectedAnimals.indexOf(animal.id) > -1} />
-              <ListItemText 
-                primary={animal.name} 
-                secondary={`${animal.species}, ${animal.sex}, ${animal.age} years`} 
-              />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+          {filteredAnimals.map(animal => {
+            const isSelected = selectedAnimals.includes(animal.id);
+            return (
+              <Paper
+                key={animal.id}
+                elevation={isSelected ? 4 : 1}
+                sx={{
+                  p: 1.5,
+                  borderRadius: 1.5,
+                  border: isSelected ? '2px solid #1976d2' : '1px solid #e0e0e0',
+                  background: isSelected ? '#e3f2fd' : '#fff',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'stretch',
+                  transition: 'all 0.25s',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  fontSize: 13,
+                  minHeight: 56,
+                  mb: 1.5
+                }}
+              >
+                <Box sx={{ minWidth: 0, flex: 1, pr: 0, display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis' }}>{animal.name}</Typography>
+                  <Typography variant="caption" color="textSecondary" sx={{ fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {animal.species}, {animal.sex}, {animal.age} years
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: 0.5 }}>
+                  <Button
+                    variant={isSelected ? 'contained' : 'outlined'}
+                    color="primary"
+                    size="small"
+                    onClick={() => handleSelectAnimal(animal.id)}
+                    sx={{ minWidth: 80, fontSize: 12, transition: 'all 0.25s', backgroundColor: isSelected ? '#1976d2' : undefined, color: isSelected ? '#fff' : undefined }}
+                  >
+                    {isSelected ? 'Selected' : 'Select'}
+                  </Button>
+                </Box>
+              </Paper>
+            );
+          })}
+        </Box>
+      </Paper>
+    </Fade>
   );
 };
 

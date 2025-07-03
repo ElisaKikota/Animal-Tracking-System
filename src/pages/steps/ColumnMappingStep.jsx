@@ -16,7 +16,9 @@ import {
   AlertTitle,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  TextField,
+  Button
 } from '@mui/material';
 import { 
   HelpCircle,
@@ -26,7 +28,7 @@ import {
   BarChart
 } from 'lucide-react';
 
-const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previewData, parsedData }) => {
+const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previewData, parsedData, renamedHeaders, setRenamedHeaders }) => {
   const [timestampMode, setTimestampMode] = React.useState(
     columnMappings.dateColumn || columnMappings.timeColumn ? 'separate' : 'single'
   );
@@ -39,6 +41,30 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
       setTimestampMode('single');
     }
   }, [columnMappings.dateColumn, columnMappings.timeColumn, columnMappings.timestamp]);
+
+  // Add local state for renamed headers if not provided by parent
+  const [localRenamedHeaders, setLocalRenamedHeaders] = React.useState(() => {
+    if (renamedHeaders) return renamedHeaders;
+    const obj = {};
+    headerRow.forEach(h => { obj[h] = h; });
+    return obj;
+  });
+
+  // Sync with parent if provided
+  React.useEffect(() => {
+    if (setRenamedHeaders) setRenamedHeaders(localRenamedHeaders);
+  }, [localRenamedHeaders, setRenamedHeaders]);
+
+  // Handle header rename
+  const handleHeaderRename = (original, newName) => {
+    setLocalRenamedHeaders(prev => ({ ...prev, [original]: newName }));
+  };
+  const handleResetHeader = (original) => {
+    setLocalRenamedHeaders(prev => ({ ...prev, [original]: original }));
+  };
+
+  // Use renamed headers in dropdowns
+  const displayHeaders = headerRow.map(h => localRenamedHeaders[h] || h);
 
   const handleColumnChange = (field, value) => {
     setColumnMappings({
@@ -117,8 +143,31 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
       </Typography>
       
       <Typography variant="body1" paragraph>
-        Match your CSV columns to the required data fields. Required fields are marked with *.
+        Match your CSV columns to the required data fields. Required fields are marked with *. You can also rename headers below.
       </Typography>
+      
+      {/* Header renaming UI */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle1">Rename Headers</Typography>
+        <Grid container spacing={2}>
+          {headerRow.map((header, idx) => (
+            <Grid item xs={12} md={6} key={header}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <TextField
+                  label={`Header ${idx + 1}`}
+                  value={localRenamedHeaders[header] || header}
+                  onChange={e => handleHeaderRename(header, e.target.value)}
+                  size="small"
+                  sx={{ flex: 1 }}
+                />
+                {localRenamedHeaders[header] !== header && (
+                  <Button onClick={() => handleResetHeader(header)} size="small">Reset</Button>
+                )}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
       
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {columnTypes.filter(ct => ct.id === 'latitude' || ct.id === 'longitude').map((columnType) => (
@@ -174,10 +223,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {headerRow.map((header) => (
-                      <MenuItem key={header} value={header}>
-                        {header}
-                      </MenuItem>
+                    {displayHeaders.map((header, i) => (
+                      <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -241,8 +288,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
             label="Timestamp Column"
           >
             <MenuItem value=""><em>None</em></MenuItem>
-            {headerRow.map(header => (
-              <MenuItem key={header} value={header}>{header}</MenuItem>
+            {displayHeaders.map((header, i) => (
+              <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -259,8 +306,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
               label="Date Column"
             >
               <MenuItem value=""><em>None</em></MenuItem>
-              {headerRow.map(header => (
-                <MenuItem key={header} value={header}>{header}</MenuItem>
+              {displayHeaders.map((header, i) => (
+                <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -273,8 +320,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
               label="Time Column"
             >
               <MenuItem value=""><em>None</em></MenuItem>
-              {headerRow.map(header => (
-                <MenuItem key={header} value={header}>{header}</MenuItem>
+              {displayHeaders.map((header, i) => (
+                <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -336,10 +383,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {headerRow.map((header) => (
-                      <MenuItem key={header} value={header}>
-                        {header}
-                      </MenuItem>
+                    {displayHeaders.map((header, i) => (
+                      <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>

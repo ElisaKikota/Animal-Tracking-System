@@ -618,7 +618,7 @@ const Map = ({
         }
       });
     }
-  }, [patrolData, showPatrols, map.current]);
+  }, [patrolData, showPatrols]);
 
   return (
     <>

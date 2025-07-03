@@ -1,6 +1,21 @@
 {
   "rules": {
-    ".read": "true", 
-    ".write": "true"
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "Models": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$modelId": {
+        ".validate": "newData.hasChildren(['name', 'type', 'parameters', 'createdAt', 'status', 'storagePath'])",
+        "name": { ".validate": "newData.isString()" },
+        "type": { ".validate": "newData.isString() && (newData.val() === 'random_forest' || newData.val() === 'lstm')" },
+        "parameters": { ".validate": "newData.hasChildren()" },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "status": { ".validate": "newData.isString() && (newData.val() === 'created' || newData.val() === 'training' || newData.val() === 'trained')" },
+        "lastTrained": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "accuracy": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "storagePath": { ".validate": "newData.isString()" }
+      }
+    }
   }
 }

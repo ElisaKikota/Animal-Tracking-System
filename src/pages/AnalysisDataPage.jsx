@@ -28,7 +28,8 @@ import AnimalDetailsStep from './steps/AnimalDetailsStep';
 import { 
   validateData, 
   processAndUploadData,
-  uploadRowsToFirestore 
+  uploadRowsToFirestore,
+  autoDetectColumns
 } from './utils/dataProcessingUtils';
 
 // Cache for processed data
@@ -102,6 +103,8 @@ const AnalysisDataPage = () => {
 
   const [hasBlockingErrors, setHasBlockingErrors] = useState(false);
 
+  const [renamedHeaders, setRenamedHeaders] = useState({});
+
   const steps = [
     'Upload CSV',
     'Validate Data',
@@ -155,6 +158,7 @@ const AnalysisDataPage = () => {
     setHeaderRow([]);
     setOriginalRowsCount(0);
     setRemovedRowsCount(0);
+    setRenamedHeaders({}); // Reset renamed headers on new file
 
     Papa.parse(file, {
       header: true,
@@ -164,6 +168,23 @@ const AnalysisDataPage = () => {
       complete: (results) => {
         const headers = results.meta.fields;
         setHeaderRow(headers);
+        // Auto-detect mappings and suggest standard header names
+        const { detectedMappings } = autoDetectColumns(headers, results.data, {}, {});
+        // Suggest standard names for renaming
+        const standardNames = {};
+        headers.forEach(h => {
+          // If detectedMappings maps a standard field to this header, use the standard name
+          const stdName = Object.keys(detectedMappings).find(key => detectedMappings[key] === h);
+          if (stdName && ['latitude','longitude','timestamp','temperature','heartRate','animalId','species'].includes(stdName)) {
+            // Capitalize for display
+            standardNames[h] = stdName.charAt(0).toUpperCase() + stdName.slice(1).replace(/([A-Z])/g, ' $1').trim();
+          } else {
+            standardNames[h] = h;
+          }
+        });
+        setRenamedHeaders(standardNames);
+        // Optionally, set columnMappings to detectedMappings for user convenience
+        setColumnMappings(detectedMappings);
         
         // Process data in chunks to prevent UI blocking
         const chunkSize = 1000;
@@ -241,7 +262,8 @@ const AnalysisDataPage = () => {
         columnMappings,
         timestampConfig,
         setUploadProgress,
-        animalDetails
+        animalDetails,
+        renamedHeaders
       );
       
       // Also upload to Firestore with the same structure
@@ -342,6 +364,8 @@ const AnalysisDataPage = () => {
             validateData={validateData}
             parsedData={parsedData}
             timestampConfig={timestampConfig}
+            renamedHeaders={renamedHeaders}
+            setRenamedHeaders={setRenamedHeaders}
           />
         );
       case 3:

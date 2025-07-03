@@ -1,0 +1,6126 @@
+{
+  "Animals": {
+    "Elephants": [
+      null,
+      {
+        "age": 40,
+        "location": {
+          "200-0-0": {
+            "13:22:36": {
+              "Lat": -6.77122,
+              "Long": 39.24002,
+              "altitude": 23.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0
+            }
+          },
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.945002,
+              "Long": 34.16382,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.7
+            },
+            "13:37": {
+              "Lat": -1.945102,
+              "Long": 34.16392,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 35.8
+            },
+            "13:42": {
+              "Lat": -1.945202,
+              "Long": 34.16402,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.9
+            }
+          },
+          "2024-9-11": {
+            "19:37:47": {
+              "Lat": -6.77102,
+              "Long": 39.24005,
+              "altitude": 38.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1.71,
+              "temperature": 26.3
+            },
+            "19:38:16": {
+              "Lat": -6.77101,
+              "Long": 39.24005,
+              "altitude": 36.2,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.84,
+              "temperature": 26.3
+            },
+            "19:38:2": {
+              "Lat": -6.77103,
+              "Long": 39.24006,
+              "altitude": 37.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1.05,
+              "temperature": 26.3
+            },
+            "19:38:31": {
+              "Lat": -6.77102,
+              "Long": 39.24004,
+              "altitude": 34.6,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.97,
+              "temperature": 26.3
+            },
+            "19:38:45": {
+              "Lat": -6.77104,
+              "Long": 39.24005,
+              "altitude": 34.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.29,
+              "temperature": 26.3
+            },
+            "19:39:0": {
+              "Lat": -6.77108,
+              "Long": 39.2401,
+              "altitude": 33.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.27,
+              "temperature": 26.3
+            }
+          },
+          "2024-9-12": {
+            "10:23:0": {
+              "altitude": -18.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.36,
+              "temperature": 29.4
+            },
+            "13:22:58": {
+              "Lat": -6.77125,
+              "Long": 39.24002,
+              "altitude": 24.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.38,
+              "temperature": 30
+            },
+            "13:23:12": {
+              "Lat": -6.77126,
+              "Long": 39.23997,
+              "altitude": 24.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.92,
+              "temperature": 29.9
+            },
+            "13:23:27": {
+              "Lat": -6.77113,
+              "Long": 39.23997,
+              "altitude": 24.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.68,
+              "temperature": 29.7
+            },
+            "13:23:42": {
+              "Lat": -6.77106,
+              "Long": 39.23995,
+              "altitude": 24.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.54,
+              "temperature": 29.7
+            },
+            "13:23:58": {
+              "Lat": -6.7711,
+              "Long": 39.23994,
+              "altitude": 23.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.07,
+              "temperature": 29.6
+            },
+            "13:24:12": {
+              "Lat": -6.77124,
+              "Long": 39.23994,
+              "altitude": 23.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.79,
+              "temperature": 29.5
+            },
+            "13:24:27": {
+              "Lat": -6.77109,
+              "Long": 39.23997,
+              "altitude": 21.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.76,
+              "temperature": 29.3
+            },
+            "13:24:41": {
+              "Lat": -6.77106,
+              "Long": 39.23997,
+              "altitude": 22,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 29.2
+            },
+            "13:24:56": {
+              "Lat": -6.77107,
+              "Long": 39.23999,
+              "altitude": 21.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.37,
+              "temperature": 29.1
+            },
+            "13:25:10": {
+              "Lat": -6.77109,
+              "Long": 39.23999,
+              "altitude": 21.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.57,
+              "temperature": 29.1
+            },
+            "13:25:25": {
+              "Lat": -6.77109,
+              "Long": 39.23996,
+              "altitude": 20.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.43,
+              "temperature": 29
+            },
+            "13:25:39": {
+              "Lat": -6.77109,
+              "Long": 39.23993,
+              "altitude": 20.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.37,
+              "temperature": 29.1
+            },
+            "13:25:55": {
+              "Lat": -6.77109,
+              "Long": 39.23991,
+              "altitude": 20.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.33,
+              "temperature": 29
+            },
+            "13:26:24": {
+              "Lat": -6.77108,
+              "Long": 39.23987,
+              "altitude": 21.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.58,
+              "temperature": 28.9
+            },
+            "13:26:38": {
+              "Lat": -6.77107,
+              "Long": 39.23986,
+              "altitude": 21.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.57,
+              "temperature": 28.9
+            },
+            "13:26:53": {
+              "Lat": -6.77105,
+              "Long": 39.23981,
+              "altitude": 21.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 28.8
+            },
+            "13:26:9": {
+              "Lat": -6.77109,
+              "Long": 39.23989,
+              "altitude": 21.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.89,
+              "temperature": 29
+            },
+            "13:27:22": {
+              "Lat": -6.77114,
+              "Long": 39.23984,
+              "altitude": 21.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.38,
+              "temperature": 28.8
+            },
+            "13:27:36": {
+              "Lat": -6.7712,
+              "Long": 39.23984,
+              "altitude": 21.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.4,
+              "temperature": 28.7
+            },
+            "13:27:51": {
+              "Lat": -6.77119,
+              "Long": 39.23983,
+              "altitude": 21.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.64,
+              "temperature": 28.7
+            },
+            "13:27:7": {
+              "Lat": -6.77108,
+              "Long": 39.23982,
+              "altitude": 21.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.66,
+              "temperature": 28.8
+            },
+            "13:28:20": {
+              "Lat": -6.77113,
+              "Long": 39.23984,
+              "altitude": 21.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.38,
+              "temperature": 28.6
+            },
+            "13:28:36": {
+              "Lat": -6.77107,
+              "Long": 39.23989,
+              "altitude": 21,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.87,
+              "temperature": 28.6
+            },
+            "13:28:5": {
+              "Lat": -6.77113,
+              "Long": 39.23983,
+              "altitude": 21.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.52,
+              "temperature": 28.7
+            },
+            "13:28:50": {
+              "Lat": -6.77104,
+              "Long": 39.23986,
+              "altitude": 20,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.64,
+              "temperature": 28.6
+            },
+            "13:29:21": {
+              "Lat": -6.77094,
+              "Long": 39.2398,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.41,
+              "temperature": 28.5
+            },
+            "13:29:35": {
+              "Lat": -6.77094,
+              "Long": 39.23981,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.86,
+              "temperature": 28.4
+            },
+            "13:29:50": {
+              "Lat": -6.77095,
+              "Long": 39.23986,
+              "altitude": 19.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.13,
+              "temperature": 28.4
+            },
+            "13:29:6": {
+              "Lat": -6.77102,
+              "Long": 39.23982,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.14,
+              "temperature": 28.5
+            },
+            "13:30:19": {
+              "Lat": -6.77095,
+              "Long": 39.23988,
+              "altitude": 19.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.91,
+              "temperature": 28.3
+            },
+            "13:30:33": {
+              "Lat": -6.77097,
+              "Long": 39.23988,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.95,
+              "temperature": 28.3
+            },
+            "13:30:4": {
+              "Lat": -6.77096,
+              "Long": 39.23988,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.77,
+              "temperature": 28.4
+            },
+            "13:30:49": {
+              "Lat": -6.77095,
+              "Long": 39.23988,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.67,
+              "temperature": 28.2
+            },
+            "13:31:18": {
+              "Lat": -6.77097,
+              "Long": 39.23985,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.4,
+              "temperature": 28.2
+            },
+            "13:31:3": {
+              "Lat": -6.77097,
+              "Long": 39.23987,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.64,
+              "temperature": 28.2
+            },
+            "13:31:32": {
+              "Lat": -6.77099,
+              "Long": 39.23986,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.7,
+              "temperature": 28.1
+            },
+            "13:31:48": {
+              "Lat": -6.77099,
+              "Long": 39.23983,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.77,
+              "temperature": 28.1
+            },
+            "13:32:18": {
+              "Lat": -6.77104,
+              "Long": 39.23986,
+              "altitude": 19.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.03,
+              "temperature": 28
+            },
+            "13:32:2": {
+              "Lat": -6.771,
+              "Long": 39.23982,
+              "altitude": 19.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.02,
+              "temperature": 28
+            },
+            "13:32:32": {
+              "Lat": -6.771,
+              "Long": 39.23987,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.56,
+              "temperature": 28
+            },
+            "13:32:47": {
+              "Lat": -6.771,
+              "Long": 39.23986,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.04,
+              "temperature": 28
+            },
+            "13:33:1": {
+              "Lat": -6.77102,
+              "Long": 39.23986,
+              "altitude": 20.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.73,
+              "temperature": 28
+            },
+            "13:33:16": {
+              "Lat": -6.77104,
+              "Long": 39.23988,
+              "altitude": 20.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.52,
+              "temperature": 28
+            },
+            "13:33:30": {
+              "Lat": -6.77106,
+              "Long": 39.23989,
+              "altitude": 20.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.56,
+              "temperature": 27.9
+            },
+            "13:33:45": {
+              "Lat": -6.77105,
+              "Long": 39.2399,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.34,
+              "temperature": 27.9
+            },
+            "13:33:59": {
+              "Lat": -6.77107,
+              "Long": 39.23991,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.11,
+              "temperature": 27.9
+            },
+            "13:34:14": {
+              "Lat": -6.77114,
+              "Long": 39.23996,
+              "altitude": 20.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.21,
+              "temperature": 27.9
+            },
+            "13:34:28": {
+              "Lat": -6.7712,
+              "Long": 39.24,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.56,
+              "temperature": 27.9
+            },
+            "13:34:43": {
+              "Lat": -6.77121,
+              "Long": 39.24,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.47,
+              "temperature": 27.9
+            },
+            "13:34:57": {
+              "Lat": -6.77115,
+              "Long": 39.23996,
+              "altitude": 19.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.88,
+              "temperature": 28
+            },
+            "13:35:12": {
+              "Lat": -6.77114,
+              "Long": 39.23997,
+              "altitude": 19.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.02,
+              "temperature": 27.9
+            },
+            "13:35:28": {
+              "Lat": -6.77116,
+              "Long": 39.23999,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.97,
+              "temperature": 27.9
+            },
+            "13:35:42": {
+              "Lat": -6.77112,
+              "Long": 39.23998,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.95,
+              "temperature": 27.8
+            },
+            "13:35:57": {
+              "Lat": -6.77105,
+              "Long": 39.23994,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.11,
+              "temperature": 27.8
+            },
+            "13:36:11": {
+              "Lat": -6.77105,
+              "Long": 39.23994,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.16,
+              "temperature": 27.8
+            },
+            "13:36:26": {
+              "Lat": -6.77105,
+              "Long": 39.23994,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.15,
+              "temperature": 27.8
+            },
+            "13:36:40": {
+              "Lat": -6.77106,
+              "Long": 39.23994,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.07,
+              "temperature": 27.8
+            },
+            "13:36:55": {
+              "Lat": -6.77106,
+              "Long": 39.23994,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.12,
+              "temperature": 27.7
+            },
+            "13:37:24": {
+              "Lat": -6.77103,
+              "Long": 39.23993,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.61,
+              "temperature": 27.7
+            },
+            "13:37:38": {
+              "Lat": -6.771,
+              "Long": 39.23992,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.99,
+              "temperature": 27.7
+            },
+            "13:37:53": {
+              "Lat": -6.77097,
+              "Long": 39.23991,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.34,
+              "temperature": 27.7
+            },
+            "13:37:9": {
+              "Lat": -6.77106,
+              "Long": 39.23994,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.44,
+              "temperature": 27.7
+            },
+            "13:38:22": {
+              "Lat": -6.771,
+              "Long": 39.23992,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.5,
+              "temperature": 27.7
+            },
+            "13:38:38": {
+              "Lat": -6.77104,
+              "Long": 39.23991,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.5,
+              "temperature": 27.6
+            },
+            "13:38:52": {
+              "Lat": -6.77106,
+              "Long": 39.23991,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.09,
+              "temperature": 27.5
+            },
+            "13:38:7": {
+              "Lat": -6.77098,
+              "Long": 39.23991,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.26,
+              "temperature": 27.7
+            },
+            "13:39:21": {
+              "Lat": -6.77107,
+              "Long": 39.23991,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.78,
+              "temperature": 27.5
+            },
+            "13:39:37": {
+              "Lat": -6.77111,
+              "Long": 39.23993,
+              "altitude": 19,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.31,
+              "temperature": 27.5
+            },
+            "13:39:51": {
+              "Lat": -6.7711,
+              "Long": 39.23989,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.73,
+              "temperature": 27.4
+            },
+            "13:39:7": {
+              "Lat": -6.77108,
+              "Long": 39.23992,
+              "altitude": 19.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 27.5
+            },
+            "13:40:20": {
+              "Lat": -6.77113,
+              "Long": 39.2399,
+              "altitude": 18.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.9,
+              "temperature": 27.4
+            },
+            "13:40:35": {
+              "Lat": -6.7711,
+              "Long": 39.23988,
+              "altitude": 18.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.53,
+              "temperature": 27.4
+            },
+            "13:40:49": {
+              "Lat": -6.77114,
+              "Long": 39.23988,
+              "altitude": 18,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.82,
+              "temperature": 27.4
+            },
+            "13:40:6": {
+              "Lat": -6.77109,
+              "Long": 39.23988,
+              "altitude": 19,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.39,
+              "temperature": 27.4
+            },
+            "13:41:18": {
+              "Lat": -6.77109,
+              "Long": 39.23988,
+              "altitude": 19,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.29,
+              "temperature": 27.3
+            },
+            "13:41:33": {
+              "Lat": -6.77112,
+              "Long": 39.23991,
+              "altitude": 18.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.63,
+              "temperature": 27.3
+            },
+            "13:41:4": {
+              "Lat": -6.77117,
+              "Long": 39.23989,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.63,
+              "temperature": 27.3
+            },
+            "13:41:49": {
+              "Lat": -6.7711,
+              "Long": 39.23991,
+              "altitude": 18.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.55,
+              "temperature": 27.3
+            },
+            "13:42:18": {
+              "Lat": -6.7711,
+              "Long": 39.23994,
+              "altitude": 18.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 27.3
+            },
+            "13:42:3": {
+              "Lat": -6.77109,
+              "Long": 39.23994,
+              "altitude": 18.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.51,
+              "temperature": 27.3
+            },
+            "13:42:32": {
+              "Lat": -6.77108,
+              "Long": 39.23993,
+              "altitude": 18.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.52,
+              "temperature": 27.3
+            },
+            "13:42:47": {
+              "Lat": -6.77102,
+              "Long": 39.23993,
+              "altitude": 18.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.52,
+              "temperature": 27.3
+            },
+            "13:43:1": {
+              "Lat": -6.77099,
+              "Long": 39.23991,
+              "altitude": 18.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.32,
+              "temperature": 27.3
+            },
+            "13:43:16": {
+              "Lat": -6.77098,
+              "Long": 39.2399,
+              "altitude": 19,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.11,
+              "temperature": 27.3
+            },
+            "13:43:30": {
+              "Lat": -6.771,
+              "Long": 39.23991,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.09,
+              "temperature": 27.3
+            },
+            "13:43:45": {
+              "Lat": -6.77103,
+              "Long": 39.23993,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.38,
+              "temperature": 27.4
+            },
+            "13:43:59": {
+              "Lat": -6.77106,
+              "Long": 39.23996,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 27.4
+            },
+            "13:44:14": {
+              "Lat": -6.77108,
+              "Long": 39.23996,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.24,
+              "temperature": 27.5
+            },
+            "13:44:28": {
+              "Lat": -6.77108,
+              "Long": 39.23996,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.13,
+              "temperature": 27.5
+            },
+            "13:44:43": {
+              "Lat": -6.77107,
+              "Long": 39.23998,
+              "altitude": 19.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.22,
+              "temperature": 27.4
+            },
+            "13:45:0": {
+              "Lat": -6.77106,
+              "Long": 39.23999,
+              "altitude": 19.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.24,
+              "temperature": 27.4
+            },
+            "13:47:24": {
+              "Lat": -6.77095,
+              "Long": 39.23995,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.78,
+              "temperature": 27.5
+            },
+            "13:47:38": {
+              "Lat": -6.77096,
+              "Long": 39.23999,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.57,
+              "temperature": 27.5
+            },
+            "13:47:53": {
+              "Lat": -6.77098,
+              "Long": 39.23991,
+              "altitude": 20.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.18,
+              "temperature": 27.5
+            },
+            "13:47:8": {
+              "Lat": -6.77099,
+              "Long": 39.23993,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.58,
+              "temperature": 27.4
+            },
+            "13:48:10": {
+              "Lat": -6.77102,
+              "Long": 39.23989,
+              "altitude": 20.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.65,
+              "temperature": 27.5
+            },
+            "13:48:24": {
+              "Lat": -6.77103,
+              "Long": 39.2399,
+              "altitude": 20.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.18,
+              "temperature": 27.5
+            },
+            "13:48:39": {
+              "Lat": -6.77102,
+              "Long": 39.23988,
+              "altitude": 20.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.42,
+              "temperature": 27.5
+            },
+            "13:48:53": {
+              "Lat": -6.77102,
+              "Long": 39.23986,
+              "altitude": 20.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.08,
+              "temperature": 27.5
+            },
+            "13:49:22": {
+              "Lat": -6.77108,
+              "Long": 39.23986,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.64,
+              "temperature": 27.5
+            },
+            "13:49:37": {
+              "Lat": -6.77112,
+              "Long": 39.23988,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.94,
+              "temperature": 27.4
+            },
+            "13:49:51": {
+              "Lat": -6.7711,
+              "Long": 39.23986,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.65,
+              "temperature": 27.4
+            },
+            "13:49:8": {
+              "Lat": -6.77106,
+              "Long": 39.23987,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.64,
+              "temperature": 27.5
+            },
+            "13:50:38": {
+              "Lat": -6.77109,
+              "Long": 39.23987,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.5,
+              "temperature": 27.4
+            },
+            "13:50:52": {
+              "Lat": -6.77109,
+              "Long": 39.23984,
+              "altitude": 20.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.46,
+              "temperature": 27.4
+            },
+            "13:50:6": {
+              "Lat": -6.7711,
+              "Long": 39.2399,
+              "altitude": 20.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.69,
+              "temperature": 27.4
+            },
+            "13:51:12": {
+              "Lat": -6.7711,
+              "Long": 39.23984,
+              "altitude": 20.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.32,
+              "temperature": 27.4
+            },
+            "13:51:27": {
+              "Lat": -6.77109,
+              "Long": 39.23987,
+              "altitude": 20.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.48,
+              "temperature": 27.3
+            },
+            "13:51:41": {
+              "Lat": -6.7711,
+              "Long": 39.23988,
+              "altitude": 20.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.38,
+              "temperature": 27.3
+            },
+            "13:51:57": {
+              "Lat": -6.77113,
+              "Long": 39.23983,
+              "altitude": 22.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.94,
+              "temperature": 27.3
+            },
+            "13:52:23": {
+              "Lat": -6.77104,
+              "Long": 39.23978,
+              "altitude": 26.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.93,
+              "temperature": 27.2
+            },
+            "13:52:37": {
+              "Lat": -6.77109,
+              "Long": 39.23977,
+              "altitude": 26.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.93,
+              "temperature": 27.2
+            },
+            "13:52:52": {
+              "Lat": -6.77114,
+              "Long": 39.2398,
+              "altitude": 26.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1,
+              "temperature": 27.1
+            },
+            "13:53:22": {
+              "Lat": -6.77114,
+              "Long": 39.2398,
+              "altitude": 28.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.13,
+              "temperature": 27.1
+            },
+            "13:53:36": {
+              "Lat": -6.7711,
+              "Long": 39.2398,
+              "altitude": 30.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.37,
+              "temperature": 27
+            },
+            "13:53:52": {
+              "Lat": -6.77115,
+              "Long": 39.23978,
+              "altitude": 31.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.1,
+              "temperature": 26.9
+            },
+            "13:53:6": {
+              "Lat": -6.77113,
+              "Long": 39.23979,
+              "altitude": 27.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.04,
+              "temperature": 27.1
+            },
+            "13:54:23": {
+              "Lat": -6.77107,
+              "Long": 39.2398,
+              "altitude": 32.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.69,
+              "temperature": 26.9
+            },
+            "13:54:37": {
+              "Lat": -6.77099,
+              "Long": 39.2398,
+              "altitude": 32.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.35,
+              "temperature": 27
+            },
+            "13:54:59": {
+              "Lat": -6.77098,
+              "Long": 39.2398,
+              "altitude": 32.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.41,
+              "temperature": 27
+            },
+            "13:54:8": {
+              "Lat": -6.77111,
+              "Long": 39.2398,
+              "altitude": 32.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.35,
+              "temperature": 26.9
+            },
+            "13:55:13": {
+              "Lat": -6.771,
+              "Long": 39.2398,
+              "altitude": 32.4,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.28,
+              "temperature": 27
+            },
+            "13:55:28": {
+              "Lat": -6.77101,
+              "Long": 39.23979,
+              "altitude": 32.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.2,
+              "temperature": 27
+            },
+            "13:55:43": {
+              "Lat": -6.77095,
+              "Long": 39.23977,
+              "altitude": 32.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.78,
+              "temperature": 27
+            },
+            "13:56:0": {
+              "Lat": -6.7709,
+              "Long": 39.23973,
+              "altitude": 32.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.65,
+              "temperature": 27
+            },
+            "13:56:21": {
+              "Lat": -6.77095,
+              "Long": 39.23965,
+              "altitude": 31.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.4,
+              "temperature": 27
+            },
+            "13:56:41": {
+              "Lat": -6.77097,
+              "Long": 39.23959,
+              "altitude": 31.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.29,
+              "temperature": 27
+            },
+            "13:56:56": {
+              "Lat": -6.77102,
+              "Long": 39.23962,
+              "altitude": 29.9,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1,
+              "temperature": 27
+            },
+            "13:57:14": {
+              "Lat": -6.77099,
+              "Long": 39.23966,
+              "altitude": 28.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.57,
+              "temperature": 27
+            },
+            "13:57:33": {
+              "Lat": -6.77101,
+              "Long": 39.23969,
+              "altitude": 28.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.52,
+              "temperature": 27
+            },
+            "13:57:49": {
+              "Lat": -6.77104,
+              "Long": 39.2397,
+              "altitude": 28.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.24,
+              "temperature": 27
+            },
+            "13:58:19": {
+              "Lat": -6.77088,
+              "Long": 39.23983,
+              "altitude": 25.7,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.54,
+              "temperature": 27.1
+            },
+            "13:58:3": {
+              "Lat": -6.77095,
+              "Long": 39.23978,
+              "altitude": 27.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 1.18,
+              "temperature": 27
+            },
+            "13:58:36": {
+              "Lat": -6.77087,
+              "Long": 39.23978,
+              "altitude": 25.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.5,
+              "temperature": 27.1
+            },
+            "13:58:51": {
+              "Lat": -6.77088,
+              "Long": 39.23976,
+              "altitude": 25.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.39,
+              "temperature": 27.1
+            },
+            "13:59:22": {
+              "Lat": -6.77091,
+              "Long": 39.23979,
+              "altitude": 25.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.19,
+              "temperature": 27
+            },
+            "13:59:38": {
+              "Lat": -6.77092,
+              "Long": 39.23984,
+              "altitude": 21.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.54,
+              "temperature": 27
+            },
+            "13:59:52": {
+              "Lat": -6.77092,
+              "Long": 39.23985,
+              "altitude": 21.3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.31,
+              "temperature": 27
+            },
+            "13:59:6": {
+              "Lat": -6.77091,
+              "Long": 39.23976,
+              "altitude": 26.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.59,
+              "temperature": 27
+            },
+            "14:0:23": {
+              "Lat": -6.77094,
+              "Long": 39.23983,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1,
+              "temperature": 27
+            },
+            "14:0:45": {
+              "Lat": -6.77095,
+              "Long": 39.23982,
+              "altitude": 18.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.07,
+              "temperature": 26.8
+            },
+            "14:0:7": {
+              "Lat": -6.77094,
+              "Long": 39.23985,
+              "altitude": 21,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.85,
+              "temperature": 27
+            },
+            "14:10:14": {
+              "Lat": -6.771,
+              "Long": 39.23981,
+              "altitude": 20.2,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.78,
+              "temperature": 27.1
+            },
+            "14:10:28": {
+              "Lat": -6.771,
+              "Long": 39.23979,
+              "altitude": 20.2,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.25,
+              "temperature": 27.1
+            },
+            "14:10:43": {
+              "Lat": -6.77095,
+              "Long": 39.23975,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.85,
+              "temperature": 27.2
+            },
+            "14:10:57": {
+              "Lat": -6.77094,
+              "Long": 39.23973,
+              "altitude": 19.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.85,
+              "temperature": 27.2
+            },
+            "14:11:12": {
+              "Lat": -6.77091,
+              "Long": 39.23971,
+              "altitude": 19.6,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.66,
+              "temperature": 27.2
+            },
+            "14:11:26": {
+              "Lat": -6.77089,
+              "Long": 39.23972,
+              "altitude": 19.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.25,
+              "temperature": 27.2
+            },
+            "14:11:41": {
+              "Lat": -6.77091,
+              "Long": 39.23972,
+              "altitude": 19.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.61,
+              "temperature": 27.2
+            },
+            "14:11:55": {
+              "Lat": -6.77098,
+              "Long": 39.2398,
+              "altitude": 20,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.23,
+              "temperature": 27.2
+            },
+            "14:12:10": {
+              "Lat": -6.77102,
+              "Long": 39.23984,
+              "altitude": 20.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1.35,
+              "temperature": 27.1
+            },
+            "14:12:24": {
+              "Lat": -6.77104,
+              "Long": 39.23987,
+              "altitude": 20.5,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.67,
+              "temperature": 27.1
+            },
+            "14:12:40": {
+              "Lat": -6.77101,
+              "Long": 39.23983,
+              "altitude": 20.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.6,
+              "temperature": 27.1
+            },
+            "14:12:56": {
+              "Lat": -6.77092,
+              "Long": 39.23982,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1.17,
+              "temperature": 27.1
+            },
+            "14:13:11": {
+              "Lat": -6.7709,
+              "Long": 39.23982,
+              "altitude": 20.5,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.3,
+              "temperature": 27.1
+            },
+            "14:13:27": {
+              "Lat": -6.77095,
+              "Long": 39.23986,
+              "altitude": 20.3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.87,
+              "temperature": 27.1
+            },
+            "14:13:42": {
+              "Lat": -6.77097,
+              "Long": 39.23986,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.88,
+              "temperature": 27
+            },
+            "14:13:59": {
+              "Lat": -6.77095,
+              "Long": 39.23991,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.84,
+              "temperature": 27
+            },
+            "14:14:13": {
+              "Lat": -6.77096,
+              "Long": 39.23994,
+              "altitude": 18.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.3,
+              "temperature": 27
+            },
+            "14:14:28": {
+              "Lat": -6.77096,
+              "Long": 39.23995,
+              "altitude": 18.2,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.19,
+              "temperature": 27
+            },
+            "14:14:42": {
+              "Lat": -6.77095,
+              "Long": 39.23992,
+              "altitude": 18,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.74,
+              "temperature": 27.1
+            },
+            "14:14:57": {
+              "Lat": -6.77093,
+              "Long": 39.23985,
+              "altitude": 17.6,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.73,
+              "temperature": 27.1
+            },
+            "14:15:11": {
+              "Lat": -6.77092,
+              "Long": 39.2398,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.46,
+              "temperature": 27
+            },
+            "14:15:26": {
+              "Lat": -6.77092,
+              "Long": 39.23978,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.51,
+              "temperature": 27
+            },
+            "14:15:40": {
+              "Lat": -6.77092,
+              "Long": 39.23976,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.27,
+              "temperature": 27
+            },
+            "14:15:56": {
+              "Lat": -6.77093,
+              "Long": 39.23977,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.19,
+              "temperature": 27
+            },
+            "14:16:10": {
+              "Lat": -6.77094,
+              "Long": 39.23978,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.32,
+              "temperature": 27
+            },
+            "14:16:25": {
+              "Lat": -6.77095,
+              "Long": 39.23981,
+              "altitude": 17.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.65,
+              "temperature": 27.1
+            },
+            "14:16:39": {
+              "Lat": -6.77097,
+              "Long": 39.23986,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.52,
+              "temperature": 27.1
+            },
+            "14:16:54": {
+              "Lat": -6.77097,
+              "Long": 39.2399,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.37,
+              "temperature": 27.1
+            },
+            "14:17:25": {
+              "Lat": -6.77097,
+              "Long": 39.23992,
+              "altitude": 17.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.49,
+              "temperature": 27.1
+            },
+            "14:17:40": {
+              "Lat": -6.77094
+            },
+            "14:17:8": {
+              "Lat": -6.77098,
+              "Long": 39.23992,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.4,
+              "temperature": 27.1
+            },
+            "14:1:1": {
+              "Lat": -6.77095,
+              "Long": 39.23982,
+              "altitude": 18.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.09,
+              "temperature": 26.9
+            },
+            "14:1:16": {
+              "Lat": -6.77098,
+              "Long": 39.23983,
+              "altitude": 18.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.72,
+              "temperature": 26.8
+            },
+            "14:1:31": {
+              "Lat": -6.771,
+              "Long": 39.23983,
+              "altitude": 17.8,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.47,
+              "temperature": 26.8
+            },
+            "14:1:45": {
+              "Lat": -6.77101,
+              "Long": 39.23986,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.53,
+              "temperature": 26.8
+            },
+            "14:2:0": {
+              "Lat": -6.77102,
+              "Long": 39.23988,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.22,
+              "temperature": 26.8
+            },
+            "14:2:16": {
+              "Lat": -6.77104,
+              "Long": 39.23989,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.28,
+              "temperature": 26.8
+            },
+            "14:2:30": {
+              "Lat": -6.77106,
+              "Long": 39.23991,
+              "altitude": 17.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.53,
+              "temperature": 26.7
+            },
+            "14:2:45": {
+              "Lat": -6.77106,
+              "Long": 39.23992,
+              "altitude": 17.6,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.09,
+              "temperature": 26.7
+            },
+            "14:2:59": {
+              "Lat": -6.77101,
+              "Long": 39.23988,
+              "altitude": 17.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.67,
+              "temperature": 26.7
+            },
+            "14:3:14": {
+              "Lat": -6.77097,
+              "Long": 39.23984,
+              "altitude": 16.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.35,
+              "temperature": 26.7
+            },
+            "14:3:29": {
+              "Lat": -6.77096,
+              "Long": 39.23983,
+              "altitude": 16.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.14,
+              "temperature": 26.7
+            },
+            "14:3:44": {
+              "Lat": -6.77097,
+              "Long": 39.23983,
+              "altitude": 16.3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.08,
+              "temperature": 26.7
+            },
+            "14:3:59": {
+              "Lat": -6.77096,
+              "Long": 39.23982,
+              "altitude": 16.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.26,
+              "temperature": 26.7
+            },
+            "14:4:14": {
+              "Lat": -6.77097,
+              "Long": 39.23981,
+              "altitude": 16.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.29,
+              "temperature": 26.7
+            },
+            "14:4:28": {
+              "Lat": -6.77094,
+              "Long": 39.23977,
+              "altitude": 16.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.57,
+              "temperature": 26.8
+            },
+            "14:4:43": {
+              "Lat": -6.77091,
+              "Long": 39.23973,
+              "altitude": 16.2,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.25,
+              "temperature": 26.8
+            },
+            "14:4:57": {
+              "Lat": -6.77092,
+              "Long": 39.23974,
+              "altitude": 16,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.32,
+              "temperature": 26.8
+            },
+            "14:5:12": {
+              "Lat": -6.77092,
+              "Long": 39.23973,
+              "altitude": 16,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.57,
+              "temperature": 26.9
+            },
+            "14:5:26": {
+              "Lat": -6.77097,
+              "Long": 39.23976,
+              "altitude": 16.4,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.38,
+              "temperature": 26.8
+            },
+            "14:5:41": {
+              "Lat": -6.77102,
+              "Long": 39.2398,
+              "altitude": 16.6,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.84,
+              "temperature": 26.8
+            },
+            "14:5:55": {
+              "Lat": -6.77104,
+              "Long": 39.2398,
+              "altitude": 16.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.34,
+              "temperature": 26.8
+            },
+            "14:6:10": {
+              "Lat": -6.77105,
+              "Long": 39.23981,
+              "altitude": 16.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.29,
+              "temperature": 26.8
+            },
+            "14:6:24": {
+              "Lat": -6.77105,
+              "Long": 39.23981,
+              "altitude": 16.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.14,
+              "temperature": 26.9
+            },
+            "14:6:40": {
+              "Lat": -6.771,
+              "Long": 39.23979,
+              "altitude": 16.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.91,
+              "temperature": 27
+            },
+            "14:6:54": {
+              "Lat": -6.77096,
+              "Long": 39.23975,
+              "altitude": 17.3,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 1.01,
+              "temperature": 27
+            },
+            "14:7:11": {
+              "Lat": -6.77095,
+              "Long": 39.23972,
+              "altitude": 18.5,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.79,
+              "temperature": 27
+            },
+            "14:7:40": {
+              "Lat": -6.77092,
+              "Long": 39.2397,
+              "altitude": 19.7,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.64,
+              "temperature": 27.1
+            },
+            "14:8:1": {
+              "Lat": -6.77092,
+              "Long": 39.23969,
+              "altitude": 19.9,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.08,
+              "temperature": 27.1
+            },
+            "14:8:17": {
+              "Lat": -6.77093,
+              "Long": 39.23969,
+              "altitude": 20,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.09,
+              "temperature": 27.1
+            },
+            "14:8:31": {
+              "Lat": -6.77097,
+              "Long": 39.23973,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.53,
+              "temperature": 27.1
+            },
+            "14:8:46": {
+              "Lat": -6.77099,
+              "Long": 39.23978,
+              "altitude": 20,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.57,
+              "temperature": 27.2
+            },
+            "14:9:0": {
+              "Lat": -6.77098,
+              "Long": 39.23977,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.36,
+              "temperature": 27.2
+            },
+            "14:9:15": {
+              "Lat": -6.77097,
+              "Long": 39.23975,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.23,
+              "temperature": 27.2
+            },
+            "14:9:29": {
+              "Lat": -6.77097,
+              "Long": 39.23976,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.17,
+              "temperature": 27.2
+            },
+            "14:9:45": {
+              "Lat": -6.77098,
+              "Long": 39.23977,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.11,
+              "temperature": 27.2
+            },
+            "14:9:59": {
+              "Lat": -6.77099,
+              "Long": 39.23978,
+              "altitude": 20.1,
+              "heart_rate": 0,
+              "satellites": 7,
+              "speed_knots": 0.51,
+              "temperature": 27.2
+            },
+            "15:10:0": {
+              "Lat": -6.77078,
+              "Long": 39.2398,
+              "altitude": 111.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 2.94,
+              "temperature": 28.7
+            },
+            "15:10:16": {
+              "Lat": -6.77078,
+              "Long": 39.23983,
+              "altitude": 114.1,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.65,
+              "temperature": 28.7
+            },
+            "15:10:30": {
+              "Lat": -6.77079,
+              "Long": 39.23985,
+              "altitude": 114.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.53,
+              "temperature": 28.7
+            },
+            "15:10:46": {
+              "Lat": -6.77092,
+              "Long": 39.23991,
+              "altitude": 106.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.46,
+              "temperature": 28.7
+            },
+            "15:11:19": {
+              "Lat": -6.77114,
+              "Long": 39.24001,
+              "altitude": 94,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 2.37,
+              "temperature": 28.7
+            },
+            "15:11:2": {
+              "Lat": -6.77108,
+              "Long": 39.24001,
+              "altitude": 99.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 2.58,
+              "temperature": 28.7
+            },
+            "15:11:35": {
+              "Lat": -6.77118,
+              "Long": 39.24002,
+              "altitude": 86.2,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.46,
+              "temperature": 28.7
+            },
+            "15:11:51": {
+              "Lat": -6.77124,
+              "Long": 39.24002,
+              "altitude": 76.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.15,
+              "temperature": 28.6
+            },
+            "15:12:23": {
+              "Lat": -6.77119,
+              "Long": 39.24002,
+              "altitude": 53.3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 2.48,
+              "temperature": 28.6
+            },
+            "15:12:37": {
+              "Lat": -6.77108,
+              "Long": 39.24,
+              "altitude": 44.8,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 2.13,
+              "temperature": 28.5
+            },
+            "15:12:52": {
+              "Lat": -6.77101,
+              "Long": 39.23999,
+              "altitude": 39.2,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 2.02,
+              "temperature": 28.5
+            },
+            "15:12:7": {
+              "Lat": -6.77123,
+              "Long": 39.24002,
+              "altitude": 65.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.18,
+              "temperature": 28.6
+            },
+            "15:13:21": {
+              "Lat": -6.77101,
+              "Long": 39.23991,
+              "altitude": 35.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.49,
+              "temperature": 28.5
+            },
+            "15:13:37": {
+              "Lat": -6.77098,
+              "Long": 39.23983,
+              "altitude": 32.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1,
+              "temperature": 28.5
+            },
+            "15:13:53": {
+              "Lat": -6.77098,
+              "Long": 39.23981,
+              "altitude": 27.3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.16,
+              "temperature": 28.4
+            },
+            "15:13:6": {
+              "Lat": -6.771,
+              "Long": 39.23994,
+              "altitude": 38.5,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.36,
+              "temperature": 28.5
+            },
+            "15:14:27": {
+              "Lat": -6.77089,
+              "Long": 39.23973,
+              "altitude": 17.2,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.4,
+              "temperature": 28.4
+            },
+            "15:14:43": {
+              "Lat": -6.77088,
+              "Long": 39.23975,
+              "altitude": 13.5,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.19,
+              "temperature": 28.4
+            },
+            "15:14:7": {
+              "Lat": -6.77095,
+              "Long": 39.23976,
+              "altitude": 23.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.98,
+              "temperature": 28.5
+            },
+            "15:15:1": {
+              "Lat": -6.77099,
+              "Long": 39.23981,
+              "altitude": 12.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.7,
+              "temperature": 28.3
+            },
+            "15:15:25": {
+              "Lat": -6.77109,
+              "Long": 39.23987,
+              "altitude": 12.8,
+              "heart_rate": 0,
+              "speed_knots": 1.78,
+              "temperature": 28.2
+            },
+            "15:16:17": {
+              "Long": 39.23994,
+              "altitude": 12.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.82,
+              "temperature": 28.1
+            },
+            "15:16:2": {
+              "Lat": -6.77109,
+              "Long": 39.23992,
+              "altitude": 14.2,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.31,
+              "temperature": 28.1
+            },
+            "15:16:45": {
+              "Lat": -6.7711,
+              "Long": 39.24002,
+              "altitude": 7.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.73,
+              "temperature": 28.2
+            },
+            "15:17:10": {
+              "Lat": -6.77119,
+              "Long": 39.24003,
+              "altitude": 0.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 1.52,
+              "temperature": 28.3
+            },
+            "15:17:30": {
+              "Lat": -6.77113,
+              "Long": 39.23996,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.7,
+              "temperature": 28.3
+            },
+            "15:17:47": {
+              "Lat": -6.77111,
+              "Long": 39.23995,
+              "altitude": -3,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.36,
+              "temperature": 28.3
+            },
+            "15:18:21": {
+              "Lat": -6.7711,
+              "Long": 39.23996,
+              "altitude": -0.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.39,
+              "temperature": 28.4
+            },
+            "15:18:3": {
+              "Lat": -6.7711,
+              "Long": 39.23996,
+              "altitude": -1.3,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.76,
+              "temperature": 28.3
+            },
+            "15:18:36": {
+              "Lat": -6.77112,
+              "Long": 39.23999,
+              "altitude": -0.2,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.48,
+              "temperature": 28.4
+            },
+            "15:18:51": {
+              "Lat": -6.77113,
+              "Long": 39.24001,
+              "altitude": -0.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.1,
+              "temperature": 28.4
+            },
+            "15:19:20": {
+              "Lat": -6.77109,
+              "Long": 39.23996,
+              "altitude": 1.6,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 0.09,
+              "temperature": 28.5
+            },
+            "15:19:36": {
+              "Lat": -6.77108,
+              "Long": 39.23995,
+              "altitude": 1.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.51,
+              "temperature": 28.4
+            },
+            "15:19:51": {
+              "Lat": -6.77099,
+              "Long": 39.23989,
+              "altitude": 3.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.73,
+              "temperature": 28.4
+            },
+            "15:19:6": {
+              "Lat": -6.77112,
+              "Long": 39.23999,
+              "altitude": 0.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.62,
+              "temperature": 28.5
+            },
+            "15:20:7": {
+              "Lat": -6.7709,
+              "Long": 39.23979,
+              "altitude": 5.8,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 0.83,
+              "temperature": 28.5
+            },
+            "15:5:37": {
+              "Long": 39.23988,
+              "altitude": 47.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.12,
+              "temperature": 28
+            },
+            "15:6:23": {
+              "Lat": -6.77102,
+              "Long": 39.23984,
+              "altitude": 48.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.4,
+              "temperature": 28.1
+            },
+            "15:6:3": {
+              "Lat": -6.77103,
+              "Long": 39.23986,
+              "altitude": 51.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.41,
+              "temperature": 28
+            },
+            "15:6:41": {
+              "Lat": -6.771,
+              "Long": 39.23982,
+              "altitude": 47.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.42,
+              "temperature": 28.1
+            },
+            "15:7:1": {
+              "Lat": -6.77095,
+              "Long": 39.2398,
+              "altitude": 46.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.07,
+              "temperature": 28.2
+            },
+            "15:7:19": {
+              "Lat": -6.77092,
+              "Long": 39.23978,
+              "altitude": 45.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.6,
+              "temperature": 28.2
+            },
+            "15:7:36": {
+              "Lat": -6.77084,
+              "Long": 39.23972,
+              "altitude": 49.5,
+              "heart_rate": 0,
+              "satellites": 5,
+              "speed_knots": 4.03,
+              "temperature": 28.3
+            },
+            "15:7:56": {
+              "Lat": -6.77081,
+              "Long": 39.23972,
+              "altitude": 66.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.51,
+              "temperature": 28.4
+            },
+            "15:8:11": {
+              "Lat": -6.77088,
+              "Long": 39.23978,
+              "altitude": 77.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.64,
+              "temperature": 28.4
+            },
+            "15:8:41": {
+              "Lat": -6.7708,
+              "Long": 39.23966,
+              "altitude": 89.7,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 5.21,
+              "temperature": 28.5
+            },
+            "15:9:1": {
+              "Lat": -6.77083,
+              "Long": 39.23969,
+              "altitude": 88.4,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 4.65,
+              "temperature": 28.6
+            },
+            "15:9:15": {
+              "Lat": -6.77089,
+              "Long": 39.23974,
+              "altitude": 90.9,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.84,
+              "temperature": 28.6
+            },
+            "15:9:30": {
+              "Lat": -6.77089,
+              "Long": 39.23978,
+              "altitude": 96.1,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 3.5,
+              "temperature": 28.6
+            },
+            "15:9:44": {
+              "Lat": -6.77083,
+              "Long": 39.23975,
+              "altitude": 104.6,
+              "heart_rate": 0,
+              "satellites": 6,
+              "speed_knots": 4.38,
+              "temperature": 28.7
+            }
+          },
+          "2025-5-5": {
+            "15:25:50": {
+              "Lat": -6.77082,
+              "Long": 39.2398,
+              "altitude": 13.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 3.13,
+              "temperature": 28.6
+            },
+            "15:26:22": {
+              "Lat": -6.77088,
+              "Long": 39.23986,
+              "altitude": 15.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.91,
+              "temperature": 28.7
+            },
+            "15:26:36": {
+              "Lat": -6.77089,
+              "Long": 39.23981,
+              "altitude": 19.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.2,
+              "temperature": 28.7
+            },
+            "15:26:51": {
+              "Lat": -6.77099,
+              "Long": 39.23991,
+              "altitude": 21.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.15,
+              "temperature": 28.7
+            },
+            "15:26:6": {
+              "Lat": -6.77102,
+              "Long": 39.23995,
+              "altitude": 24,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 4.53,
+              "temperature": 28.7
+            },
+            "15:27:20": {
+              "Lat": -6.77107,
+              "Long": 39.23997,
+              "altitude": 26,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.31,
+              "temperature": 28.7
+            },
+            "15:27:34": {
+              "Lat": -6.77104,
+              "Long": 39.23996,
+              "altitude": 27.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.07,
+              "temperature": 28.7
+            },
+            "15:27:49": {
+              "Lat": -6.77101,
+              "Long": 39.23994,
+              "altitude": 29.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.1,
+              "temperature": 28.7
+            },
+            "15:27:5": {
+              "Lat": -6.77102,
+              "Long": 39.23995,
+              "altitude": 24.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.27,
+              "temperature": 28.7
+            },
+            "15:28:18": {
+              "Lat": -6.77099,
+              "Long": 39.23993,
+              "altitude": 30.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.11,
+              "temperature": 28.8
+            },
+            "15:28:3": {
+              "Lat": -6.77105,
+              "Long": 39.23999,
+              "altitude": 29.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 28.8
+            },
+            "15:28:32": {
+              "Lat": -6.77108,
+              "Long": 39.24,
+              "altitude": 30.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.35,
+              "temperature": 28.7
+            },
+            "15:28:47": {
+              "Lat": -6.77112,
+              "Long": 39.24004,
+              "altitude": 32.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.51,
+              "temperature": 28.7
+            },
+            "15:30:22": {
+              "Lat": -6.77074,
+              "Long": 39.23973,
+              "altitude": 35.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.69,
+              "temperature": 29
+            },
+            "15:49:28": {
+              "Lat": -6.77065,
+              "Long": 39.23959,
+              "altitude": 1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.76,
+              "temperature": 29.4
+            },
+            "15:49:45": {
+              "Lat": -6.77058,
+              "Long": 39.23959,
+              "altitude": 0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.54,
+              "temperature": 29.3
+            },
+            "15:49:59": {
+              "Lat": -6.77061,
+              "Long": 39.23955,
+              "altitude": 0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.43,
+              "temperature": 29.3
+            },
+            "15:50:14": {
+              "Lat": -6.77066,
+              "Long": 39.23965,
+              "altitude": 0.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.37,
+              "temperature": 29.4
+            },
+            "15:50:28": {
+              "Lat": -6.77063,
+              "Long": 39.23959,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.52,
+              "temperature": 29.4
+            },
+            "15:50:43": {
+              "Lat": -6.77059,
+              "Long": 39.23955,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.24,
+              "temperature": 29.3
+            },
+            "15:50:57": {
+              "Lat": -6.77062,
+              "Long": 39.23955,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 29.5
+            },
+            "15:51:12": {
+              "Lat": -6.77058,
+              "Long": 39.23954,
+              "altitude": 0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 29.6
+            },
+            "15:51:29": {
+              "Lat": -6.77056,
+              "Long": 39.23957,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.11,
+              "temperature": 29.5
+            },
+            "15:51:43": {
+              "Lat": -6.77057,
+              "Long": 39.23958,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.09,
+              "temperature": 29.6
+            },
+            "15:51:58": {
+              "Lat": -6.77059,
+              "Long": 39.23957,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.14,
+              "temperature": 29.6
+            },
+            "15:52:12": {
+              "Lat": -6.7708,
+              "Long": 39.2397,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.03,
+              "temperature": 29.7
+            },
+            "15:52:27": {
+              "Lat": -6.77098,
+              "Long": 39.23989,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.48,
+              "temperature": 29.7
+            },
+            "15:52:43": {
+              "Lat": -6.77117,
+              "Long": 39.23999,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.91,
+              "temperature": 29.6
+            },
+            "15:53:3": {
+              "Lat": -6.77116,
+              "Long": 39.24002,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.37,
+              "temperature": 29.6
+            },
+            "15:53:31": {
+              "Lat": -6.77097,
+              "Long": 39.23987,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.4,
+              "temperature": 29.7
+            },
+            "15:53:47": {
+              "Lat": -6.77083,
+              "Long": 39.2397,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.22,
+              "temperature": 29.7
+            },
+            "15:54:21": {
+              "Lat": -6.77076,
+              "Long": 39.23972,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.44,
+              "temperature": 29.8
+            },
+            "15:54:36": {
+              "Lat": -6.77079,
+              "Long": 39.23972,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.24,
+              "temperature": 29.8
+            },
+            "15:54:50": {
+              "Lat": -6.77083,
+              "Long": 39.23972,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.14,
+              "temperature": 29.7
+            },
+            "15:54:7": {
+              "Lat": -6.77076,
+              "Long": 39.23969,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.93,
+              "temperature": 29.8
+            },
+            "15:55:19": {
+              "Lat": -6.77097,
+              "Long": 39.2398,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.29,
+              "temperature": 29.8
+            },
+            "15:55:34": {
+              "Lat": -6.77101,
+              "Long": 39.23982,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.39,
+              "temperature": 29.8
+            },
+            "15:55:5": {
+              "Lat": -6.77098,
+              "Long": 39.23982,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.7,
+              "temperature": 29.8
+            },
+            "15:55:50": {
+              "Lat": -6.77104,
+              "Long": 39.23984,
+              "altitude": 0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.38,
+              "temperature": 29.8
+            },
+            "15:56:19": {
+              "Lat": -6.77107,
+              "Long": 39.2399,
+              "altitude": 0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.29,
+              "temperature": 29.8
+            },
+            "15:56:38": {
+              "Lat": -6.77094,
+              "Long": 39.23983,
+              "altitude": 1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.48,
+              "temperature": 29.9
+            },
+            "15:56:4": {
+              "Lat": -6.77103,
+              "Long": 39.23984,
+              "altitude": 0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.05,
+              "temperature": 29.8
+            },
+            "15:56:52": {
+              "Lat": -6.7709,
+              "Long": 39.23979,
+              "altitude": 0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.48,
+              "temperature": 29.9
+            },
+            "15:57:21": {
+              "Lat": -6.77073,
+              "Long": 39.23966,
+              "altitude": 0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.08,
+              "temperature": 29.9
+            },
+            "15:57:36": {
+              "Lat": -6.77079,
+              "Long": 39.23968,
+              "altitude": 0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.7,
+              "temperature": 29.9
+            },
+            "15:57:50": {
+              "Lat": -6.7709,
+              "Long": 39.23972,
+              "altitude": 0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.48,
+              "temperature": 29.9
+            },
+            "15:57:7": {
+              "Lat": -6.77094,
+              "Long": 39.23982,
+              "altitude": 0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.22,
+              "temperature": 29.9
+            },
+            "15:58:17": {
+              "Lat": -6.77077,
+              "Long": 39.23969,
+              "altitude": 0.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.56,
+              "temperature": 29.9
+            },
+            "15:58:32": {
+              "Lat": -6.77077,
+              "Long": 39.23976,
+              "altitude": 0.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.33,
+              "temperature": 29.9
+            },
+            "15:58:49": {
+              "Lat": -6.77094,
+              "Long": 39.23991,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.57,
+              "temperature": 29.9
+            },
+            "15:59:18": {
+              "Lat": -6.77093,
+              "Long": 39.23994,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.29,
+              "temperature": 29.9
+            },
+            "15:59:3": {
+              "Lat": -6.77099,
+              "Long": 39.23997,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.67,
+              "temperature": 29.9
+            },
+            "15:59:32": {
+              "Lat": -6.7709,
+              "Long": 39.2399,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.15,
+              "temperature": 29.9
+            },
+            "15:59:47": {
+              "Lat": -6.77093,
+              "Long": 39.23984,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.6,
+              "temperature": 29.9
+            },
+            "16:0:1": {
+              "Lat": -6.77098,
+              "Long": 39.23988,
+              "altitude": 0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.18,
+              "temperature": 30
+            },
+            "16:0:16": {
+              "Lat": -6.77106,
+              "Long": 39.23996,
+              "altitude": 0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.59,
+              "temperature": 30
+            },
+            "16:0:30": {
+              "Lat": -6.77121,
+              "Long": 39.24007,
+              "altitude": 0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.29,
+              "temperature": 30
+            },
+            "16:0:45": {
+              "Lat": -6.77113,
+              "Long": 39.24005,
+              "altitude": 0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.45,
+              "temperature": 30
+            },
+            "16:0:59": {
+              "Lat": -6.77111,
+              "Long": 39.24002,
+              "altitude": 0.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.19,
+              "temperature": 30.1
+            },
+            "16:10:22": {
+              "Lat": -6.7708,
+              "Long": 39.23974,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.64,
+              "temperature": 29.6
+            },
+            "16:10:36": {
+              "Lat": -6.77089,
+              "Long": 39.23978,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.33,
+              "temperature": 29.6
+            },
+            "16:10:52": {
+              "Lat": -6.77101,
+              "Long": 39.23983,
+              "altitude": -1.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.88,
+              "temperature": 29.6
+            },
+            "16:10:7": {
+              "Lat": -6.77085,
+              "Long": 39.23982,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.11,
+              "temperature": 29.6
+            },
+            "16:11:22": {
+              "Lat": -6.77111,
+              "Long": 39.23991,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.6,
+              "temperature": 29.7
+            },
+            "16:11:37": {
+              "Lat": -6.77099,
+              "Long": 39.23992,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.55,
+              "temperature": 29.7
+            },
+            "16:11:51": {
+              "Lat": -6.77099,
+              "Long": 39.23988,
+              "altitude": -1.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.05,
+              "temperature": 29.6
+            },
+            "16:11:8": {
+              "Lat": -6.77114,
+              "Long": 39.23989,
+              "altitude": -1.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.33,
+              "temperature": 29.6
+            },
+            "16:12:20": {
+              "Lat": -6.771,
+              "Long": 39.23985,
+              "altitude": -2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.1,
+              "temperature": 29.6
+            },
+            "16:12:35": {
+              "Lat": -6.77093,
+              "Long": 39.23985,
+              "altitude": -2.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.54,
+              "temperature": 29.6
+            },
+            "16:12:49": {
+              "Lat": -6.77099,
+              "Long": 39.23989,
+              "altitude": -2.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.11,
+              "temperature": 29.7
+            },
+            "16:12:6": {
+              "Lat": -6.77105,
+              "Long": 39.23988,
+              "altitude": -1.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.35,
+              "temperature": 29.6
+            },
+            "16:13:20": {
+              "Lat": -6.77113,
+              "Long": 39.24,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.51,
+              "temperature": 29.7
+            },
+            "16:13:34": {
+              "Lat": -6.77114,
+              "Long": 39.24001,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.04,
+              "temperature": 29.7
+            },
+            "16:13:49": {
+              "Lat": -6.77115,
+              "Long": 39.24,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.21,
+              "temperature": 29.8
+            },
+            "16:13:5": {
+              "Lat": -6.77109,
+              "Long": 39.23999,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.48,
+              "temperature": 29.7
+            },
+            "16:14:19": {
+              "Lat": -6.77107,
+              "Long": 39.23991,
+              "altitude": -2.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.87,
+              "temperature": 29.9
+            },
+            "16:14:3": {
+              "Lat": -6.77115,
+              "Long": 39.23999,
+              "altitude": -2.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.4,
+              "temperature": 29.8
+            },
+            "16:14:34": {
+              "Lat": -6.77107,
+              "Long": 39.23988,
+              "altitude": -3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.38,
+              "temperature": 29.9
+            },
+            "16:14:48": {
+              "Lat": -6.77106,
+              "Long": 39.23987,
+              "altitude": -3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.41,
+              "temperature": 29.9
+            },
+            "16:15:19": {
+              "Lat": -6.77103,
+              "Long": 39.23985,
+              "altitude": -3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 29.9
+            },
+            "16:15:3": {
+              "Lat": -6.77104,
+              "Long": 39.23985,
+              "altitude": -3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.1,
+              "temperature": 29.9
+            },
+            "16:15:34": {
+              "Lat": -6.771,
+              "Long": 39.23982,
+              "altitude": -3.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.5,
+              "temperature": 29.9
+            },
+            "16:15:49": {
+              "Lat": -6.77096,
+              "Long": 39.23979,
+              "altitude": -3.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.51,
+              "temperature": 29.9
+            },
+            "16:16:19": {
+              "Lat": -6.77096,
+              "Long": 39.23982,
+              "altitude": -3.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.27,
+              "temperature": 29.9
+            },
+            "16:16:3": {
+              "Lat": -6.77096,
+              "Long": 39.2398,
+              "altitude": -3.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.21,
+              "temperature": 29.9
+            },
+            "16:16:33": {
+              "Lat": -6.77103,
+              "Long": 39.23982,
+              "altitude": -3.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.92,
+              "temperature": 29.9
+            },
+            "16:16:48": {
+              "Lat": -6.77108,
+              "Long": 39.23984,
+              "altitude": -4.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.72,
+              "temperature": 29.8
+            },
+            "16:17:2": {
+              "Lat": -6.77107,
+              "Long": 39.23984,
+              "altitude": -5.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.21,
+              "temperature": 29.9
+            },
+            "16:17:26": {
+              "Lat": -6.77104,
+              "Long": 39.23983,
+              "altitude": -5.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 29.8
+            },
+            "16:17:52": {
+              "Lat": -6.77098,
+              "Long": 39.23986,
+              "altitude": -5.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.74,
+              "temperature": 29.9
+            },
+            "16:18:10": {
+              "Lat": -6.77095,
+              "Long": 39.23989,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.23,
+              "temperature": 29.9
+            },
+            "16:18:26": {
+              "Lat": -6.77095,
+              "Long": 39.23987,
+              "altitude": -5.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.96,
+              "temperature": 29.9
+            },
+            "16:18:40": {
+              "Lat": -6.77099,
+              "Long": 39.23987,
+              "altitude": -5.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.97,
+              "temperature": 30
+            },
+            "16:18:55": {
+              "Lat": -6.77101,
+              "Long": 39.23988,
+              "altitude": -5.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.5,
+              "temperature": 30
+            },
+            "16:19:24": {
+              "Lat": -6.77098,
+              "Long": 39.23985,
+              "altitude": -5.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.51,
+              "temperature": 30
+            },
+            "16:19:38": {
+              "Lat": -6.77096,
+              "Long": 39.23986,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.19,
+              "temperature": 30
+            },
+            "16:19:53": {
+              "Lat": -6.77095,
+              "Long": 39.23986,
+              "altitude": -5.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.36,
+              "temperature": 30
+            },
+            "16:19:9": {
+              "Lat": -6.77098,
+              "Long": 39.23983,
+              "altitude": -5.8,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.79,
+              "temperature": 30
+            },
+            "16:1:14": {
+              "Lat": -6.77117,
+              "Long": 39.24004,
+              "altitude": 0,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.43,
+              "temperature": 30.1
+            },
+            "16:1:28": {
+              "Lat": -6.77119,
+              "Long": 39.24003,
+              "altitude": -0.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.35,
+              "temperature": 30.1
+            },
+            "16:1:43": {
+              "Lat": -6.77112,
+              "Long": 39.23998,
+              "altitude": -0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 30
+            },
+            "16:1:59": {
+              "Lat": -6.77095,
+              "Long": 39.23985,
+              "altitude": -0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.27,
+              "temperature": 30
+            },
+            "16:20:23": {
+              "Lat": -6.77091,
+              "Long": 39.23986,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.16,
+              "temperature": 30.1
+            },
+            "16:20:38": {
+              "Lat": -6.7709,
+              "Long": 39.23985,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.31,
+              "temperature": 30.1
+            },
+            "16:20:52": {
+              "Lat": -6.7709,
+              "Long": 39.23983,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 30
+            },
+            "16:20:7": {
+              "Lat": -6.77093,
+              "Long": 39.23988,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.31,
+              "temperature": 30
+            },
+            "16:21:21": {
+              "Lat": -6.77093,
+              "Long": 39.23982,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.53,
+              "temperature": 30
+            },
+            "16:21:36": {
+              "Lat": -6.77098,
+              "Long": 39.23967,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.17,
+              "temperature": 30
+            },
+            "16:21:50": {
+              "Lat": -6.77098,
+              "Long": 39.23967,
+              "altitude": -5.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.39,
+              "temperature": 30
+            },
+            "16:21:7": {
+              "Lat": -6.77091,
+              "Long": 39.23983,
+              "altitude": -5.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.06,
+              "temperature": 30
+            },
+            "16:22:19": {
+              "Lat": -6.77106,
+              "Long": 39.24012,
+              "altitude": -6.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.21,
+              "temperature": 30.1
+            },
+            "16:22:34": {
+              "Lat": -6.7712,
+              "Long": 39.24031,
+              "altitude": -6.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.43,
+              "temperature": 30.1
+            },
+            "16:22:5": {
+              "Lat": -6.77101,
+              "Long": 39.23987,
+              "altitude": -5.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.96,
+              "temperature": 30.1
+            },
+            "16:22:50": {
+              "Lat": -6.77136,
+              "Long": 39.24039,
+              "altitude": -6.6,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.3,
+              "temperature": 30.1
+            },
+            "16:23:19": {
+              "Lat": -6.77134,
+              "Long": 39.2403,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.49,
+              "temperature": 30.2
+            },
+            "16:23:35": {
+              "Lat": -6.77137,
+              "Long": 39.2403,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.41,
+              "temperature": 30.2
+            },
+            "16:23:4": {
+              "Lat": -6.77135,
+              "Long": 39.24035,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.15,
+              "temperature": 30.1
+            },
+            "16:23:49": {
+              "Lat": -6.77138,
+              "Long": 39.24032,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.61,
+              "temperature": 30.3
+            },
+            "16:24:18": {
+              "Lat": -6.77132,
+              "Long": 39.24026,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.61,
+              "temperature": 30.4
+            },
+            "16:24:33": {
+              "Lat": -6.77125,
+              "Long": 39.24018,
+              "altitude": -6.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.85,
+              "temperature": 30.4
+            },
+            "16:24:4": {
+              "Lat": -6.77134,
+              "Long": 39.24029,
+              "altitude": -6.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.31,
+              "temperature": 30.4
+            },
+            "16:24:47": {
+              "Lat": -6.77112,
+              "Long": 39.24006,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.26,
+              "temperature": 30.5
+            },
+            "16:25:17": {
+              "Lat": -6.77094,
+              "Long": 39.23995,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.76,
+              "temperature": 30.5
+            },
+            "16:25:3": {
+              "Lat": -6.77104,
+              "Long": 39.23998,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.44,
+              "temperature": 30.5
+            },
+            "16:25:32": {
+              "Lat": -6.77087,
+              "Long": 39.23998,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.39,
+              "temperature": 30.5
+            },
+            "16:25:46": {
+              "Lat": -6.77091,
+              "Long": 39.23991,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.09,
+              "temperature": 30.4
+            },
+            "16:26:1": {
+              "Lat": -6.77089,
+              "Long": 39.23986,
+              "altitude": -6.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.04,
+              "temperature": 30.4
+            },
+            "16:26:56": {
+              "Lat": -6.77096,
+              "Long": 39.23977,
+              "altitude": -5.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.97,
+              "temperature": 30.3
+            },
+            "16:27:12": {
+              "Lat": -6.77103,
+              "Long": 39.23984,
+              "altitude": -5.2,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.08,
+              "temperature": 30.3
+            },
+            "16:27:41": {
+              "Lat": -6.7711,
+              "Long": 39.23993,
+              "altitude": -7.3,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.42,
+              "temperature": 30.2
+            },
+            "16:27:56": {
+              "Lat": -6.77108,
+              "Long": 39.23985,
+              "altitude": -64,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 2.26,
+              "temperature": 30.1
+            },
+            "16:28:10": {
+              "Lat": -6.77123,
+              "Long": 39.23995,
+              "altitude": -65.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 2.95,
+              "temperature": 30.1
+            },
+            "16:28:26": {
+              "Lat": -6.77145,
+              "Long": 39.24006,
+              "altitude": -62.1,
+              "heart_rate": 0,
+              "speed_knots": 3.36,
+              "temperature": 30.1
+            },
+            "16:29:30": {
+              "Lat": -6.7712,
+              "Long": 39.24043,
+              "altitude": -13.9,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.73,
+              "temperature": 30
+            },
+            "16:2:13": {
+              "Lat": -6.77094,
+              "Long": 39.23982,
+              "altitude": -0.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.85,
+              "temperature": 30
+            },
+            "16:2:29": {
+              "Lat": -6.7709,
+              "Long": 39.23977,
+              "altitude": -0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.74,
+              "temperature": 30
+            },
+            "16:2:43": {
+              "Lat": -6.77086,
+              "Long": 39.23974,
+              "altitude": -0.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.58,
+              "temperature": 30
+            },
+            "16:2:58": {
+              "Lat": -6.77091,
+              "Long": 39.23976,
+              "altitude": -0.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 30
+            },
+            "16:30:25": {
+              "Lat": -6.7711,
+              "Long": 39.24022,
+              "altitude": -3.3,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.01,
+              "temperature": 30.1
+            },
+            "16:30:41": {
+              "Lat": -6.77119,
+              "Long": 39.24031,
+              "altitude": 53.7,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.91,
+              "temperature": 30.1
+            },
+            "16:30:57": {
+              "Lat": -6.77117,
+              "Long": 39.24023,
+              "altitude": 92.4,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.43,
+              "temperature": 30.2
+            },
+            "16:31:11": {
+              "Lat": -6.77118,
+              "Long": 39.24031,
+              "altitude": 99.6,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.22,
+              "temperature": 30.3
+            },
+            "16:31:27": {
+              "Lat": -6.77127,
+              "Long": 39.24044,
+              "altitude": 97.1,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 2.17,
+              "temperature": 30.3
+            },
+            "16:31:43": {
+              "Lat": -6.77136,
+              "Long": 39.24048,
+              "altitude": 92.8,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 1.87,
+              "temperature": 30.2
+            },
+            "16:31:57": {
+              "Lat": -6.77133,
+              "Long": 39.24036,
+              "altitude": 85.4,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.88,
+              "temperature": 30.2
+            },
+            "16:32:12": {
+              "Lat": -6.77126,
+              "Long": 39.24008,
+              "altitude": 72.5,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.99,
+              "temperature": 30.1
+            },
+            "16:32:26": {
+              "Lat": -6.77123,
+              "Long": 39.24018,
+              "altitude": 70.2,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.85,
+              "temperature": 30.1
+            },
+            "16:32:41": {
+              "Lat": -6.77115,
+              "Long": 39.24018,
+              "altitude": 58.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.57,
+              "temperature": 30.1
+            },
+            "16:32:55": {
+              "Lat": -6.77114,
+              "Long": 39.24018,
+              "altitude": 54.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.32,
+              "temperature": 30.1
+            },
+            "16:33:10": {
+              "Lat": -6.77109,
+              "Long": 39.24,
+              "altitude": 21.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.92,
+              "temperature": 30.2
+            },
+            "16:33:24": {
+              "Lat": -6.77105,
+              "Long": 39.23991,
+              "altitude": -13.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.39,
+              "temperature": 30.1
+            },
+            "16:33:40": {
+              "Lat": -6.77105,
+              "Long": 39.2399,
+              "altitude": -14.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.42,
+              "temperature": 30.1
+            },
+            "16:3:12": {
+              "Lat": -6.77094,
+              "Long": 39.23983,
+              "altitude": -0.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.23,
+              "temperature": 29.9
+            },
+            "16:3:28": {
+              "Lat": -6.77103,
+              "Long": 39.23989,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.45,
+              "temperature": 29.9
+            },
+            "16:3:42": {
+              "Lat": -6.77099,
+              "Long": 39.23986,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.12,
+              "temperature": 29.9
+            },
+            "16:3:57": {
+              "Lat": -6.77092,
+              "Long": 39.23986,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 29.8
+            },
+            "16:4:11": {
+              "Lat": -6.77099,
+              "Long": 39.23991,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.33,
+              "temperature": 29.8
+            },
+            "16:4:26": {
+              "Lat": -6.771,
+              "Long": 39.23989,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.23,
+              "temperature": 29.8
+            },
+            "16:4:41": {
+              "Lat": -6.77095,
+              "Long": 39.23986,
+              "altitude": -0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.3,
+              "temperature": 29.8
+            },
+            "16:4:57": {
+              "Lat": -6.77096,
+              "Long": 39.23989,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.1,
+              "temperature": 29.8
+            },
+            "16:5:12": {
+              "Lat": -6.77098,
+              "Long": 39.23989,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.22,
+              "temperature": 29.7
+            },
+            "16:5:26": {
+              "Lat": -6.77102,
+              "Long": 39.23989,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.37,
+              "temperature": 29.7
+            },
+            "16:5:41": {
+              "Lat": -6.77107,
+              "Long": 39.23994,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.55,
+              "temperature": 29.7
+            },
+            "16:5:55": {
+              "Lat": -6.77106,
+              "Long": 39.23995,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.14,
+              "temperature": 29.7
+            },
+            "16:6:10": {
+              "Lat": -6.77103,
+              "Long": 39.2399,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.18,
+              "temperature": 29.7
+            },
+            "16:6:25": {
+              "Lat": -6.771,
+              "Long": 39.23989,
+              "altitude": -0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.24,
+              "temperature": 29.7
+            },
+            "16:6:41": {
+              "Lat": -6.77097,
+              "Long": 39.23991,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.24,
+              "temperature": 29.7
+            },
+            "16:6:55": {
+              "Lat": -6.77088,
+              "Long": 39.23987,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.65,
+              "temperature": 29.7
+            },
+            "16:7:10": {
+              "Lat": -6.7709,
+              "Long": 39.23985,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.38,
+              "temperature": 29.7
+            },
+            "16:7:24": {
+              "Lat": -6.77092,
+              "Long": 39.23984,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.11,
+              "temperature": 29.7
+            },
+            "16:7:40": {
+              "Lat": -6.77094,
+              "Long": 39.23982,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 29.7
+            },
+            "16:7:54": {
+              "Lat": -6.77106,
+              "Long": 39.23982,
+              "altitude": -0.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.89,
+              "temperature": 29.7
+            },
+            "16:8:10": {
+              "Lat": -6.77098,
+              "Long": 39.23983,
+              "altitude": -0.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.21,
+              "temperature": 29.7
+            },
+            "16:8:24": {
+              "Lat": -6.77088,
+              "Long": 39.23974,
+              "altitude": -1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.73,
+              "temperature": 29.7
+            },
+            "16:8:39": {
+              "Lat": -6.7708,
+              "Long": 39.23966,
+              "altitude": -1.2,
+              "heart_rate": 0,
+              "satellites": 3,
+              "speed_knots": 0.95,
+              "temperature": 29.7
+            },
+            "16:8:53": {
+              "Lat": -6.77081,
+              "Long": 39.23966,
+              "altitude": -1.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.63,
+              "temperature": 29.7
+            },
+            "16:9:22": {
+              "Lat": -6.77084,
+              "Long": 39.23968,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.03,
+              "temperature": 29.7
+            },
+            "16:9:37": {
+              "Lat": -6.77089,
+              "Long": 39.2398,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.46,
+              "temperature": 29.7
+            },
+            "16:9:53": {
+              "Lat": -6.77088,
+              "Long": 39.23983,
+              "altitude": -0.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.47,
+              "temperature": 29.6
+            },
+            "16:9:8": {
+              "Lat": -6.77079,
+              "Long": 39.23963,
+              "altitude": -1.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.55,
+              "temperature": 29.7
+            },
+            "17:20:24": {
+              "Lat": -6.77093,
+              "Long": 39.23994,
+              "altitude": 3.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.02,
+              "temperature": 30.1
+            },
+            "17:20:38": {
+              "Lat": -6.77127,
+              "Long": 39.24014,
+              "altitude": 139,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 3.19,
+              "temperature": 30.1
+            },
+            "17:20:53": {
+              "Lat": -6.77127,
+              "Long": 39.24012,
+              "altitude": 148.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.23,
+              "temperature": 30.1
+            },
+            "17:20:8": {
+              "Lat": -6.77078,
+              "Long": 39.23988,
+              "altitude": 5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.1,
+              "temperature": 30
+            },
+            "17:21:22": {
+              "Lat": -6.77129,
+              "Long": 39.24008,
+              "altitude": 154.39999,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.44,
+              "temperature": 30.1
+            },
+            "17:21:36": {
+              "Lat": -6.77123,
+              "Long": 39.24008,
+              "altitude": 154.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.74,
+              "temperature": 30.1
+            },
+            "17:21:51": {
+              "Lat": -6.77116,
+              "Long": 39.24004,
+              "altitude": 151.60001,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 30.1
+            },
+            "17:21:7": {
+              "Lat": -6.77132,
+              "Long": 39.24012,
+              "altitude": 145.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.57,
+              "temperature": 30.1
+            },
+            "17:22:27": {
+              "Lat": -6.77126,
+              "Long": 39.24012,
+              "altitude": 134.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.45,
+              "temperature": 29.9
+            },
+            "17:22:41": {
+              "Lat": -6.77118,
+              "Long": 39.24009,
+              "altitude": 127.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.19,
+              "temperature": 29.9
+            },
+            "17:22:56": {
+              "Lat": -6.77116,
+              "Long": 39.24007,
+              "altitude": 119.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.19,
+              "temperature": 29.8
+            },
+            "17:22:8": {
+              "Lat": -6.77123,
+              "Long": 39.2401,
+              "altitude": 148.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.75,
+              "temperature": 30
+            },
+            "17:23:10": {
+              "Lat": -6.77118,
+              "Long": 39.24009,
+              "altitude": 108.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.59,
+              "temperature": 29.7
+            },
+            "17:23:27": {
+              "Lat": -6.77109,
+              "Long": 39.24003,
+              "altitude": 99.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.33,
+              "temperature": 29.7
+            },
+            "17:23:42": {
+              "Lat": -6.77101,
+              "Long": 39.23993,
+              "altitude": 93.2,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.49,
+              "temperature": 29.7
+            },
+            "17:23:57": {
+              "Lat": -6.77096,
+              "Long": 39.23988,
+              "altitude": 91.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.34,
+              "temperature": 29.7
+            },
+            "17:24:13": {
+              "Lat": -6.771,
+              "Long": 39.23992,
+              "altitude": 92.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.79,
+              "temperature": 29.7
+            },
+            "17:24:27": {
+              "Lat": -6.77103,
+              "Long": 39.23992,
+              "altitude": 88.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.05,
+              "temperature": 29.8
+            },
+            "17:24:42": {
+              "Lat": -6.77099,
+              "Long": 39.23992,
+              "altitude": 85.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.24,
+              "temperature": 29.9
+            },
+            "17:24:56": {
+              "Lat": -6.77102,
+              "Long": 39.23992,
+              "altitude": 84.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.86,
+              "temperature": 29.9
+            },
+            "17:25:11": {
+              "Lat": -6.77093,
+              "Long": 39.23985,
+              "altitude": 83.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.05,
+              "temperature": 29.9
+            },
+            "17:25:25": {
+              "Lat": -6.77096,
+              "Long": 39.23987,
+              "altitude": 82.6,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.55,
+              "temperature": 29.9
+            },
+            "17:25:40": {
+              "Lat": -6.77102,
+              "Long": 39.23996,
+              "altitude": 82.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.46,
+              "temperature": 29.9
+            },
+            "17:25:54": {
+              "Lat": -6.77094,
+              "Long": 39.24,
+              "altitude": 82.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.2,
+              "temperature": 29.9
+            },
+            "17:26:10": {
+              "Lat": -6.77105,
+              "Long": 39.24002,
+              "altitude": 82.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.85,
+              "temperature": 29.9
+            },
+            "17:26:26": {
+              "Lat": -6.77113,
+              "Long": 39.24003,
+              "altitude": 82.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.85,
+              "temperature": 29.8
+            },
+            "17:26:42": {
+              "Lat": -6.77108,
+              "Long": 39.23997,
+              "altitude": 82.1,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.39,
+              "temperature": 29.8
+            },
+            "17:26:56": {
+              "Lat": -6.77112,
+              "Long": 39.24,
+              "altitude": 83.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.74,
+              "temperature": 29.8
+            },
+            "17:27:11": {
+              "Lat": -6.771,
+              "Long": 39.23988,
+              "altitude": 83.8,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.27,
+              "temperature": 29.9
+            },
+            "17:27:25": {
+              "Lat": -6.77114,
+              "Long": 39.23996,
+              "altitude": 83.7,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.1,
+              "temperature": 30.1
+            },
+            "17:27:40": {
+              "Lat": -6.7713,
+              "Long": 39.2401,
+              "altitude": 85.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.99,
+              "temperature": 30
+            },
+            "17:27:54": {
+              "Lat": -6.77121,
+              "Long": 39.2401,
+              "altitude": 87,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 1.06,
+              "temperature": 29.9
+            },
+            "17:28:23": {
+              "Lat": -6.77125,
+              "Long": 39.24009,
+              "altitude": 90.4,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.21,
+              "temperature": 29.9
+            },
+            "17:28:38": {
+              "Lat": -6.77121,
+              "Long": 39.2401,
+              "altitude": 93,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.26,
+              "temperature": 29.8
+            },
+            "17:28:52": {
+              "Lat": -6.77123,
+              "Long": 39.24012,
+              "altitude": 95.3,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.67,
+              "temperature": 29.7
+            },
+            "17:28:9": {
+              "Lat": -6.77119,
+              "Long": 39.24007,
+              "altitude": 88.9,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.25,
+              "temperature": 29.9
+            },
+            "17:29:7": {
+              "Lat": -6.77124,
+              "Long": 39.24012,
+              "altitude": 96.5,
+              "heart_rate": 0,
+              "satellites": 4,
+              "speed_knots": 0.49,
+              "temperature": 29.7
+            }
+          }
+        },
+        "name": "Dady Elephany",
+        "sex": "male",
+        "upload_interval": 9
+      },
+      {
+        "age": 38,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.945002,
+              "Long": 34.16382,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36
+            },
+            "13:37": {
+              "Lat": -1.9452,
+              "Long": 34.1637,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.004
+              },
+              "temperature": 36.1
+            },
+            "13:42": {
+              "Lat": -1.9454,
+              "Long": 34.1636,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.2
+            }
+          }
+        },
+        "name": "Big Tusk",
+        "sex": "male",
+        "upload_interval": 12
+      },
+      {
+        "age": 35,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.94553,
+              "Long": 34.16401,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 35.5
+            },
+            "13:37": {
+              "Lat": -1.9456,
+              "Long": 34.1642,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.6
+            },
+            "13:42": {
+              "Lat": -1.9457,
+              "Long": 34.1643,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.7
+            }
+          }
+        },
+        "name": "Mama Ellie",
+        "sex": "female",
+        "upload_interval": 1
+      },
+      {
+        "age": 45,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.944996,
+              "Long": 34.164437,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:37": {
+              "Lat": -1.945096,
+              "Long": 34.164537,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            },
+            "13:42": {
+              "Lat": -1.945196,
+              "Long": 34.164637,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            }
+          }
+        },
+        "name": "Uncle Jumbo",
+        "sex": "male",
+        "upload_interval": 1
+      },
+      {
+        "age": 23,
+        "location": {
+          "2025-02-20": {
+            "15:19:16": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:20:17": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "15:21:19": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "15:22:21": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "15:23:23": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "15:24:24": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "15:25:27": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "15:26:29": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "15:27:31": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "15:28:33": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "15:29:35": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "15:30:37": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "15:32:50": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:33:52": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "15:34:53": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "15:35:54": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "15:36:57": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "15:37:58": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "15:39:00": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "15:40:02": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "15:42:08": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "15:43:09": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "15:43:31": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "15:44:32": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:45:33": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "15:46:35": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:47:38": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:48:40": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "15:49:42": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "15:50:44": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "15:51:46": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "15:53:51": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "15:54:53": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "15:55:54": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "15:56:55": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "15:57:58": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "15:58:59": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "16:00:01": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "16:01:03": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "16:02:05": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "16:08:07": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "16:09:09": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "16:10:11": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "16:11:13": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "16:45:06": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "16:46:08": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "16:47:10": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "17:38:46": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "17:39:48": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "17:40:50": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "17:41:52": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "17:42:56": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "17:43:31": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "17:44:33": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "17:45:35": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "17:46:37": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "17:47:39": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "17:48:41": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "17:49:44": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "17:50:47": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "17:51:49": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "17:52:52": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "17:53:55": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "17:54:57": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "17:55:59": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "17:57:03": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "17:58:05": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "17:59:07": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "19:27:38": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "19:28:01": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "19:29:07": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "19:30:09": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "19:31:11": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "19:32:14": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "19:33:16": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "19:34:18": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "19:35:22": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "19:36:23": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "19:37:25": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "19:38:28": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "19:39:30": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "19:40:31": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "19:41:35": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "19:42:37": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "19:43:38": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "19:44:42": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "19:45:45": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "19:46:47": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "19:47:51": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "19:48:53": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "19:49:55": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "19:50:59": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "19:52:02": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "19:53:04": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "19:54:08": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "19:55:09": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "19:56:13": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "19:57:17": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "19:58:21": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 27
+            },
+            "19:59:26": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "20:00:35": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "20:01:40": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "20:02:45": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "20:03:49": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "20:04:54": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "20:05:58": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "20:07:05": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:08:11": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "20:09:14": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "20:10:20": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "20:11:24": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "20:12:30": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "20:13:38": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:14:44": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "20:15:51": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "20:16:57": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "20:18:02": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "20:19:07": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "20:20:16": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "20:21:18": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:22:22": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 26
+            },
+            "20:23:28": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "20:24:32": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 26
+            },
+            "20:25:39": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:26:51": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "20:27:59": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "20:29:03": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "20:30:10": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 26
+            },
+            "20:31:17": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 77,
+              "temperature": 27
+            },
+            "20:32:22": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:33:38": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 27
+            },
+            "20:34:41": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 73,
+              "temperature": 27
+            },
+            "20:35:45": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            },
+            "20:36:48": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "20:37:53": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "20:38:57": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:40:03": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 26
+            },
+            "20:41:06": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 74,
+              "temperature": 27
+            },
+            "20:42:09": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 76,
+              "temperature": 26
+            },
+            "20:43:14": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 72,
+              "temperature": 26
+            },
+            "20:44:16": {
+              "Lat": -6.77468,
+              "Long": 39.24103,
+              "pulse": 75,
+              "temperature": 27
+            }
+          }
+        },
+        "name": "Tembo John",
+        "sex": "male",
+        "upload_interval": 1
+      }
+    ],
+    "Giraffes": [
+      null,
+      {
+        "age": 15,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9458,
+              "Long": 34.1649,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.1
+            },
+            "13:37": {
+              "Lat": -1.946,
+              "Long": 34.165,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.2
+            },
+            "13:42": {
+              "Lat": -1.9462,
+              "Long": 34.1681,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.3
+            }
+          }
+        },
+        "name": "Graceful Giraffe",
+        "sex": "female",
+        "upload_interval": 1
+      },
+      {
+        "age": 12,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9463,
+              "Long": 34.1652,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.4
+            },
+            "13:37": {
+              "Lat": -1.9464,
+              "Long": 34.1653,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 35.5
+            },
+            "13:42": {
+              "Lat": -1.9465,
+              "Long": 34.1654,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 35.6
+            }
+          }
+        },
+        "name": "Tall George",
+        "sex": "male",
+        "upload_interval": 1
+      },
+      {
+        "age": 60,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.952,
+              "Long": 34.172,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 35.7
+            }
+          }
+        },
+        "name": "Granny Gira",
+        "sex": "female",
+        "upload_interval": 1
+      }
+    ],
+    "Leopards": [
+      null,
+      {
+        "age": 6,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.949,
+              "Long": 34.1671,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36
+            },
+            "13:37": {
+              "Lat": -1.9492,
+              "Long": 34.1672,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.1
+            },
+            "13:42": {
+              "Lat": -1.9494,
+              "Long": 34.1673,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.2
+            }
+          }
+        },
+        "name": "Spotty Sam",
+        "sex": "male",
+        "upload_interval": 1
+      },
+      {
+        "age": 5,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9495,
+              "Long": 34.1674,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.3
+            },
+            "13:37": {
+              "Lat": -1.9497,
+              "Long": 34.1675,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.03,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            },
+            "13:42": {
+              "Lat": -1.9499,
+              "Long": 34.1676,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.5
+            }
+          }
+        },
+        "name": "Luna the Leopard",
+        "sex": "female",
+        "upload_interval": 1
+      }
+    ],
+    "Lions": [
+      null,
+      {
+        "age": 8,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.948,
+              "Long": 34.1665,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.002
+              },
+              "temperature": 36.1
+            },
+            "13:37": {
+              "Lat": -1.9482,
+              "Long": 34.1666,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:42": {
+              "Lat": -1.9484,
+              "Long": 34.1667,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            }
+          }
+        },
+        "name": "King Leo",
+        "sex": "male",
+        "upload_interval": 1
+      },
+      {
+        "age": 7,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9485,
+              "Long": 34.1668,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.4
+            },
+            "13:37": {
+              "Lat": -1.9487,
+              "Long": 34.1669,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.01,
+                "z": 0.02
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.5
+            },
+            "13:42": {
+              "Lat": -1.9489,
+              "Long": 34.167,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.03,
+                "z": 0.01
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.6
+            }
+          }
+        },
+        "name": "Queen Nala",
+        "sex": "female",
+        "upload_interval": 1
+      }
+    ],
+    "Rhinos": [
+      null,
+      {
+        "age": 20,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.95,
+              "Long": 34.1677,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.002,
+                "yaw": 0.001
+              },
+              "temperature": 36.2
+            },
+            "13:37": {
+              "Lat": -1.9502,
+              "Long": 34.1678,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.04
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.001,
+                "yaw": 0.003
+              },
+              "temperature": 36.3
+            },
+            "13:42": {
+              "Lat": -1.9504,
+              "Long": 34.1679,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.003,
+                "yaw": 0.002
+              },
+              "temperature": 36.4
+            }
+          }
+        },
+        "name": "Faru John",
+        "sex": "male",
+        "upload_interval": 60
+      },
+      {
+        "age": 18,
+        "location": {
+          "2024-08-21": {
+            "13:32": {
+              "Lat": -1.9505,
+              "Long": 34.168,
+              "accelerometer": {
+                "x": 0.02,
+                "y": -0.01,
+                "z": 0.04
+              },
+              "activity": "walking",
+              "gyroscope": {
+                "pitch": -0.003,
+                "roll": 0.001,
+                "yaw": 0.002
+              },
+              "temperature": 36.5
+            },
+            "13:37": {
+              "Lat": -1.9507,
+              "Long": 34.1681,
+              "accelerometer": {
+                "x": 0.01,
+                "y": -0.02,
+                "z": 0.03
+              },
+              "activity": "grazing",
+              "gyroscope": {
+                "pitch": -0.002,
+                "roll": 0.003,
+                "yaw": 0.001
+              },
+              "temperature": 36.6
+            },
+            "13:42": {
+              "Lat": -1.9509,
+              "Long": 34.1682,
+              "accelerometer": {
+                "x": 0.03,
+                "y": -0.03,
+                "z": 0.02
+              },
+              "activity": "resting",
+              "gyroscope": {
+                "pitch": -0.001,
+                "roll": 0.002,
+                "yaw": 0.003
+              },
+              "temperature": 36.7
+            }
+          }
+        },
+        "name": "Rhonda Rhino",
+        "sex": "female",
+        "upload_interval": 1
+      }
+    ]
+  },
+  "Controls": {
+    "showAnimals": true,
+    "showPatrols": true,
+    "showReports": true,
+    "trackingMode": "lastKnown"
+  },
+  "PatrolOfficers": {
+    "0001": {
+      "active": "false",
+      "email": "ellykikota@gmail.com",
+      "last_report_time": "",
+      "name": "Elisa Kikota",
+      "on_patrol": false,
+      "phone": "0748485183",
+      "role": "Ranger"
+    }
+  },
+  "Reports": {
+    "CT_Icon_Sighting": [
+      null,
+      {
+        "day": "2024-08-26",
+        "description": "CT Icon observed near park.",
+        "location": {
+          "Lat": -6.7708,
+          "Long": 39.2397
+        },
+        "notes": "Icon was spotted on a tree trunk.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer H",
+        "time": "19:45"
+      }
+    ],
+    "Fire": [
+      null,
+      {
+        "action_taken": "Extinguishing",
+        "attended": false,
+        "cause_of_fire": "Human-induced",
+        "day": "2024-09-02",
+        "fire_status": "Active",
+        "location": {
+          "Lat": "-6.7710064",
+          "Long": "39.23993"
+        },
+        "notes": "need immediate assistance ",
+        "pictures": [
+          "https://firebasestorage.googleapis.com/v0/b/animal-tracking-01.appspot.com/o/Reports%2FFire%2F1%2F0.jpg?alt=media&token=d5ff9be3-d7d8-453a-a712-ddb6ccae389c"
+        ],
+        "reportID": 1,
+        "reported_by": "Officer A",
+        "size_hectares": 2,
+        "time": "14:29:51"
+      }
+    ],
+    "Human_Wildlife_Contact": [
+      null,
+      {
+        "action_taken": "Reported to authorities",
+        "contact_type": "Aggressive",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7712,
+          "Long": 39.2401
+        },
+        "notes": "Elephant was seen destroying crops.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer B",
+        "species": "Elephant",
+        "time": "13:15"
+      }
+    ],
+    "Injured_Animal": [
+      null,
+      {
+        "action_taken": "Treated",
+        "cause_of_injury": "Shot",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77115,
+          "Long": 39.23985
+        },
+        "notes": "Lion is in stable condition after treatment.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer C",
+        "species": "Lion",
+        "time": "14:30",
+        "type_of_injury": "Gunshot wound"
+      }
+    ],
+    "Invasive_Species_Sighting": [
+      null,
+      {
+        "action_taken": "Reported for eradication",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7713,
+          "Long": 39.24
+        },
+        "location_description": "Near riverbank",
+        "notes": "Species found in large quantities.",
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer D",
+        "species": "Kudzu",
+        "time": "15:45"
+      }
+    ],
+    "Rainfall": [
+      null,
+      {
+        "amount_mm": 25.4,
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7709,
+          "Long": 39.24005
+        },
+        "notes": "Heavy rainfall expected to continue.",
+        "reported_by": "Officer E",
+        "time": "16:00"
+      }
+    ],
+    "Rhino_Sighting": [
+      null,
+      {
+        "action_taken": "Monitored",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.77095,
+          "Long": 39.23975
+        },
+        "notes": "Rhinos were seen grazing peacefully.",
+        "number_of_rhinos": 3,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer F",
+        "time": "17:15"
+      }
+    ],
+    "Wildlife_Sighting": [
+      null,
+      {
+        "action_taken": "Noted",
+        "day": "2024-08-26",
+        "location": {
+          "Lat": -6.7711,
+          "Long": 39.23995
+        },
+        "notes": "Giraffes were observed in their natural habitat.",
+        "number_of_animals": 5,
+        "pictures": [
+          "https://example.com/picture1.jpg"
+        ],
+        "reported_by": "Officer G",
+        "species": "Giraffe",
+        "time": "18:30"
+      }
+    ]
+  },
+  "Users": [
+    null,
+    {
+      "avatar": "https://t4.ftcdn.net/jpg/09/65/74/21/240_F_965742167_IujGESFUoUARMM51Fj3Ce6iskAMfo6ba.jpg",
+      "email": "ellykikota@gmail.com",
+      "index": 1,
+      "name": "Elisa Kikota",
+      "role": "user",
+      "status": "active"
+    }
+  ]
+}

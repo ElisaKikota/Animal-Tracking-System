@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, get } from 'firebase/database';
 import { database } from '../../firebase';
-import { FormControlLabel, Switch, Box, Typography, CircularProgress, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Switch, Box, Typography, CircularProgress, Radio, RadioGroup, Button, Paper, Fade, Grid, FormControl, InputLabel, Select, MenuItem, Modal } from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import AnimalSelector from './AnimalSelector';
 import TimelineControl from './TimelineControl';
@@ -10,6 +10,8 @@ import './HistoricalPatterns.css';
 import { MapContainer, TileLayer, Polyline, ZoomControl, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import Papa from 'papaparse';
+import AnimalDetailsPanel from './AnimalDetailsPanel';
+import { ModelTraining, DirectionsRun, Timeline, Public } from '@mui/icons-material';
 
 // Import animal icons
 import elephantIcon from '../../assets/elephant.png';
@@ -38,6 +40,7 @@ function HistoricalPatterns() {
   const [loadingCSV, setLoadingCSV] = useState(false);
   const [csvError, setCsvError] = useState(null);
   const [csvLoaded, setCsvLoaded] = useState(false);
+  const [showAnimalDetailsPanel, setShowAnimalDetailsPanel] = useState(false);
   
   // Get main sidebar state from App's CSS classes
   const [isMainSidebarOpen, setIsMainSidebarOpen] = useState(false);
@@ -411,6 +414,152 @@ function HistoricalPatterns() {
     }
   }, [dataSource, selectedAnimals, animalData]);
 
+  // When a single animal is selected, show the details panel
+  useEffect(() => {
+    if (selectedAnimals.length === 1) {
+      setShowAnimalDetailsPanel(true);
+    } else {
+      setShowAnimalDetailsPanel(false);
+    }
+  }, [selectedAnimals]);
+
+  const handleBackToSelection = () => {
+    setSelectedAnimals([]);
+    setShowAnimalDetailsPanel(false);
+  };
+
+  // New UI state for home panel and workflow
+  const [mainPanel, setMainPanel] = useState('home'); // 'home', 'train', 'predict', 'patterns', 'geo'
+  const [trainStep, setTrainStep] = useState(0); // 0: data source, 1: animal, 2: model type, 3: model, 4: params
+
+  // Add state for modelType, selectedModel, availableModels
+  const [modelType, setModelType] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [availableModels, setAvailableModels] = useState([]);
+
+  // Update availableModels when modelType changes (fetch from Firebase)
+  useEffect(() => {
+    if (!modelType) { setAvailableModels([]); return; }
+    // Map modelType to Firebase node
+    const typeLabel = modelType === 'random_forest' ? 'Random Forest' : 'LSTM';
+    const modelsRef = ref(database, `Models/${typeLabel}`);
+    get(modelsRef).then(snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        const models = Object.entries(data).map(([id, model]) => ({ id, ...model }));
+        setAvailableModels(models);
+      } else {
+        setAvailableModels([]);
+      }
+    });
+  }, [modelType]);
+
+  // New Home Panel UI
+  const HomePanel = () => (
+    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 250, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>AI Animal Tracking</Typography>
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Button fullWidth size="medium" variant="contained" color="primary" startIcon={<ModelTraining />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => { setMainPanel('train'); setTrainStep(0); }}>
+            Train Model
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button fullWidth size="medium" variant="contained" color="secondary" startIcon={<DirectionsRun />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('predict')}>
+            Predict Movement
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button fullWidth size="medium" variant="contained" color="info" startIcon={<Timeline />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('patterns')}>
+            View Patterns
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button fullWidth size="medium" variant="contained" color="success" startIcon={<Public />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('geo')}>
+            Geo-analysis
+          </Button>
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+
+  // Train Model Workflow Panel
+  const TrainModelPanel = () => (
+    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 250, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Train Model</Typography>
+      {/* Step 1: Select Data Source */}
+      {trainStep === 0 && (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Data Source</Typography>
+          <RadioGroup
+            row
+            value={dataSource}
+            onChange={e => setDataSource(e.target.value)}
+          >
+            <FormControlLabel value="realtime" control={<Radio />} label="Realtime Data" />
+            <FormControlLabel value="predictive" control={<Radio />} label="Predictive Data" />
+          </RadioGroup>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)}>
+            Next
+          </Button>
+        </Box>
+      )}
+      {/* Step 2: Select Animal */}
+      {trainStep === 1 && (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Animal</Typography>
+          <AnimalSelector
+            animals={animalData}
+            selectedAnimals={selectedAnimals}
+            onAnimalSelection={setSelectedAnimals}
+            collapsed={false}
+            onToggleCollapse={() => {}}
+          />
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(2)} disabled={selectedAnimals.length === 0}>
+            Next
+          </Button>
+          <Button fullWidth sx={{ mt: 1, fontSize: 15, py: 1 }} onClick={() => setTrainStep(0)}>Back</Button>
+        </Box>
+      )}
+      {/* Step 3: Select Model Type and go directly to parameters */}
+      {trainStep === 2 && (
+        <Box>
+          <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Model Type</Typography>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Model Type</InputLabel>
+            <Select
+              value={modelType}
+              label="Model Type"
+              onChange={e => {
+                setModelType(e.target.value);
+                setSelectedModel('');
+                setTrainStep(3); // Go directly to parameters step
+              }}
+            >
+              <MenuItem value="random_forest">Random Forest</MenuItem>
+              <MenuItem value="lstm">LSTM</MenuItem>
+            </Select>
+          </FormControl>
+          <Button fullWidth sx={{ mt: 1, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)}>Back</Button>
+        </Box>
+      )}
+      {/* Step 4: Parameters dashboard (trainStep 3) */}
+      {trainStep === 3 && (
+        <AnimalDetailsPanel
+          animal={animalData.find(a => a.id === selectedAnimals[0])}
+          onBack={() => setTrainStep(2)}
+          dataSource={dataSource}
+          modelType={modelType}
+          selectedModel={selectedModel}
+          availableModels={availableModels}
+          showFullPanel
+        />
+      )}
+      {/* Back to home */}
+      <Button fullWidth sx={{ mt: 2, fontSize: 15, py: 1 }} onClick={() => setMainPanel('home')}>Back to Home</Button>
+    </Paper>
+  );
+
   return (
     <div className="historical-patterns">
       <div className="analysis-container">
@@ -457,78 +606,12 @@ function HistoricalPatterns() {
           </MapContainer>
         </div>
 
-        <div className="controls-panel">
-          {/* Data Source Selection */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Select Data Source
-            </Typography>
-            <RadioGroup
-              row
-              value={dataSource}
-              onChange={e => {
-                setDataSource(e.target.value);
-                setSelectedAnimals([]);
-                setShowDateRange(false);
-              }}
-            >
-              <FormControlLabel value="realtime" control={<Radio />} label="Realtime Data" />
-              <FormControlLabel value="predictive" control={<Radio />} label="Predictive Data" />
-            </RadioGroup>
-          </Box>
+       
 
-          {/* Only show the rest if a data source is selected */}
-          {dataSource && (
-            <>
-              {loadingCSV && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CircularProgress size={20} />
-                  <Typography>Loading data...</Typography>
-                </Box>
-              )}
-              {csvError && (
-                <Typography color="error" sx={{ ml: 2 }}>
-                  {csvError}
-                </Typography>
-              )}
-              <AnimalSelector
-                animals={animalData}
-                selectedAnimals={selectedAnimals}
-                onAnimalSelection={setSelectedAnimals}
-                collapsed={animalSelectorCollapsed}
-                onToggleCollapse={() => setAnimalSelectorCollapsed(!animalSelectorCollapsed)}
-              />
-              {/* Model training panel placeholder */}
-              {csvLoaded && dataSource === 'predictive' && (
-                <Box sx={{ mt: 2, p: 2, background: '#f8f9fa', borderRadius: 2 }}>
-                  <Typography variant="h6">Model Training Options</Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    (Here you will select train/test split and start training the model)
-                  </Typography>
-                  {/* Add your model training UI here */}
-                </Box>
-              )}
-              {pathData && pathData.length > 0 && (
-                <TimelineControl
-                  pathData={pathData}
-                  currentTimestamp={currentTimestamp}
-                  onTimestampChange={handleTimelineChange}
-                  isPlaying={isPlaying}
-                  onPlayPause={togglePlayback}
-                  playbackSpeed={playbackSpeed}
-                  onSpeedChange={handleSpeedChange}
-                />
-              )}
-              {pathData && pathData.length > 0 && (
-                <AnalysisFeatures
-                  pathData={pathData}
-                  selectedAnimals={selectedAnimals}
-                  dateRange={dateRange}
-                />
-              )}
-            </>
-          )}
-        </div>
+        {/* New Home/Workflow Panel at top right */}
+        {mainPanel === 'home' && <HomePanel />}
+        {mainPanel === 'train' && <TrainModelPanel />}
+        {/* TODO: Add panels for predict, patterns, geo as needed */}
       </div>
     </div>
   );

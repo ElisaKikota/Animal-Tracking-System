@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from 'firebase/database';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,14 +23,19 @@ const firebaseConfig = {
 let app;
 let database;
 let firestore;
+let storage;
 
 try {
   app = initializeApp(firebaseConfig);
   database = getDatabase(app);
   firestore = getFirestore(app);
+  storage = getStorage(app);
   console.log('Firebase initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase:', error);
+  // Throw the error to prevent the app from continuing with invalid Firebase state
+  throw new Error('Failed to initialize Firebase. Please check your configuration and try again.');
 }
 
-export { database, firestore };
+// Export initialized instances
+export { app, database, firestore, storage };

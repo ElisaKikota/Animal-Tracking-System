@@ -363,6 +363,7 @@ function groupDataByDateTime(data) {
  * @param {Object} timestampConfig - Timestamp configuration
  * @param {Function} setUploadProgress - Function to update upload progress
  * @param {Object} animalDetails - Animal details
+ * @param {Object} renamedHeaders - Renamed headers
  * @returns {Promise<void>}
  */
 export const processAndUploadData = async (
@@ -371,24 +372,45 @@ export const processAndUploadData = async (
   columnMappings,
   timestampConfig,
   setUploadProgress,
-  animalDetails
+  animalDetails,
+  renamedHeaders
 ) => {
   try {
     // Preprocess: add 'date' and 'time' fields if missing, using timestamp/Timestamp
     const preprocessed = parsedData.map(row => {
-      let date = row.date;
-      let time = row.time;
+      // Check for any case variant of 'date' and 'time'
+      const hasDate = Object.keys(row).some(k => k.toLowerCase() === 'date');
+      const hasTime = Object.keys(row).some(k => k.toLowerCase() === 'time');
+      let date = hasDate ? row[Object.keys(row).find(k => k.toLowerCase() === 'date')] : undefined;
+      let time = hasTime ? row[Object.keys(row).find(k => k.toLowerCase() === 'time')] : undefined;
       const ts = row.timestamp || row.Timestamp;
       if ((!date || !time) && ts) {
         const [d, t] = ts.split('T');
         date = date || d;
         time = time || (t ? t.substring(0, 8) : undefined);
       }
-      return { ...row, date, time };
+      // Only add if they have values
+      const newRow = { ...row };
+      if (date !== undefined) newRow.date = date;
+      if (time !== undefined) newRow.time = time;
+      return newRow;
     });
 
+    // Remap keys to renamed headers
+    let renamedData = preprocessed;
+    if (renamedHeaders && Object.keys(renamedHeaders).length > 0) {
+      renamedData = preprocessed.map(row => {
+        const newRow = {};
+        Object.keys(row).forEach(origKey => {
+          const newKey = renamedHeaders[origKey] || origKey;
+          newRow[newKey] = row[origKey];
+        });
+        return newRow;
+      });
+    }
+
     // Sanitize keys and group data by date and time
-    const sanitized = preprocessed.map(sanitizeKeys);
+    const sanitized = renamedData.map(sanitizeKeys);
     const groupedData = groupDataByDateTime(sanitized);
     console.log("Grouped data to be saved:", groupedData);
 
@@ -412,7 +434,8 @@ export const processAndUploadData = async (
     setUploadProgress(50);
 
     // --- NEW LOGIC: Produce CSV file and upload to Firebase Storage ---
-    const csv = Papa.unparse(parsedData);
+    // Use renamed headers for CSV
+    const csv = Papa.unparse(renamedData);
     const csvBlob = new Blob([csv], { type: 'text/csv' });
     const storage = getStorage();
     const csvFileName = `PredictiveData/${species}/${animalId}.csv`;

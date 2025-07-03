@@ -7,6 +7,7 @@ import Welcome from './pages/Welcome';
 import RealTime from './pages/realtime/index';
 import Analysis from './pages/historical/HistoricalPatterns';
 import AnalysisData from './pages/Analysis';
+import Models from './pages/Models';
 import ViewUsers from './pages/ViewUsers';
 import ViewAnimals from './pages/ViewAnimals';
 import ChangePassword from './pages/ChangePassword';
@@ -18,6 +19,7 @@ const pageOrder = [
   '/real_time',
   '/analysis',
   '/analysis_data',
+  '/models',
   '/view_users',
   '/view_animals',
   '/change_password',
@@ -61,6 +63,9 @@ const AppContent = () => {
       case '/analysis_data':
         title = 'Analysis Data | Animal Tracking';
         break;
+      case '/models':
+        title = 'ML Models | Animal Tracking';
+        break;
       case '/view_users':
         title = 'View Users | Animal Tracking';
         break;
@@ -92,6 +97,7 @@ const AppContent = () => {
           <Route path="/real_time" element={<RealTime />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/analysis_data" element={<AnalysisData />} />
+          <Route path="/models" element={<Models />} />
           <Route path="/view_users" element={<ViewUsers />} />
           <Route path="/view_animals" element={<ViewAnimals />} />
           <Route path="/change_password" element={<ChangePassword />} />
