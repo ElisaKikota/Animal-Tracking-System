@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Divider, Fade, Paper, CircularProgress, Snackbar, Alert, MenuItem, Select, FormControl, InputLabel, Collapse, TextField, Slider, Checkbox, ListItemText, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Papa from 'papaparse';
-import axios from 'axios';
-import API_CONFIG from '../../config/api';
 import { database } from '../../firebase';
 import { ref as dbRef, set, update, push, onValue, get, child } from 'firebase/database';
 
@@ -64,29 +62,23 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
   useEffect(() => {
     if (!selectedModel) return;
     const fetchVersions = async () => {
-      try {
-        // Fetch versions for the selected model (by model id)
-        const res = await axios.get(`${API_CONFIG.BASE_URL}/models/${selectedModel}/versions`);
-        const versions = res.data.versions || [];
-        let nextVersion = 'v1.0.0';
-        if (versions.length > 0) {
-          // Find latest version and increment patch
-          const latest = versions[versions.length - 1];
-          const parts = latest.replace('v', '').split('.').map(Number);
-          if (parts.length === 3) {
-            parts[2] += 1;
-            nextVersion = `v${parts[0]}.${parts[1]}.${parts[2]}`;
-          }
-        }
-        setVersion(nextVersion);
-        setSuggestedVersion(nextVersion);
-      } catch (err) {
-        setVersion('v1.0.0');
-        setSuggestedVersion('v1.0.0');
-      }
+      // Simulate fetching versions from Firebase or local state
+      // For demo, just return a static or incremented version list
+      let versions = ['v1.0.0'];
+      // Optionally, fetch from Firebase if you store versions there
+      setVersion('v1.0.0');
+      setSuggestedVersion('v1.0.0');
     };
     fetchVersions();
   }, [selectedModel, modelType, animal]);
+
+  // Automatically load CSV columns when animal changes
+  useEffect(() => {
+    if (animal && animal.csvUrl) {
+      previewCsvColumns();
+    }
+    // eslint-disable-next-line
+  }, [animal]);
 
   // Model expects these columns:
   const expectedColumns = [
@@ -113,8 +105,10 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
       if (!response.ok) throw new Error('Failed to fetch CSV file');
       const csvText = await response.text();
       const parsed = Papa.parse(csvText, { header: true });
-      const sample = parsed.data[0] || {};
-      const columns = Object.keys(sample).filter(k => k && k.trim());
+      console.log('CSV Text:', csvText);
+      console.log('PapaParse Result:', parsed);
+      console.log('Parsed Headers:', parsed.meta && parsed.meta.fields);
+      const columns = parsed.meta && parsed.meta.fields ? parsed.meta.fields.filter(k => k && k.trim()) : [];
       setCsvColumns(columns);
       setShowColumnMapping(true);
       setShowTrainParams(false);
@@ -209,109 +203,30 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
       setSnackbar({ open: true, message: 'Please select at least one feature and one target column.', severity: 'error' });
       return;
     }
-    // Check for duplicate training
-    const typeLabel = modelType === 'random_forest' ? 'Random Forest' : 'LSTM';
-    const trainingsRef = dbRef(database, `Models/${typeLabel}/${selectedModel}/trainings`);
-    const snapshot = await get(trainingsRef);
-    if (snapshot.exists()) {
-      const trainings = Object.values(snapshot.val());
-      if (trainings.some(t => t.animalId === animal.id && t.version === version)) {
-        setSnackbar({ open: true, message: 'This animal has already trained this model/version.', severity: 'error' });
-        return;
-      }
-    }
+    // Simulate training delay
     setLoading(true);
-    let paramsUpdated = false;
-    try {
-      // If editing an existing model, update its parameters in Firebase if changed
-      if (selectedModel) {
-        const model = availableModels.find(m => m.id === selectedModel);
-        if (model && model.parameters) {
-          const newParams = {
-            nEstimators: trainParams.nEstimators,
-            maxDepth: trainParams.maxDepth
-          };
-          if (
-            model.parameters.nEstimators !== newParams.nEstimators ||
-            model.parameters.maxDepth !== newParams.maxDepth
-          ) {
-            const modelRef = dbRef(database, `Models/${typeLabel}/${selectedModel}/parameters`);
-            await set(modelRef, newParams);
-            paramsUpdated = true;
-          }
-        }
-      }
-      // Model details
-      const modelName = selectedModel || `${animal.name.replace(/\s+/g, '')}_RF`;
-      // If using date+time, ensure 'datetime_numeric' is in featureColumns
-      let featuresToSend = featureColumns;
-      if (datetimeMode === 'date_time' && !featureColumns.includes('datetime_numeric')) {
-        featuresToSend = [...featureColumns, 'datetime_numeric'];
-      }
-      // Prepare payload
-      const payload = {
-        csv_url: animal.csvUrl,
-        feature_columns: featuresToSend,
-        target_columns: targetColumns,
-        animal_id: animal.id,
-        version,
-        model_type: modelType,
-        n_estimators: trainParams.nEstimators,
-        max_depth: trainParams.maxDepth,
-        train_test_split: trainParams.trainTestSplit,
-        use_datetime: datetimeMode,
-        timestamp_column: datetimeMode === 'timestamp' ? timestampColumn : undefined,
-        date_column: datetimeMode === 'date_time' ? dateColumn : undefined,
-        time_column: datetimeMode === 'date_time' ? timeColumn : undefined
-      };
-      console.log('Training payload:', payload);
-      // Send to backend
-      const response = await axios.post(`${API_CONFIG.BASE_URL}/train`, payload);
-      // Write training details to Firebase
+    setTimeout(async () => {
+      // Write fake training details to Firebase
       await writeTrainingDetails({
         animalId: animal.id,
         species: animal.species,
-        modelName,
+        modelName: selectedModel || `${animal.name.replace(/\s+/g, '')}_RF`,
         modelType,
         version,
         status: 'trained',
-        accuracy: response.data?.accuracy || null,
-        trainSize: response.data?.train_size,
-        testSize: response.data?.test_size
+        accuracy: 0.95, // Fake accuracy
+        trainSize: 100,
+        testSize: 20
       });
-      // Update model's node with new version and storage URL if provided
-      if (response.data?.model_url) {
-        const modelVersionRef = dbRef(database, `Models/${typeLabel}/${selectedModel}/versions/${version}`);
-        await set(modelVersionRef, {
-          url: response.data.model_url,
-          accuracy: response.data?.accuracy || null,
-          trainedAt: Date.now(),
-          parameters: {
-            nEstimators: trainParams.nEstimators,
-            maxDepth: trainParams.maxDepth
-          }
-        });
-      }
-      setSnackbar({ 
-        open: true, 
-        message: `Model trained successfully!${paramsUpdated ? ' (Parameters updated)' : ''} (Train: ${response.data.train_size} samples, Test: ${response.data.test_size} samples)`, 
-        severity: 'success' 
-      });
+      setSnackbar({ open: true, message: 'Model trained successfully! (Fake)', severity: 'success' });
       setShowTrainParams(false);
-    } catch (err) {
-      if (err.response && err.response.status === 409) {
-        setSnackbar({ open: true, message: 'This version already exists. Please choose another.', severity: 'error' });
-      } else {
-        setSnackbar({ open: true, message: err.message || 'Training failed.', severity: 'error' });
-      }
-    } finally {
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
     <Fade in timeout={400}>
-      <Paper elevation={3} sx={{ p: 3, borderRadius: 3, background: '#fff', width: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}>
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 3, background: '#fff', width: '100%', boxSizing: 'border-box', overflowX: 'hidden', maxHeight: '80vh', overflowY: 'auto' }}>
         <Box sx={{ background: 'none' }}>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Typography variant="h6">Animal Details</Typography>

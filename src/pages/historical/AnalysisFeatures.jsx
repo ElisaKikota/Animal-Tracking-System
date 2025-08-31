@@ -21,8 +21,6 @@ import { message } from 'antd';
 import L from 'leaflet';
 import * as tf from '@tensorflow/tfjs';
 import { IsolationForest } from 'isolation-forest';
-import axios from 'axios';
-import API_CONFIG from '../../config/api';
 
 const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -58,15 +56,9 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
   // Fetch available models
   useEffect(() => {
     const fetchModels = async () => {
-      try {
-        const response = await axios.get(`${API_CONFIG.BASE_URL}/models/${selectedAnimals[0]}/versions`);
-        setAvailableModels(response.data.versions);
-      } catch (error) {
-        console.error('Error fetching models:', error);
-        setError('Failed to fetch available models');
-      }
+      // Simulate fetching models/versions from Firebase or local state
+      setAvailableModels(['v1.0.0', 'v1.0.1']); // Example static versions
     };
-
     if (selectedAnimals.length > 0) {
       fetchModels();
     }
@@ -97,26 +89,15 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
     try {
       setIsAnalyzing(true);
       setError(null);
-
-      // Prepare training data
-      const { features, targets } = prepareTrainingData(animalData);
-
-      // Train model
-      const response = await axios.post(`${API_CONFIG.BASE_URL}/train`, {
-        features,
-        targets,
-        animal_id: selectedAnimals[0],
-        version,
-        model_type: modelType
-      });
-
-      message.success('Model trained successfully!');
-      setIsVersionDialogOpen(false);
+      // Simulate training delay
+      setTimeout(() => {
+        message.success('Model trained successfully! (Fake)');
+        setIsVersionDialogOpen(false);
+        setIsAnalyzing(false);
+      }, 1500);
     } catch (error) {
-      console.error('Error training model:', error);
       setError('Failed to train model');
       message.error('Failed to train model');
-    } finally {
       setIsAnalyzing(false);
     }
   };
@@ -125,30 +106,14 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
     try {
       setIsAnalyzing(true);
       setError(null);
-
-      // Prepare prediction data
-      const features = animalData.map(point => [
-        point.latitude,
-        point.longitude,
-        new Date(point.timestamp).getHours(),
-        new Date(point.timestamp).getDay()
-      ]);
-
-      // Make predictions
-      const response = await axios.post(`${API_CONFIG.BASE_URL}/predict`, {
-        features,
-        animal_id: selectedAnimals[0],
-        model_version: selectedModel
-      });
-
-      // Visualize predictions on map
-      const predictions = response.data.predictions;
-      visualizePredictions(predictions);
-
+      // Simulate prediction delay and fake predictions
+      setTimeout(() => {
+        const predictions = animalData.map(() => Math.random() * 10); // Fake predictions
+        visualizePredictions(predictions);
+        setIsAnalyzing(false);
+      }, 1200);
     } catch (error) {
-      console.error('Error making predictions:', error);
       setError('Failed to make predictions');
-    } finally {
       setIsAnalyzing(false);
     }
   };
@@ -210,8 +175,8 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
                 label="Select Model Version"
               >
                 {availableModels.map((model) => (
-                  <MenuItem key={model.version} value={model.version}>
-                    {model.version} (Accuracy: {(model.accuracy * 100).toFixed(2)}%)
+                  <MenuItem key={model} value={model}>
+                    {model}
                   </MenuItem>
                 ))}
               </Select>

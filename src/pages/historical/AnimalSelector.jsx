@@ -57,7 +57,7 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
 
   return (
     <Fade in timeout={400}>
-      <Paper elevation={1} sx={{ p: 1.5, borderRadius: 2, background: '#fff', width: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}>
+      <Paper elevation={1} sx={{ p: 1.5, borderRadius: 2, background: '#fff', width: '100%', minWidth: 340, maxWidth: 420, boxSizing: 'border-box', overflowX: 'hidden' }}>
         <Typography variant="subtitle2" className="section-title" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600, fontSize: 15 }}>
           <PawPrint size={18} /> Select Animal to Track
         </Typography>
@@ -102,8 +102,8 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
                   border: isSelected ? '2px solid #1976d2' : '1px solid #e0e0e0',
                   background: isSelected ? '#e3f2fd' : '#fff',
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'stretch',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                   transition: 'all 0.25s',
                   width: '100%',
                   boxSizing: 'border-box',
@@ -112,13 +112,14 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
                   mb: 1.5
                 }}
               >
-                <Box sx={{ minWidth: 0, flex: 1, pr: 0, display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis' }}>{animal.name}</Typography>
-                  <Typography variant="caption" color="textSecondary" sx={{ fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <Box sx={{ minWidth: 0, flex: 1, pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.2 }}>
+                    {animal.name}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary" sx={{ fontSize: 12, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.2 }}>
                     {animal.species}, {animal.sex}, {animal.age} years
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: 0.5 }}>
                   <Button
                     variant={isSelected ? 'contained' : 'outlined'}
                     color="primary"
@@ -128,7 +129,6 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
                   >
                     {isSelected ? 'Selected' : 'Select'}
                   </Button>
-                </Box>
               </Paper>
             );
           })}

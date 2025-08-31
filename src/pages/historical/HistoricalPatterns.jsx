@@ -12,6 +12,7 @@ import L from 'leaflet';
 import Papa from 'papaparse';
 import AnimalDetailsPanel from './AnimalDetailsPanel';
 import { ModelTraining, DirectionsRun, Timeline, Public } from '@mui/icons-material';
+import Slider from '@mui/material/Slider';
 
 // Import animal icons
 import elephantIcon from '../../assets/elephant.png';
@@ -21,7 +22,7 @@ import rhinoIcon from '../../assets/rhino.png';
 import leopardIcon from '../../assets/leopard.png';
 
 function HistoricalPatterns() {
-  const [dataSource, setDataSource] = useState('realtime'); // 'realtime' or 'predictive'
+  const [dataSource, setDataSource] = useState('predictive'); // Only use predictive/AnalysisData
   const [showDateRange, setShowDateRange] = useState(false);
   const [animalData, setAnimalData] = useState([]);
   const [selectedAnimals, setSelectedAnimals] = useState([]);
@@ -41,6 +42,11 @@ function HistoricalPatterns() {
   const [csvError, setCsvError] = useState(null);
   const [csvLoaded, setCsvLoaded] = useState(false);
   const [showAnimalDetailsPanel, setShowAnimalDetailsPanel] = useState(false);
+  const [predictionMode, setPredictionMode] = useState(false);
+  const [predictedPathData, setPredictedPathData] = useState([]);
+  const [predictAnimal, setPredictAnimal] = useState('');
+  const [numPoints, setNumPoints] = useState(5);
+  const [interval, setInterval] = useState(1); // in hours
   
   // Get main sidebar state from App's CSS classes
   const [isMainSidebarOpen, setIsMainSidebarOpen] = useState(false);
@@ -91,56 +97,8 @@ function HistoricalPatterns() {
 
   // Load animal data based on selected data source
   useEffect(() => {
-    if (dataSource === 'realtime') {
-      loadRealtimeData();
-    } else {
-      loadPredictiveData();
-    }
-  }, [dataSource]);
-
-  const loadRealtimeData = () => {
-    const animalSpecies = ['Elephants', 'Giraffes', 'Lions', 'Leopards', 'Rhinos'];
-    const fetchedData = [];
-
-    animalSpecies.forEach((species) => {
-      const animalsRef = ref(database, `Animals/${species}`);
-      onValue(animalsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          Object.entries(data).forEach(([id, animal]) => {
-            const animalObj = {
-              id,
-              species: species.slice(0, -1),
-              name: animal.name,
-              sex: animal.sex,
-              age: animal.age,
-              locationHistory: []
-            };
-
-            if (animal.location) {
-              Object.entries(animal.location).forEach(([date, times]) => {
-                Object.entries(times).forEach(([time, location]) => {
-                  const timestamp = new Date(`${date} ${time}`).getTime();
-                  animalObj.locationHistory.push({
-                    timestamp,
-                    date,
-                    time,
-                    lat: parseFloat(location.Lat),
-                    lng: parseFloat(location.Long),
-                    temperature: location.temperature || 'N/A',
-                    activity: location.activity || 'N/A'
-                  });
-                });
-              });
-              animalObj.locationHistory.sort((a, b) => a.timestamp - b.timestamp);
-            }
-            fetchedData.push(animalObj);
-          });
-        }
-        setAnimalData(fetchedData);
-      });
-    });
-  };
+    loadPredictiveData();
+  }, []); // Only run once on mount
 
   const loadPredictiveData = () => {
     const analysisDataRef = ref(database, 'AnalysisData');
@@ -233,12 +191,6 @@ function HistoricalPatterns() {
       }
     });
   }, [selectedAnimals, dataSource]);
-
-  const handleDataSourceChange = (event) => {
-    setDataSource(event.target.checked ? 'predictive' : 'realtime');
-    setSelectedAnimals([]); // Clear selected animals when switching data source
-    setShowDateRange(false); // Hide date range until animals are selected
-  };
 
   const handleDateRangeChange = (newRange) => {
     setDateRange(newRange);
@@ -454,6 +406,40 @@ function HistoricalPatterns() {
     });
   }, [modelType]);
 
+  // Predict Movement logic
+  const handlePredictMovement = () => {
+    setMainPanel('predict');
+    setPredictionMode(false);
+    setPredictedPathData([]);
+    setNumPoints(5);
+    setInterval(1);
+    setPredictAnimal(selectedAnimals[0] || '');
+  };
+
+  const handleRunPrediction = () => {
+    if (!predictAnimal) return;
+    const animal = animalData.find(a => a.id === predictAnimal);
+    if (!animal || !animal.locationHistory || animal.locationHistory.length < 5) return;
+    const total = animal.locationHistory.length;
+    const splitIdx = Math.max(1, total - numPoints);
+    const historical = animal.locationHistory.slice(0, splitIdx);
+    const predicted = animal.locationHistory.slice(splitIdx);
+    setPathData([{
+      ...animal,
+      path: historical.map(loc => [loc.lat, loc.lng]),
+      locations: historical,
+      color: getPathColor(animal.species)
+    }]);
+    setPredictedPathData([{
+      ...animal,
+      path: predicted.map(loc => [loc.lat, loc.lng]),
+      locations: predicted,
+      color: '#a020f0',
+      predicted: true
+    }]);
+    setPredictionMode(true);
+  };
+
   // New Home Panel UI
   const HomePanel = () => (
     <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 250, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
@@ -465,7 +451,7 @@ function HistoricalPatterns() {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <Button fullWidth size="medium" variant="contained" color="secondary" startIcon={<DirectionsRun />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('predict')}>
+          <Button fullWidth size="medium" variant="contained" color="secondary" startIcon={<DirectionsRun />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={handlePredictMovement}>
             Predict Movement
           </Button>
         </Grid>
@@ -485,28 +471,11 @@ function HistoricalPatterns() {
 
   // Train Model Workflow Panel
   const TrainModelPanel = () => (
-    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 250, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
+    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 480, minWidth: 340, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200, boxSizing: 'border-box' }}>
       <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Train Model</Typography>
-      {/* Step 1: Select Data Source */}
+      {/* Step 1: Select Animal (skip data source step) */}
       {trainStep === 0 && (
-        <Box>
-          <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Data Source</Typography>
-          <RadioGroup
-            row
-            value={dataSource}
-            onChange={e => setDataSource(e.target.value)}
-          >
-            <FormControlLabel value="realtime" control={<Radio />} label="Realtime Data" />
-            <FormControlLabel value="predictive" control={<Radio />} label="Predictive Data" />
-          </RadioGroup>
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)}>
-            Next
-          </Button>
-        </Box>
-      )}
-      {/* Step 2: Select Animal */}
-      {trainStep === 1 && (
-        <Box>
+        <Box sx={{ width: '100%' }}>
           <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Animal</Typography>
           <AnimalSelector
             animals={animalData}
@@ -515,14 +484,13 @@ function HistoricalPatterns() {
             collapsed={false}
             onToggleCollapse={() => {}}
           />
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(2)} disabled={selectedAnimals.length === 0}>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)} disabled={selectedAnimals.length === 0}>
             Next
           </Button>
-          <Button fullWidth sx={{ mt: 1, fontSize: 15, py: 1 }} onClick={() => setTrainStep(0)}>Back</Button>
         </Box>
       )}
-      {/* Step 3: Select Model Type and go directly to parameters */}
-      {trainStep === 2 && (
+      {/* Step 2: Select Model Type and go directly to parameters */}
+      {trainStep === 1 && (
         <Box>
           <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Model Type</Typography>
           <FormControl fullWidth sx={{ mb: 2 }}>
@@ -533,21 +501,21 @@ function HistoricalPatterns() {
               onChange={e => {
                 setModelType(e.target.value);
                 setSelectedModel('');
-                setTrainStep(3); // Go directly to parameters step
+                setTrainStep(2); // Go directly to parameters step
               }}
             >
               <MenuItem value="random_forest">Random Forest</MenuItem>
               <MenuItem value="lstm">LSTM</MenuItem>
             </Select>
           </FormControl>
-          <Button fullWidth sx={{ mt: 1, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)}>Back</Button>
+          <Button fullWidth sx={{ mt: 1, fontSize: 15, py: 1 }} onClick={() => setTrainStep(0)}>Back</Button>
         </Box>
       )}
-      {/* Step 4: Parameters dashboard (trainStep 3) */}
-      {trainStep === 3 && (
+      {/* Step 3: Parameters dashboard (trainStep 2) */}
+      {trainStep === 2 && (
         <AnimalDetailsPanel
           animal={animalData.find(a => a.id === selectedAnimals[0])}
-          onBack={() => setTrainStep(2)}
+          onBack={() => setTrainStep(1)}
           dataSource={dataSource}
           modelType={modelType}
           selectedModel={selectedModel}
@@ -557,6 +525,50 @@ function HistoricalPatterns() {
       )}
       {/* Back to home */}
       <Button fullWidth sx={{ mt: 2, fontSize: 15, py: 1 }} onClick={() => setMainPanel('home')}>Back to Home</Button>
+    </Paper>
+  );
+
+  // Prediction Panel
+  const PredictPanel = () => (
+    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 340, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Predict Movement</Typography>
+      <Box sx={{ mb: 2 }}>
+        <AnimalSelector
+          animals={animalData}
+          selectedAnimals={predictAnimal ? [predictAnimal] : []}
+          onAnimalSelection={ids => setPredictAnimal(ids[0] || '')}
+          collapsed={false}
+          singleSelect={true}
+        />
+      </Box>
+      <Box sx={{ mb: 2 }}>
+        <Typography gutterBottom>Number of Points to Predict</Typography>
+        <Slider
+          value={numPoints}
+          min={1}
+          max={20}
+          step={1}
+          onChange={(_, v) => setNumPoints(v)}
+          valueLabelDisplay="auto"
+        />
+      </Box>
+      <Box sx={{ mb: 2 }}>
+        <FormControl fullWidth size="small">
+          <InputLabel>Time Interval</InputLabel>
+          <Select value={interval} label="Time Interval" onChange={e => setInterval(Number(e.target.value))}>
+            <MenuItem value={1}>1 hour</MenuItem>
+            <MenuItem value={6}>6 hours</MenuItem>
+            <MenuItem value={12}>12 hours</MenuItem>
+            <MenuItem value={24}>1 day</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Button fullWidth variant="contained" color="secondary" sx={{ mt: 2 }} onClick={handleRunPrediction} disabled={!predictAnimal}>
+        Predict
+      </Button>
+      <Button fullWidth sx={{ mt: 2 }} variant="outlined" onClick={() => setMainPanel('home')}>
+        Back to Menu
+      </Button>
     </Paper>
   );
 
@@ -577,12 +589,43 @@ function HistoricalPatterns() {
             />
             {mapReady && pathData && pathData.map(animal => (
               <Polyline
-                key={animal.id}
+                key={animal.id + '-historical'}
                 positions={animal.path}
                 color={getPathColor(animal.species)}
                 weight={3}
                 opacity={0.7}
               />
+            ))}
+            {mapReady && predictionMode && predictedPathData && predictedPathData.map(animal => (
+              <>
+                <Polyline
+                  key={animal.id + '-predicted'}
+                  positions={animal.path}
+                  color={animal.color}
+                  weight={4}
+                  opacity={0.9}
+                  dashArray="8 8"
+                />
+                {animal.locations.map((loc, idx) => (
+                  <Marker
+                    key={animal.id + '-predicted-marker-' + idx}
+                    position={[loc.lat, loc.lng]}
+                    icon={L.divIcon({
+                      className: 'predicted-marker',
+                      html: `<div style=\"background:#a020f0;border-radius:50%;width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 6px #a020f0;\"></div>`
+                    })}
+                  >
+                    <Popup>
+                      <div>
+                        <strong>Predicted Point</strong><br />
+                        Lat: {loc.lat}<br />
+                        Lng: {loc.lng}<br />
+                        {loc.timestamp && `Time: ${new Date(loc.timestamp).toLocaleString()}`}
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </>
             ))}
             {mapReady && getCurrentPositions().map(animal => (
               <Marker
@@ -604,6 +647,8 @@ function HistoricalPatterns() {
             ))}
             <ZoomControl position="bottomright" />
           </MapContainer>
+          {/* Prediction Results Panel */}
+          {mainPanel === 'predict' && <PredictPanel />}
         </div>
 
        

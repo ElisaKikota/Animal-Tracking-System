@@ -35,6 +35,7 @@ import TimestampConfigStep from './steps/TimestampConfigStep';
 import PreviewAndUploadStep from './steps/PreviewAndUploadStep';
 import UploadCompleteStep from './steps/UploadCompleteStep';
 import AnimalDetailsStep from './steps/AnimalDetailsStep';
+import FeatureEngineering from './FeatureEngineering';
 
 // Import utility functions
 import { 
@@ -119,7 +120,7 @@ const AnalysisDataPage = () => {
 
   const [renamedHeaders, setRenamedHeaders] = useState({});
 
-  const [tab, setTab] = useState(0); // 0 = Upload, 1 = Management
+  const [tab, setTab] = useState(0); // 0 = Upload, 1 = Management, 2 = Feature Engineering
   const [uploadedDatasets, setUploadedDatasets] = useState([]);
   const [loadingDatasets, setLoadingDatasets] = useState(false);
 
@@ -489,6 +490,7 @@ const AnalysisDataPage = () => {
         <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 4 }}>
           <Tab label="Upload Data" />
           <Tab label="Manage Uploaded Data" />
+          <Tab label="Feature Engineering" />
         </Tabs>
         
         {tab === 0 && (
@@ -599,6 +601,9 @@ const AnalysisDataPage = () => {
               </DialogActions>
             </Dialog>
           </Box>
+        )}
+        {tab === 2 && (
+          <FeatureEngineering />
         )}
       </Paper>
     </Container>

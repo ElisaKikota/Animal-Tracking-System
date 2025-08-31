@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { database } from '../../firebase';
+import { Button } from '@mui/material';
 
 import elephantIcon from '../../assets/elephant.png';
 import lionIcon from '../../assets/lion.png';
@@ -40,6 +41,9 @@ const Map = ({
     patrols: {},
     reports: {}
   });
+  const [predictionMode, setPredictionMode] = useState(false);
+  const [historicalPath, setHistoricalPath] = useState([]);
+  const [predictedPath, setPredictedPath] = useState([]);
 
   // Initialize map
   useEffect(() => {
@@ -58,7 +62,11 @@ const Map = ({
     const loadImage = (url, id) => {
       return new Promise((resolve, reject) => {
         map.current.loadImage(url, (error, image) => {
-          if (error) reject(error);
+          if (error || !image) {
+            console.warn(`Failed to load image for ${id}:`, error);
+            resolve(); // Don't reject, just skip this icon
+            return;
+          }
           if (!map.current.hasImage(id)) map.current.addImage(id, image);
           resolve();
         });
@@ -620,153 +628,57 @@ const Map = ({
     }
   }, [patrolData, showPatrols]);
 
+  // Function to trigger prediction mode
+  const handlePredictMovement = () => {
+    if (!animalData.length) return;
+    // For demo, use the first animal with a path
+    const animal = animalData[0];
+    if (!animal || !animal.path || animal.path.length < 5) return;
+    const path = animal.path;
+    const splitIdx = Math.floor(path.length * 0.8);
+    setHistoricalPath(path.slice(0, splitIdx));
+    setPredictedPath(path.slice(splitIdx));
+    setPredictionMode(true);
+  };
+
+  useEffect(() => {
+    if (!map.current) return;
+    // Remove old prediction layers if they exist
+    if (map.current.getLayer('predicted-path')) {
+      map.current.removeLayer('predicted-path');
+    }
+    if (map.current.getSource('predicted-path')) {
+      map.current.removeSource('predicted-path');
+    }
+    if (predictionMode && predictedPath.length > 1) {
+      map.current.addSource('predicted-path', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: predictedPath.map(p => [p.longitude || p.Lng, p.latitude || p.Lat])
+          }
+        }
+      });
+      map.current.addLayer({
+        id: 'predicted-path',
+        type: 'line',
+        source: 'predicted-path',
+        layout: {},
+        paint: {
+          'line-color': '#a020f0', // purple
+          'line-width': 4,
+          'line-dasharray': [2, 2]
+        }
+      });
+    }
+  }, [predictionMode, predictedPath]);
+
   return (
-    <>
-      <style>
-        {`
-          .marker {
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-          }
-
-          .animal-marker {
-            background-image: url(${animalIcon});
-          }
-
-          .animal-marker.elephants {
-            background-image: url(${elephantIcon});
-          }
-
-          .animal-marker.lions {
-            background-image: url(${lionIcon});
-          }
-
-          .animal-marker.giraffes {
-            background-image: url(${giraffeIcon});
-          }
-
-          .animal-marker.rhinos {
-            background-image: url(${rhinoIcon});
-          }
-
-          .animal-marker.leopards {
-            background-image: url(${leopardIcon});
-          }
-
-          .report-marker {
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-          }
-
-          .report-marker.ct_icon_sighting {
-            background-image: url(${cameraTrapIcon});
-          }
-
-          .report-marker.fire {
-            background-image: url(${fireIcon});
-          }
-
-          .report-marker.human_wildlife_contact {
-            background-image: url(${humanWildlifeIcon});
-          }
-
-          .report-marker.injured_animal {
-            background-image: url(${injuredAnimalIcon});
-          }
-
-          .report-marker.invasive_species_sighting {
-            background-image: url(${invasiveSpeciesIcon});
-          }
-
-          .report-marker.rainfall {
-            background-image: url(${rainfallIcon});
-          }
-
-          .report-marker.rhino_sighting {
-            background-image: url(${rhinoSightingIcon});
-          }
-
-          .report-marker.wildlife_sighting {
-            background-image: url(${wildlifeSightingIcon});
-          }
-
-          .patrol-marker {
-            background-color: #2ecc71;
-            border-radius: 50%;
-            border: 2px solid white;
-            width: 12px;
-            height: 12px;
-          }
-
-          .custom-popup {
-            background: transparent !important;
-            border: none !important;
-            border-radius: 6px !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            max-width: 200px !important;
-          }
-
-          .custom-popup .mapboxgl-popup-content {
-            background: linear-gradient(135deg, rgba(31, 118, 206, 0.8), rgba(31, 118, 206, 0.9)) !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 6px !important;
-            padding: 8px 12px !important;
-            color: white !important;
-          }
-
-          .custom-popup .mapboxgl-popup-tip {
-            display: none !important;
-          }
-
-          .popup-content h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 4px;
-            color: white;
-          }
-
-          .popup-details {
-            font-size: 12px;
-          }
-
-          .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 4px 0;
-          }
-
-          .section-title {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            margin: 8px 0 4px 0;
-            font-size: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 2px;
-          }
-
-          .label {
-            color: rgba(255, 255, 255, 0.8);
-            margin-right: 12px;
-          }
-
-          .value {
-            color: white;
-            font-weight: 500;
-          }
-        `}
-      </style>
-      <div ref={mapContainer} className="map" />
-    </>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
+    </div>
   );
 };
 
