@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ref, onValue, get } from 'firebase/database';
 import { database } from '../../firebase';
-import { FormControlLabel, Switch, Box, Typography, CircularProgress, Radio, RadioGroup, Button, Paper, Fade, Grid, FormControl, InputLabel, Select, MenuItem, Modal } from '@mui/material';
+import { Box, Typography, Button, Paper, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import AnimalSelector from './AnimalSelector';
-import TimelineControl from './TimelineControl';
-import AnalysisFeatures from './AnalysisFeatures';
 import './HistoricalPatterns.css';
 import { MapContainer, TileLayer, Polyline, ZoomControl, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -22,25 +20,27 @@ import rhinoIcon from '../../assets/rhino.png';
 import leopardIcon from '../../assets/leopard.png';
 
 function HistoricalPatterns() {
+  // eslint-disable-next-line no-unused-vars
   const [dataSource, setDataSource] = useState('predictive'); // Only use predictive/AnalysisData
-  const [showDateRange, setShowDateRange] = useState(false);
   const [animalData, setAnimalData] = useState([]);
   const [selectedAnimals, setSelectedAnimals] = useState([]);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     endDate: new Date()
   });
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTimestamp, setCurrentTimestamp] = useState(null);
   const [pathData, setPathData] = useState([]);
   const [mapKey, setMapKey] = useState('initial');
   const [mapReady, setMapReady] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [animalSelectorCollapsed, setAnimalSelectorCollapsed] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [loadingCSV, setLoadingCSV] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [csvError, setCsvError] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [csvLoaded, setCsvLoaded] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [showAnimalDetailsPanel, setShowAnimalDetailsPanel] = useState(false);
   const [predictionMode, setPredictionMode] = useState(false);
   const [predictedPathData, setPredictedPathData] = useState([]);
@@ -50,7 +50,6 @@ function HistoricalPatterns() {
   
   // Get main sidebar state from App's CSS classes
   const [isMainSidebarOpen, setIsMainSidebarOpen] = useState(false);
-  const containerRef = useRef(null);
   
   // Monitor main sidebar state changes
   useEffect(() => {
@@ -190,23 +189,9 @@ function HistoricalPatterns() {
         loadCSVData(animal);
       }
     });
-  }, [selectedAnimals, dataSource]);
+  }, [selectedAnimals]);
 
-  const handleDateRangeChange = (newRange) => {
-    setDateRange(newRange);
-  };
 
-  const handleTimelineChange = (timestamp) => {
-    setCurrentTimestamp(timestamp);
-  };
-
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleSpeedChange = (speed) => {
-    setPlaybackSpeed(speed);
-  };
 
   const getAnimalIcon = (species) => {
     const iconUrl = species.toLowerCase().includes('elephant') ? elephantIcon :
@@ -375,10 +360,7 @@ function HistoricalPatterns() {
     }
   }, [selectedAnimals]);
 
-  const handleBackToSelection = () => {
-    setSelectedAnimals([]);
-    setShowAnimalDetailsPanel(false);
-  };
+
 
   // New UI state for home panel and workflow
   const [mainPanel, setMainPanel] = useState('home'); // 'home', 'train', 'predict', 'patterns', 'geo'
@@ -612,7 +594,7 @@ function HistoricalPatterns() {
                     position={[loc.lat, loc.lng]}
                     icon={L.divIcon({
                       className: 'predicted-marker',
-                      html: `<div style=\"background:#a020f0;border-radius:50%;width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 6px #a020f0;\"></div>`
+                      html: `<div style="background:#a020f0;border-radius:50%;width:18px;height:18px;border:2px solid #fff;box-shadow:0 0 6px #a020f0;"></div>`
                     })}
                   >
                     <Popup>

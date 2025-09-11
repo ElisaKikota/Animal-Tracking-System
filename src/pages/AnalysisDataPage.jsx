@@ -279,7 +279,7 @@ const AnalysisDataPage = () => {
       setUploadStatus('uploading');
       setUploadProgress(0);
       
-      const result = await processAndUploadData(
+      await processAndUploadData(
         parsedData,
         selectedFile,
         columnMappings,

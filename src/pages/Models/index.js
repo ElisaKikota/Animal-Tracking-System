@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Select, Form, Input, message, Table, Space, Tag, Modal, Descriptions } from 'antd';
-import { PlusOutlined, ExperimentOutlined, DeleteOutlined, EditOutlined, HistoryOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, DeleteOutlined, HistoryOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { ref, set, onValue, remove } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { database, storage } from '../../firebase';
+import { database } from '../../firebase';
 import axios from 'axios';
 import API_CONFIG from '../../config/api';
 import './styles.css';

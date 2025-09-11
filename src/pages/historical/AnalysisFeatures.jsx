@@ -19,14 +19,13 @@ import {
 } from '@mui/material';
 import { message } from 'antd';
 import L from 'leaflet';
-import * as tf from '@tensorflow/tfjs';
-import { IsolationForest } from 'isolation-forest';
+
 
 const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState(null);
   const [modelType, setModelType] = useState('lstm');
-  const [anomalyThreshold, setAnomalyThreshold] = useState(0.1);
+
   const [availableModels, setAvailableModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState('');
   const [isVersionDialogOpen, setIsVersionDialogOpen] = useState(false);
@@ -64,26 +63,7 @@ const AnalysisFeatures = ({ animalData, selectedAnimals, dateRange }) => {
     }
   }, [selectedAnimals]);
 
-  const prepareTrainingData = (data) => {
-    // Convert animal data into features and targets for training
-    const features = data.map(point => [
-      point.latitude,
-      point.longitude,
-      new Date(point.timestamp).getHours(),
-      new Date(point.timestamp).getDay()
-    ]);
-    
-    const targets = data.map((point, index) => {
-      if (index === data.length - 1) return null;
-      const nextPoint = data[index + 1];
-      return Math.sqrt(
-        Math.pow(nextPoint.latitude - point.latitude, 2) +
-        Math.pow(nextPoint.longitude - point.longitude, 2)
-      );
-    }).filter(Boolean);
 
-    return { features, targets };
-  };
 
   const trainModel = async () => {
     try {

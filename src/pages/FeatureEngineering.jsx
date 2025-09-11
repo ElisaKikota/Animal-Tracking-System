@@ -12,7 +12,7 @@ const FeatureEngineering = () => {
   const [enhancedData, setEnhancedData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchingEnv, setFetchingEnv] = useState(false);
-  const [csvUrl, setCsvUrl] = useState('');
+
   const [locationLoading, setLocationLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -48,7 +48,7 @@ const FeatureEngineering = () => {
     if (!selectedAnimal) return;
     const animal = animals.find(a => a.key === selectedAnimal);
     if (!animal || !animal.csvDownloadURL) return;
-    setCsvUrl(animal.csvDownloadURL);
+
     setLoading(true);
     console.log('Fetching CSV from:', animal.csvDownloadURL);
     fetch(animal.csvDownloadURL)

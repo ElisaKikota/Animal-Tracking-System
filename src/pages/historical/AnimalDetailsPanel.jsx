@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Divider, Fade, Paper, CircularProgress, Snackbar, Alert, MenuItem, Select, FormControl, InputLabel, Collapse, TextField, Slider, Checkbox, ListItemText, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Papa from 'papaparse';
 import { database } from '../../firebase';
-import { ref as dbRef, set, update, push, onValue, get, child } from 'firebase/database';
+import { ref as dbRef, set, push, onValue } from 'firebase/database';
 
 const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
   // All hooks must be before any return
@@ -10,7 +10,7 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
   const [csvColumns, setCsvColumns] = useState([]);
   const [showColumnMapping, setShowColumnMapping] = useState(false);
-  const [columnMapping, setColumnMapping] = useState({ lat: '', lng: '', ts: '', date: '', time: '' });
+
   const [showTrainParams, setShowTrainParams] = useState(false);
   const [trainParams, setTrainParams] = useState({ 
     nEstimators: 100, 
@@ -64,7 +64,6 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
     const fetchVersions = async () => {
       // Simulate fetching versions from Firebase or local state
       // For demo, just return a static or incremented version list
-      let versions = ['v1.0.0'];
       // Optionally, fetch from Firebase if you store versions there
       setVersion('v1.0.0');
       setSuggestedVersion('v1.0.0');
@@ -80,12 +79,7 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
     // eslint-disable-next-line
   }, [animal]);
 
-  // Model expects these columns:
-  const expectedColumns = [
-    { key: 'lat', label: 'Latitude' },
-    { key: 'lng', label: 'Longitude' },
-    { key: 'ts', label: 'Timestamp (or map Date & Time below)' }
-  ];
+
 
   // All hooks above, now do the early return
   if (!animal) return null;
@@ -112,15 +106,7 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
       setCsvColumns(columns);
       setShowColumnMapping(true);
       setShowTrainParams(false);
-      // Try to auto-map
-      setColumnMapping(mapping => ({
-        ...mapping,
-        lat: columns.find(k => k.toLowerCase().includes('lat')) || '',
-        lng: columns.find(k => k.toLowerCase().includes('lon') || k.toLowerCase().includes('lng')) || '',
-        ts: columns.find(k => k.toLowerCase().includes('timestamp')) || '',
-        date: columns.find(k => k.toLowerCase() === 'date') || '',
-        time: columns.find(k => k.toLowerCase() === 'time') || ''
-      }));
+      // Try to auto-map - removed unused mapping
     } catch (err) {
       setSnackbar({ open: true, message: err.message || 'Failed to preview CSV.', severity: 'error' });
     } finally {
@@ -128,34 +114,7 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
     }
   };
 
-  // Helper: Parse CSV and prepare features/targets using mapping
-  const parseCsvForTraining = async (csvUrl, mapping, featuresArr, targetsArr) => {
-    const response = await fetch(csvUrl);
-    if (!response.ok) throw new Error('Failed to fetch CSV file');
-    const csvText = await response.text();
-    return new Promise((resolve, reject) => {
-      Papa.parse(csvText, {
-        header: true,
-        complete: (results) => {
-          const features = [];
-          const targets = [];
-          results.data.forEach(row => {
-            // Features: array of selected feature columns
-            const featureVals = featuresArr.map(col => parseFloat(row[col]));
-            // Targets: array of selected target columns (can be multi-output)
-            const targetVals = targetsArr.map(col => parseFloat(row[col]));
-            // Only push if all values are valid numbers
-            if (featureVals.every(v => !isNaN(v)) && targetVals.every(v => !isNaN(v))) {
-              features.push(featureVals);
-              targets.push(targetVals.length === 1 ? targetVals[0] : targetVals);
-            }
-          });
-          resolve({ features, targets });
-        },
-        error: (err) => reject(err)
-      });
-    });
-  };
+
 
   // Helper: Write training details to Firebase
   const writeTrainingDetails = async ({ animalId, species, modelName, modelType, version, status, accuracy, trainSize, testSize }) => {

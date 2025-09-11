@@ -10,7 +10,6 @@ import {
   Button,
   Paper,
   Fade,
-  Grid,
   Chip
 } from '@mui/material';
 import { PawPrint } from 'lucide-react';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Typography, Box, Button, Grid, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
@@ -16,7 +16,7 @@ const Welcome = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchDataWithRetry = async (ref, retryCount = 0) => {
+  const fetchDataWithRetry = useCallback(async (ref, retryCount = 0) => {
     try {
       return await new Promise((resolve, reject) => {
         onValue(ref, resolve, (error) => {
@@ -38,7 +38,7 @@ const Welcome = () => {
       }
       throw error;
     }
-  };
+  }, []);
 
   useEffect(() => {
     const animalsRef = ref(database, 'Animals');
@@ -84,7 +84,7 @@ const Welcome = () => {
     };
 
     fetchData();
-  }, []);
+  }, [fetchDataWithRetry]);
 
   return (
     <div className="h-full w-full" style={{ 
