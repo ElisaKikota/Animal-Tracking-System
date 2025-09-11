@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ref, onValue, get } from 'firebase/database';
 import { database } from '../../firebase';
 import { Box, Typography, Button, Paper, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
@@ -125,7 +125,7 @@ function HistoricalPatterns() {
   };
 
   // Add new function to load CSV data
-  const loadCSVData = async (animal) => {
+  const loadCSVData = useCallback(async (animal) => {
     if (!animal.csvUrl) {
       setCsvError('No CSV URL found for this animal');
       return;
@@ -175,7 +175,7 @@ function HistoricalPatterns() {
       setCsvError(`Error loading CSV: ${error.message}`);
       setLoadingCSV(false);
     }
-  };
+  }, []);
 
   // Modify the useEffect for selected animals to load CSV data
   useEffect(() => {
@@ -189,7 +189,7 @@ function HistoricalPatterns() {
         loadCSVData(animal);
       }
     });
-  }, [selectedAnimals]);
+  }, [selectedAnimals, animalData, dataSource, loadCSVData]);
 
 
 

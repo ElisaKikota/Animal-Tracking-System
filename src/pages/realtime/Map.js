@@ -4,7 +4,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { database } from '../../firebase';
 
-
 import elephantIcon from '../../assets/elephant.png';
 import lionIcon from '../../assets/lion.png';
 import giraffeIcon from '../../assets/giraffe.png';
@@ -41,9 +40,10 @@ const Map = ({
     patrols: {},
     reports: {}
   });
-
-  // eslint-disable-next-line no-unused-vars
   const [predictionMode, setPredictionMode] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [historicalPath, setHistoricalPath] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [predictedPath, setPredictedPath] = useState([]);
 
   // Initialize map
@@ -629,7 +629,19 @@ const Map = ({
     }
   }, [patrolData, showPatrols]);
 
-
+  // Function to trigger prediction mode
+  // eslint-disable-next-line no-unused-vars
+  const handlePredictMovement = () => {
+    if (!animalData.length) return;
+    // For demo, use the first animal with a path
+    const animal = animalData[0];
+    if (!animal || !animal.path || animal.path.length < 5) return;
+    const path = animal.path;
+    const splitIdx = Math.floor(path.length * 0.8);
+    setHistoricalPath(path.slice(0, splitIdx));
+    setPredictedPath(path.slice(splitIdx));
+    setPredictionMode(true);
+  };
 
   useEffect(() => {
     if (!map.current) return;
