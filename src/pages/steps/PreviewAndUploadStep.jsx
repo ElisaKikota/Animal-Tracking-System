@@ -68,7 +68,6 @@ const PreviewAndUploadStep = ({ previewData, uploadStatus, uploadProgress, colum
               {columnMappings.temperature && <TableCell>Temperature</TableCell>}
               {columnMappings.heartRate && <TableCell>Heart Rate</TableCell>}
               {columnMappings.animalId && <TableCell>Animal ID</TableCell>}
-              {columnMappings.species && <TableCell>Species</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -81,7 +80,6 @@ const PreviewAndUploadStep = ({ previewData, uploadStatus, uploadProgress, colum
                 {columnMappings.temperature && <TableCell>{row[columnMappings.temperature]}</TableCell>}
                 {columnMappings.heartRate && <TableCell>{row[columnMappings.heartRate]}</TableCell>}
                 {columnMappings.animalId && <TableCell>{row[columnMappings.animalId]}</TableCell>}
-                {columnMappings.species && <TableCell>{row[columnMappings.species]}</TableCell>}
               </TableRow>
             ))}
           </TableBody>

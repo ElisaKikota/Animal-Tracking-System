@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ref, onValue, set } from 'firebase/database';
 import { database } from '../../firebase';
 import Map from './Map';
@@ -8,7 +8,6 @@ import LayerMenu from './menus/LayerMenu';
 import ReportMenu from './menus/ReportMenu';
 import PatrolMenu from './menus/PatrolMenu';
 import AnimalMenu from './menus/AnimalMenu';
-import RemoteControlMenu from './menus/RemoteControlMenu';
 import ReportModal from './modals/ReportModals';
 import '../../styles/RealTime.css';
 
@@ -20,7 +19,8 @@ const RealTime = () => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [mapStyle, setMapStyle] = useState('default');
+  const [trackedPatrols, setTrackedPatrols] = useState([]);
+  const [mapStyle, setMapStyle] = useState('mapbox/outdoors-v11');
 
   // Initialize control states from database
   useEffect(() => {
@@ -39,9 +39,13 @@ const RealTime = () => {
     }, { onlyOnce: true });
   }, []);
 
-  const toggleMenu = (menuName) => {
-    setActiveMenu(activeMenu === menuName ? null : menuName);
-  };
+  const toggleMenu = useCallback((menuName) => {
+    setActiveMenu((currentMenu) => currentMenu === menuName ? null : menuName);
+  }, []);
+
+  const handlePatrolDataChange = useCallback((patrols) => {
+    setTrackedPatrols(patrols);
+  }, []);
 
   const handleAnimalLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -89,35 +93,39 @@ const RealTime = () => {
         onToggleAnimals={handleToggleAnimals}
       />
 
-      <Map 
-        isRealTimeMode={isRealTimeMode} 
+      <LayerMenu
+        onLayerChange={handleLayerChange}
+        selectedStyle={mapStyle}
+      />
+
+      <Map
+        isRealTimeMode={isRealTimeMode}
         selectedAnimalLocation={selectedLocation}
         mapStyle={mapStyle}
         showReports={showReports}
         showPatrols={showPatrols}
         showAnimals={showAnimals}
+        onPatrolDataChange={handlePatrolDataChange}
       />
       
-      {activeMenu === 'layers' && (
-        <LayerMenu onLayerChange={handleLayerChange} />
-      )}
-      
       {activeMenu === 'reports' && (
-        <ReportMenu onReportSelect={handleReportSelect} />
+        <ReportMenu
+          onReportSelect={handleReportSelect}
+          onReportLocate={(report) => setSelectedLocation(report.location)}
+        />
       )}
       
       {activeMenu === 'patrols' && (
-        <PatrolMenu />
+        <PatrolMenu
+          patrols={trackedPatrols}
+          onPatrolLocate={(patrol) => setSelectedLocation(patrol.location)}
+        />
       )}
       
       {activeMenu === 'animals' && (
         <AnimalMenu onAnimalLocationSelect={handleAnimalLocationSelect} />
       )}
-      
-      {activeMenu === 'remoteControl' && (
-        <RemoteControlMenu />
-      )}
-      
+
       {selectedReport && (
         <ReportModal 
           report={selectedReport} 

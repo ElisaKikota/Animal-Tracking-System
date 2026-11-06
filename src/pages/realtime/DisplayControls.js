@@ -19,14 +19,6 @@ const DisplayControls = ({
               checked={showReports}
               onChange={onToggleReports}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Reports"
@@ -46,14 +38,6 @@ const DisplayControls = ({
               checked={showPatrols}
               onChange={onTogglePatrols}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Patrol Officers"
@@ -73,14 +57,6 @@ const DisplayControls = ({
               checked={showAnimals}
               onChange={onToggleAnimals}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Animals"

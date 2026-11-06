@@ -1,33 +1,47 @@
-import React from 'react';
-import outdoorsIcon from '../../../assets/outdoors.png';
-import lightIcon from '../../../assets/light.png';
-import darkIcon from '../../../assets/dark.png';
-import satelliteIcon from '../../../assets/satellite.png';
-import threeDIcon from '../../../assets/3d.png';
-import heatmapIcon from '../../../assets/heatmap.png';
+import React, { useState } from 'react';
+import { Box, Layers, Map, Moon, Satellite, Sun, Thermometer } from 'lucide-react';
 
-const LayerMenu = ({ onLayerChange }) => {
+const LayerMenu = ({ onLayerChange, selectedStyle }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const layers = [
-    { id: 'outdoors', style: 'mapbox/outdoors-v11', icon: outdoorsIcon, label: 'Outdoors' },
-    { id: 'light', style: 'mapbox/light-v10', icon: lightIcon, label: 'Light' },
-    { id: 'dark', style: 'mapbox/dark-v10', icon: darkIcon, label: 'Dark' },
-    { id: 'satellite', style: 'mapbox/satellite-v9', icon: satelliteIcon, label: 'Satellite' },
-    { id: '3d', style: 'elisakikota/clzjmuy7i00jx01r37jx58xy9', icon: threeDIcon, label: '3D' },
-    { id: 'heatmap', style: 'mapbox/heatmap-v10', icon: heatmapIcon, label: 'Heatmap' }
+    { id: 'outdoors', style: 'mapbox/outdoors-v11', Icon: Map, label: 'Outdoors' },
+    { id: 'light', style: 'mapbox/light-v10', Icon: Sun, label: 'Light' },
+    { id: 'dark', style: 'mapbox/dark-v10', Icon: Moon, label: 'Dark' },
+    { id: 'satellite', style: 'mapbox/satellite-v9', Icon: Satellite, label: 'Satellite' },
+    { id: '3d', style: '3d', Icon: Box, label: '3D terrain' },
+    { id: 'heatmap', style: 'heatmap', Icon: Thermometer, label: 'Animal heatmap' }
   ];
 
   return (
-    <div className="layer-menu show">
-      {layers.map(layer => (
-        <button 
-          key={layer.id}
-          className="btn" 
-          onClick={() => onLayerChange(layer.style)}
-        >
-          <img src={layer.icon} alt={layer.label} className="layer-icon" />
-          {layer.label}
-        </button>
-      ))}
+    <div className="map-layer-control">
+      {isOpen && (
+        <div className="map-layer-options" role="group" aria-label="Map style">
+          {layers.map(layer => (
+            <button
+              key={layer.id}
+              className={selectedStyle === layer.style ? 'active' : ''}
+              onClick={() => {
+                onLayerChange(layer.style);
+                setIsOpen(false);
+              }}
+              aria-pressed={selectedStyle === layer.style}
+            >
+              <layer.Icon className="layer-icon" aria-hidden="true" strokeWidth={1.8} />
+              {layer.label}
+            </button>
+          ))}
+        </div>
+      )}
+      <button
+        type="button"
+        className="map-layer-toggle"
+        aria-label="Choose map layers"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <Layers className="layer-icon" aria-hidden="true" strokeWidth={1.8} />
+        <span>Layers</span>
+      </button>
     </div>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { 
-  Typography, 
-  Box, 
+import React from 'react';
+import {
+  Typography,
+  Box,
   Grid,
   Card,
   CardHeader,
@@ -14,9 +14,6 @@ import {
   Tooltip,
   Alert,
   AlertTitle,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   TextField,
   Button
 } from '@mui/material';
@@ -29,18 +26,7 @@ import {
 } from 'lucide-react';
 
 const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previewData, parsedData, renamedHeaders, setRenamedHeaders }) => {
-  const [timestampMode, setTimestampMode] = React.useState(
-    columnMappings.dateColumn || columnMappings.timeColumn ? 'separate' : 'single'
-  );
-
-  // Auto-set timestamp mode when columnMappings change (e.g., after autoDetectColumns)
-  useEffect(() => {
-    if (columnMappings.dateColumn && columnMappings.timeColumn) {
-      setTimestampMode('separate');
-    } else if (columnMappings.timestamp) {
-      setTimestampMode('single');
-    }
-  }, [columnMappings.dateColumn, columnMappings.timeColumn, columnMappings.timestamp]);
+  // Timestamp options removed - handled in Timestamp Config step
 
   // Add local state for renamed headers if not provided by parent
   const [localRenamedHeaders, setLocalRenamedHeaders] = React.useState(() => {
@@ -71,23 +57,6 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
       ...columnMappings,
       [field]: value
     });
-  };
-  
-  const handleTimestampModeChange = (event) => {
-    const mode = event.target.value;
-    setTimestampMode(mode);
-    if (mode === 'single') {
-      setColumnMappings({
-        ...columnMappings,
-        dateColumn: '',
-        timeColumn: ''
-      });
-    } else {
-      setColumnMappings({
-        ...columnMappings,
-        timestamp: ''
-      });
-    }
   };
   
   // Column type definitions with icons and descriptions
@@ -124,15 +93,8 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
       id: 'animalId',
       label: 'Animal ID',
       icon: <BarChart size={20} />,
-      description: 'Identifier for the animal being tracked',
-      required: false
-    },
-    {
-      id: 'species',
-      label: 'Species',
-      icon: <BarChart size={20} />,
-      description: 'Animal species classification',
-      required: false
+      description: 'Identifier for the animal being tracked (required for grouping data by animal)',
+      required: true
     }
   ];
 
@@ -181,26 +143,29 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
                 position: 'relative'
               }}
             >
-              {columnType.required && (
-                <Box 
-                  sx={{ 
-                    position: 'absolute', 
-                    top: 0, 
-                    right: 0, 
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    px: 1,
-                    py: 0.5,
-                    borderBottomLeftRadius: 8
-                  }}
-                >
-                  Required
-                </Box>
-              )}
               <CardHeader
                 avatar={<Box sx={{ color: 'primary.main' }}>{columnType.icon}</Box>}
-                title={columnType.label}
-                titleTypographyProps={{ variant: 'h6' }}
+                title={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="h6">{columnType.label}</Typography>
+                    {columnType.required && (
+                      <Box
+                        sx={{
+                          bgcolor: 'primary.main',
+                          color: 'white',
+                          px: 0.75,
+                          py: 0.15,
+                          borderRadius: 1,
+                          fontSize: '0.6rem',
+                          fontWeight: 'bold',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        Required
+                      </Box>
+                    )}
+                  </Box>
+                }
                 action={
                   <Tooltip title={columnType.description}>
                     <IconButton size="small">
@@ -263,71 +228,7 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
           </Grid>
         ))}
       </Grid>
-      
-      {/* Timestamp mode selection and mapping - now appears right after lat/lon */}
-      <Typography variant="subtitle1" sx={{ mt: 2 }}>
-        Timestamp Columns
-      </Typography>
-      <RadioGroup
-        row
-        value={timestampMode}
-        onChange={handleTimestampModeChange}
-        sx={{ mb: 2 }}
-      >
-        <FormControlLabel value="single" control={<Radio />} label="Single timestamp column" />
-        <FormControlLabel value="separate" control={<Radio />} label="Separate date and time columns" />
-      </RadioGroup>
 
-      {timestampMode === 'single' && (
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel id="timestamp-label">Timestamp Column</InputLabel>
-          <Select
-            labelId="timestamp-label"
-            value={columnMappings.timestamp || ''}
-            onChange={e => handleColumnChange('timestamp', e.target.value)}
-            label="Timestamp Column"
-          >
-            <MenuItem value=""><em>None</em></MenuItem>
-            {displayHeaders.map((header, i) => (
-              <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-
-      {timestampMode === 'separate' && (
-        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-          <FormControl fullWidth>
-            <InputLabel id="dateColumn-label">Date Column</InputLabel>
-            <Select
-              labelId="dateColumn-label"
-              value={columnMappings.dateColumn || ''}
-              onChange={e => handleColumnChange('dateColumn', e.target.value)}
-              label="Date Column"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {displayHeaders.map((header, i) => (
-                <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="timeColumn-label">Time Column</InputLabel>
-            <Select
-              labelId="timeColumn-label"
-              value={columnMappings.timeColumn || ''}
-              onChange={e => handleColumnChange('timeColumn', e.target.value)}
-              label="Time Column"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {displayHeaders.map((header, i) => (
-                <MenuItem key={headerRow[i]} value={headerRow[i]}>{header}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      )}
-      
       {/* Now render the rest of the optional fields */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {columnTypes.filter(ct => ct.id !== 'latitude' && ct.id !== 'longitude').map((columnType) => (
@@ -341,26 +242,29 @@ const ColumnMappingStep = ({ headerRow, columnMappings, setColumnMappings, previ
                 position: 'relative'
               }}
             >
-              {columnType.required && (
-                <Box 
-                  sx={{ 
-                    position: 'absolute', 
-                    top: 0, 
-                    right: 0, 
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    px: 1,
-                    py: 0.5,
-                    borderBottomLeftRadius: 8
-                  }}
-                >
-                  Required
-                </Box>
-              )}
               <CardHeader
                 avatar={<Box sx={{ color: 'primary.main' }}>{columnType.icon}</Box>}
-                title={columnType.label}
-                titleTypographyProps={{ variant: 'h6' }}
+                title={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="h6">{columnType.label}</Typography>
+                    {columnType.required && (
+                      <Box
+                        sx={{
+                          bgcolor: 'primary.main',
+                          color: 'white',
+                          px: 0.75,
+                          py: 0.15,
+                          borderRadius: 1,
+                          fontSize: '0.6rem',
+                          fontWeight: 'bold',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        Required
+                      </Box>
+                    )}
+                  </Box>
+                }
                 action={
                   <Tooltip title={columnType.description}>
                     <IconButton size="small">

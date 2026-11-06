@@ -211,7 +211,7 @@ function ViewAnimals() {
   return (
     <Container maxWidth="xl" className="standard-page">
       <Typography variant="h4" component="h1" gutterBottom>
-        Animal Management
+        Animal Profile Management
       </Typography>
       
       <Box display="flex" justifyContent="space-between" mb={3}>

@@ -1,26 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../../../firebase';
-import locationIcon from '../../../assets/location.png';
-import elephantIcon from '../../../assets/elephant.png';
-import lionIcon from '../../../assets/lion.png';
-import giraffeIcon from '../../../assets/giraffe.png';
-import rhinoIcon from '../../../assets/rhino.png';
-import leopardIcon from '../../../assets/leopard.png';
+import { MapPin } from 'lucide-react';
+import AnimalSpeciesIcon from '../components/AnimalSpeciesIcon';
 
 const AnimalMenu = ({ onAnimalLocationSelect }) => {
   const [animals, setAnimals] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const getSpeciesIcon = (species) => {
-    const speciesLower = species.toLowerCase();
-    if (speciesLower.includes('elephant')) return elephantIcon;
-    if (speciesLower.includes('lion')) return lionIcon;
-    if (speciesLower.includes('giraffe')) return giraffeIcon;
-    if (speciesLower.includes('rhino')) return rhinoIcon;
-    if (speciesLower.includes('leopard')) return leopardIcon;
-    return elephantIcon;
-  };
 
   useEffect(() => {
     const fetchAnimalData = async () => {
@@ -41,7 +27,6 @@ const AnimalMenu = ({ onAnimalLocationSelect }) => {
                 animalData.push({
                   id,
                   species,
-                  icon: getSpeciesIcon(species),
                   name: animal.name,
                   date: latestDate,
                   time: latestTime,
@@ -93,11 +78,7 @@ const AnimalMenu = ({ onAnimalLocationSelect }) => {
       <div className="animal-list">
         {filteredAnimals.map((animal) => (
           <div key={animal.id} className="animal-item">
-            <img
-              src={animal.icon}
-              alt={animal.species}
-              className="animal-image"
-            />
+            <AnimalSpeciesIcon species={animal.species} className="animal-image" />
             <span className="entry-number">{animal.id}</span>
             <span className="animal-name">{animal.name}</span>
             <span className="animal-day-time">
@@ -108,7 +89,7 @@ const AnimalMenu = ({ onAnimalLocationSelect }) => {
               className="locate-icon"
               onClick={() => handleLocationClick(animal)}
             >
-              <img src={locationIcon} alt="Locate" className="layer-icon" />
+              <MapPin className="layer-icon" aria-hidden="true" />
             </button>
           </div>
         ))}

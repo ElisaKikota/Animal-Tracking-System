@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ref, onValue, get } from 'firebase/database';
-import { database } from '../../firebase';
-import { Box, Typography, Button, Paper, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { database, firestore } from '../../firebase';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { Box, Typography, Button, Paper, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import AnimalSelector from './AnimalSelector';
+import DateRangeSelector from './DateRangeSelector';
 import './HistoricalPatterns.css';
-import { MapContainer, TileLayer, Polyline, ZoomControl, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, ZoomControl, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import Papa from 'papaparse';
 import AnimalDetailsPanel from './AnimalDetailsPanel';
@@ -18,6 +20,79 @@ import lionIcon from '../../assets/lion.png';
 import giraffeIcon from '../../assets/giraffe.png';
 import rhinoIcon from '../../assets/rhino.png';
 import leopardIcon from '../../assets/leopard.png';
+
+function FitMapToPaths({ paths, active }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!active) return;
+    const points = paths.flatMap(animal => animal.path);
+    if (points.length > 0) {
+      map.fitBounds(L.latLngBounds(points).pad(0.15), { maxZoom: 16 });
+    }
+  }, [active, map, paths]);
+
+  return null;
+}
+
+function getTrackMetrics(paths) {
+  const validPaths = paths.map(animal => ({
+    ...animal,
+    locations: animal.locations.filter(point => Number.isFinite(point.lat) && Number.isFinite(point.lng))
+  })).filter(animal => animal.locations.length > 0);
+  const locations = validPaths.flatMap(animal => animal.locations);
+  if (locations.length === 0) {
+    return { observationCount: 0, distanceKm: 0, northSouthKm: 0, eastWestKm: 0, animals: [] };
+  }
+
+  const distanceBetween = (first, second) => {
+    const radians = degrees => (degrees * Math.PI) / 180;
+    const latitudeDelta = radians(second.lat - first.lat);
+    const longitudeDelta = radians(second.lng - first.lng);
+    const haversine = Math.min(1,
+      Math.sin(latitudeDelta / 2) ** 2 +
+      Math.cos(radians(first.lat)) * Math.cos(radians(second.lat)) *
+      Math.sin(longitudeDelta / 2) ** 2
+    );
+    return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+  };
+
+  const getDistance = points => points.slice(1).reduce(
+    (total, point, index) => total + distanceBetween(points[index], point),
+    0
+  );
+  const bounds = locations.reduce((currentBounds, point) => ({
+    minLatitude: Math.min(currentBounds.minLatitude, point.lat),
+    maxLatitude: Math.max(currentBounds.maxLatitude, point.lat),
+    minLongitude: Math.min(currentBounds.minLongitude, point.lng),
+    maxLongitude: Math.max(currentBounds.maxLongitude, point.lng)
+  }), {
+    minLatitude: Infinity,
+    maxLatitude: -Infinity,
+    minLongitude: Infinity,
+    maxLongitude: -Infinity
+  });
+
+  return {
+    observationCount: locations.length,
+    distanceKm: validPaths.reduce((total, animal) => total + getDistance(animal.locations), 0),
+    northSouthKm: distanceBetween(
+      { lat: bounds.minLatitude, lng: bounds.minLongitude },
+      { lat: bounds.maxLatitude, lng: bounds.minLongitude }
+    ),
+    eastWestKm: distanceBetween(
+      { lat: bounds.minLatitude, lng: bounds.minLongitude },
+      { lat: bounds.minLatitude, lng: bounds.maxLongitude }
+    ),
+    animals: validPaths.map(animal => ({
+      id: animal.id,
+      name: animal.name,
+      species: animal.species,
+      observationCount: animal.locations.length,
+      distanceKm: getDistance(animal.locations)
+    }))
+  };
+}
 
 function HistoricalPatterns() {
   // eslint-disable-next-line no-unused-vars
@@ -99,87 +174,87 @@ function HistoricalPatterns() {
     loadPredictiveData();
   }, []); // Only run once on mount
 
-  const loadPredictiveData = () => {
-    const analysisDataRef = ref(database, 'AnalysisData');
-    onValue(analysisDataRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const fetchedData = [];
-        Object.entries(data).forEach(([species, animals]) => {
-          Object.entries(animals).forEach(([id, animal]) => {
-            const animalObj = {
-              id,
-              species,
-              name: animal.name || 'Unnamed',
-              sex: animal.sex || 'Unknown',
-              age: animal.age || 'Unknown',
-              locationHistory: [],
-              csvUrl: animal.csvDownloadURL
-            };
-            fetchedData.push(animalObj);
-          });
-        });
-        setAnimalData(fetchedData);
+  const loadPredictiveData = async () => {
+    try {
+      const analysisDataCol = collection(firestore, 'AnalysisData');
+      const snapshot = await getDocs(analysisDataCol);
+      const fetchedData = [];
+
+      for (const doc of snapshot.docs) {
+        const documentId = doc.id;
+        const animal = doc.data();
+
+        // Skip metadata documents
+        if (documentId === '_metadata') continue;
+
+        // Parse species and animalId from documentId (format: species_animalId)
+        const parts = documentId.split('_');
+        const species = parts.slice(0, -1).join('_') || 'UnknownSpecies';
+        const animalId = parts[parts.length - 1];
+
+        const animalObj = {
+          id: animalId,
+          documentId,
+          species,
+          name: animal.name || 'Unnamed',
+          sex: animal.sex || 'Unknown',
+          age: animal.age || 'Unknown',
+          locationHistory: []
+        };
+        fetchedData.push(animalObj);
       }
-    });
+
+      setAnimalData(fetchedData);
+    } catch (error) {
+      console.error('Error loading predictive data:', error);
+    }
   };
 
   // Add new function to load CSV data
   const loadCSVData = useCallback(async (animal) => {
-    if (!animal.csvUrl) {
-      setCsvError('No CSV URL found for this animal');
-      return;
-    }
-
     setLoadingCSV(true);
     setCsvError(null);
 
     try {
-      const response = await fetch(animal.csvUrl);
-      if (!response.ok) throw new Error('Failed to fetch CSV file');
-      
-      const csvText = await response.text();
-      
-      Papa.parse(csvText, {
-        header: true,
-        complete: (results) => {
-          const locationHistory = results.data
-            .filter(row => row.latitude && row.longitude) // Filter out rows without coordinates
-            .map(row => ({
-              timestamp: new Date(row.timestamp || `${row.date} ${row.time}`).getTime(),
-              date: row.date,
-              time: row.time,
-              lat: parseFloat(row.latitude),
-              lng: parseFloat(row.longitude),
-              temperature: row.temperature || 'N/A',
-              activity: row.activity || 'N/A'
-            }))
-            .sort((a, b) => a.timestamp - b.timestamp);
+      // Fetch data from Firestore using the new document structure
+      const dataCol = collection(firestore, 'AnalysisData', animal.documentId, 'data');
+      const dataSnapshot = await getDocs(dataCol);
 
-          // Update the animal's location history
-          setAnimalData(prevData => 
-            prevData.map(a => 
-              a.id === animal.id 
-                ? { ...a, locationHistory } 
-                : a
-            )
-          );
-          setLoadingCSV(false);
-        },
-        error: (error) => {
-          setCsvError(`Error parsing CSV: ${error.message}`);
-          setLoadingCSV(false);
-        }
-      });
+      const locationHistory = dataSnapshot.docs
+        .map(doc => doc.data())
+        .filter(row => row.latitude && row.longitude) // Filter out rows without coordinates
+        .map(row => ({
+          timestamp: new Date(row.timestamp || `${row.date} ${row.time}`).getTime(),
+          date: row.date,
+          time: row.time,
+          lat: parseFloat(row.latitude),
+          lng: parseFloat(row.longitude),
+          temperature: row.temperature || 'N/A',
+          activity: row.activity || 'N/A'
+        }))
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      // Update the animal's location history
+      setAnimalData(prevData =>
+        prevData.map(a =>
+          a.id === animal.id
+            ? { ...a, locationHistory }
+            : a
+        )
+      );
+      setLoadingCSV(false);
     } catch (error) {
-      setCsvError(`Error loading CSV: ${error.message}`);
+      setCsvError(`Error loading data: ${error.message}`);
       setLoadingCSV(false);
     }
   }, []);
 
   // Modify the useEffect for selected animals to load CSV data
   useEffect(() => {
-    if (selectedAnimals.length === 0) return;
+    if (selectedAnimals.length === 0) {
+      setPathData([]);
+      return;
+    }
 
     selectedAnimals.forEach(animalId => {
       const animal = animalData.find(a => a.id === animalId);
@@ -363,7 +438,7 @@ function HistoricalPatterns() {
 
 
   // New UI state for home panel and workflow
-  const [mainPanel, setMainPanel] = useState('home'); // 'home', 'train', 'predict', 'patterns', 'geo'
+  const [mainPanel, setMainPanel] = useState('patterns'); // 'train', 'predict', 'patterns', 'geo'
   const [trainStep, setTrainStep] = useState(0); // 0: data source, 1: animal, 2: model type, 3: model, 4: params
 
   // Add state for modelType, selectedModel, availableModels
@@ -422,42 +497,13 @@ function HistoricalPatterns() {
     setPredictionMode(true);
   };
 
-  // New Home Panel UI
-  const HomePanel = () => (
-    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 250, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
-      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>AI Animal Tracking</Typography>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Button fullWidth size="medium" variant="contained" color="primary" startIcon={<ModelTraining />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => { setMainPanel('train'); setTrainStep(0); }}>
-            Train Model
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button fullWidth size="medium" variant="contained" color="secondary" startIcon={<DirectionsRun />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={handlePredictMovement}>
-            Predict Movement
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button fullWidth size="medium" variant="contained" color="info" startIcon={<Timeline />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('patterns')}>
-            View Patterns
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button fullWidth size="medium" variant="contained" color="success" startIcon={<Public />} sx={{ py: 1, fontWeight: 600, fontSize: 15 }} onClick={() => setMainPanel('geo')}>
-            Geo-analysis
-          </Button>
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-
   // Train Model Workflow Panel
-  const TrainModelPanel = () => (
-    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 480, minWidth: 340, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200, boxSizing: 'border-box' }}>
+  const trainModelPanel = (
+    <Paper className="analysis-workflow-panel analysis-train-panel" elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 384, minWidth: 0, zIndex: 1200, boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}>
       <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Train Model</Typography>
       {/* Step 1: Select Animal (skip data source step) */}
       {trainStep === 0 && (
-        <Box sx={{ width: '100%' }}>
+        <Box className="analysis-train-animal-step" sx={{ width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <Typography variant="subtitle1" sx={{ mb: 2, fontSize: 15 }}>Select Animal</Typography>
           <AnimalSelector
             animals={animalData}
@@ -466,7 +512,7 @@ function HistoricalPatterns() {
             collapsed={false}
             onToggleCollapse={() => {}}
           />
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3, fontSize: 15, py: 1 }} onClick={() => setTrainStep(1)} disabled={selectedAnimals.length === 0}>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 2, fontSize: 15, py: 1, flexShrink: 0 }} onClick={() => setTrainStep(1)} disabled={selectedAnimals.length === 0}>
             Next
           </Button>
         </Box>
@@ -505,58 +551,185 @@ function HistoricalPatterns() {
           showFullPanel
         />
       )}
-      {/* Back to home */}
-      <Button fullWidth sx={{ mt: 2, fontSize: 15, py: 1 }} onClick={() => setMainPanel('home')}>Back to Home</Button>
+      {/* Back to patterns */}
+      <Button fullWidth sx={{ mt: 2, fontSize: 15, py: 1 }} onClick={() => setMainPanel('patterns')}>Back to Patterns</Button>
+    </Paper>
+  );
+
+  const patternsPanel = (
+    <Paper className="analysis-workflow-panel analysis-patterns-panel" elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 384, minWidth: 0, zIndex: 1200, boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}>
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>View Patterns</Typography>
+      <Box className="analysis-patterns-content">
+        <AnimalSelector
+          animals={animalData}
+          selectedAnimals={selectedAnimals}
+          onAnimalSelection={setSelectedAnimals}
+          collapsed={false}
+          onToggleCollapse={() => {}}
+        />
+        <DateRangeSelector
+          startDate={dateRange.startDate}
+          endDate={dateRange.endDate}
+          onDateRangeChange={setDateRange}
+        />
+        {selectedAnimals.length === 0 && (
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Select an animal to display its recorded movement on the map.
+          </Typography>
+        )}
+      </Box>
+    </Paper>
+  );
+
+  const geoMetrics = getTrackMetrics(pathData);
+  const geoAnalysisPanel = (
+    <Paper className="analysis-workflow-panel analysis-patterns-panel analysis-geo-panel" elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 384, minWidth: 0, zIndex: 1200, boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}>
+      <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Geo-analysis</Typography>
+      <Box className="analysis-patterns-content">
+        <AnimalSelector
+          animals={animalData}
+          selectedAnimals={selectedAnimals}
+          onAnimalSelection={setSelectedAnimals}
+          collapsed={false}
+          onToggleCollapse={() => {}}
+        />
+        <DateRangeSelector
+          startDate={dateRange.startDate}
+          endDate={dateRange.endDate}
+          onDateRangeChange={setDateRange}
+        />
+        {geoMetrics.observationCount > 0 ? (
+          <Box className="geo-analysis-results">
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>
+              Track summary
+            </Typography>
+            <Box className="geo-analysis-metrics">
+              <Paper variant="outlined" sx={{ p: 1 }}>
+                <Typography variant="caption" color="text.secondary">Observations</Typography>
+                <Typography variant="subtitle1" fontWeight={700}>{geoMetrics.observationCount}</Typography>
+              </Paper>
+              <Paper variant="outlined" sx={{ p: 1 }}>
+                <Typography variant="caption" color="text.secondary">Estimated distance</Typography>
+                <Typography variant="subtitle1" fontWeight={700}>{geoMetrics.distanceKm.toFixed(2)} km</Typography>
+              </Paper>
+              <Paper variant="outlined" sx={{ p: 1 }}>
+                <Typography variant="caption" color="text.secondary">North-south span</Typography>
+                <Typography variant="subtitle1" fontWeight={700}>{geoMetrics.northSouthKm.toFixed(2)} km</Typography>
+              </Paper>
+              <Paper variant="outlined" sx={{ p: 1 }}>
+                <Typography variant="caption" color="text.secondary">East-west span</Typography>
+                <Typography variant="subtitle1" fontWeight={700}>{geoMetrics.eastWestKm.toFixed(2)} km</Typography>
+              </Paper>
+            </Box>
+            <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: 700 }}>
+              By animal
+            </Typography>
+            {geoMetrics.animals.map(animal => (
+              <Box className="geo-analysis-animal" key={animal.id}>
+                <Box>
+                  <Typography variant="body2" fontWeight={600}>{animal.name}</Typography>
+                  <Typography variant="caption" color="text.secondary">{animal.species}</Typography>
+                </Box>
+                <Typography variant="body2" textAlign="right">
+                  {animal.observationCount} points
+                  <br />
+                  {animal.distanceKm.toFixed(2)} km
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            Select an animal with recorded locations to see geographic summaries.
+          </Typography>
+        )}
+      </Box>
     </Paper>
   );
 
   // Prediction Panel
-  const PredictPanel = () => (
-    <Paper elevation={4} sx={{ p: 2, borderRadius: 3, width: 340, mt: 2, mr: 2, position: 'absolute', top: 0, right: 0, zIndex: 1200 }}>
+  const predictPanel = (
+    <Paper className="analysis-workflow-panel analysis-predict-panel" elevation={4} sx={{ p: 2, borderRadius: 3, width: '100%', maxWidth: 384, minWidth: 0, zIndex: 1200, boxSizing: 'border-box', backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}>
       <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 700, fontSize: 18 }}>Predict Movement</Typography>
-      <Box sx={{ mb: 2 }}>
-        <AnimalSelector
-          animals={animalData}
-          selectedAnimals={predictAnimal ? [predictAnimal] : []}
-          onAnimalSelection={ids => setPredictAnimal(ids[0] || '')}
-          collapsed={false}
-          singleSelect={true}
-        />
+      <Box className="analysis-predict-animal-step" sx={{ width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <Box className="analysis-predict-selector" sx={{ mb: 2, flex: 1, minHeight: 0, display: 'flex' }}>
+          <AnimalSelector
+            animals={animalData}
+            selectedAnimals={predictAnimal ? [predictAnimal] : []}
+            onAnimalSelection={ids => setPredictAnimal(ids[0] || '')}
+            collapsed={false}
+            singleSelect={true}
+          />
+        </Box>
+        <Box sx={{ mb: 2, flexShrink: 0 }}>
+          <Typography gutterBottom>Number of Points to Predict</Typography>
+          <Slider
+            value={numPoints}
+            min={1}
+            max={20}
+            step={1}
+            onChange={(_, v) => setNumPoints(v)}
+            valueLabelDisplay="auto"
+          />
+        </Box>
+        <Box sx={{ mb: 2, flexShrink: 0 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Time Interval</InputLabel>
+            <Select value={interval} label="Time Interval" onChange={e => setInterval(Number(e.target.value))}>
+              <MenuItem value={1}>1 hour</MenuItem>
+              <MenuItem value={6}>6 hours</MenuItem>
+              <MenuItem value={12}>12 hours</MenuItem>
+              <MenuItem value={24}>1 day</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Button fullWidth variant="contained" color="secondary" sx={{ mt: 1, flexShrink: 0 }} onClick={handleRunPrediction} disabled={!predictAnimal}>
+          Predict
+        </Button>
+        <Button fullWidth sx={{ mt: 2, flexShrink: 0 }} variant="outlined" onClick={() => setMainPanel('patterns')}>
+          Back to Patterns
+        </Button>
       </Box>
-      <Box sx={{ mb: 2 }}>
-        <Typography gutterBottom>Number of Points to Predict</Typography>
-        <Slider
-          value={numPoints}
-          min={1}
-          max={20}
-          step={1}
-          onChange={(_, v) => setNumPoints(v)}
-          valueLabelDisplay="auto"
-        />
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <FormControl fullWidth size="small">
-          <InputLabel>Time Interval</InputLabel>
-          <Select value={interval} label="Time Interval" onChange={e => setInterval(Number(e.target.value))}>
-            <MenuItem value={1}>1 hour</MenuItem>
-            <MenuItem value={6}>6 hours</MenuItem>
-            <MenuItem value={12}>12 hours</MenuItem>
-            <MenuItem value={24}>1 day</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-      <Button fullWidth variant="contained" color="secondary" sx={{ mt: 2 }} onClick={handleRunPrediction} disabled={!predictAnimal}>
-        Predict
-      </Button>
-      <Button fullWidth sx={{ mt: 2 }} variant="outlined" onClick={() => setMainPanel('home')}>
-        Back to Menu
-      </Button>
     </Paper>
   );
 
   return (
     <div className="historical-patterns">
       <div className="analysis-container">
+        <div className="analysis-sidebar">
+          <button
+            className={`sidebar-button ${mainPanel === 'train' ? 'active' : ''}`}
+            onClick={() => { setMainPanel('train'); setTrainStep(0); }}
+            title="Train Model"
+          >
+            <ModelTraining sx={{ fontSize: 24 }} />
+            <span>Train Model</span>
+          </button>
+          <button
+            className={`sidebar-button ${mainPanel === 'predict' ? 'active' : ''}`}
+            onClick={handlePredictMovement}
+            title="Predict Movement"
+          >
+            <DirectionsRun sx={{ fontSize: 24 }} />
+            <span>Predict Movement</span>
+          </button>
+          <button
+            className={`sidebar-button ${mainPanel === 'patterns' ? 'active' : ''}`}
+            onClick={() => setMainPanel('patterns')}
+            title="View Patterns"
+          >
+            <Timeline sx={{ fontSize: 24 }} />
+            <span>View Patterns</span>
+          </button>
+          <button
+            className={`sidebar-button ${mainPanel === 'geo' ? 'active' : ''}`}
+            onClick={() => setMainPanel('geo')}
+            title="Geo-analysis"
+          >
+            <Public sx={{ fontSize: 24 }} />
+            <span>Geo-analysis</span>
+          </button>
+        </div>
         <div className="analysis-map">
           <MapContainer
             center={[-1.948, 34.1665]}
@@ -565,6 +738,7 @@ function HistoricalPatterns() {
             key={mapKey}
             whenReady={handleMapLoad}
           >
+            <FitMapToPaths paths={pathData} active={mainPanel === 'patterns'} />
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -629,15 +803,12 @@ function HistoricalPatterns() {
             ))}
             <ZoomControl position="bottomright" />
           </MapContainer>
-          {/* Prediction Results Panel */}
-          {mainPanel === 'predict' && <PredictPanel />}
         </div>
 
-       
-
-        {/* New Home/Workflow Panel at top right */}
-        {mainPanel === 'home' && <HomePanel />}
-        {mainPanel === 'train' && <TrainModelPanel />}
+        {mainPanel === 'patterns' && patternsPanel}
+        {mainPanel === 'geo' && geoAnalysisPanel}
+        {mainPanel === 'predict' && predictPanel}
+        {mainPanel === 'train' && trainModelPanel}
         {/* TODO: Add panels for predict, patterns, geo as needed */}
       </div>
     </div>

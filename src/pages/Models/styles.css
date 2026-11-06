@@ -6,7 +6,7 @@
 
 .models-container h1 {
   margin-bottom: 24px;
-  color: #1890ff;
+  color: var(--color-primary);
 }
 
 .model-selection-card,

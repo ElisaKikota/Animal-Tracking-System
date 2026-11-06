@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   Paper,
   Typography,
   Box,
@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import Papa from 'papaparse';
 import { Upload, Save } from 'lucide-react';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as dbRef, push, set, get } from 'firebase/database';
 import { processAndUploadData, uploadRowsToFirestore } from './utils/dataProcessingUtils';
 
@@ -174,7 +173,8 @@ const AnalysisInput = () => {
         if (ids.length > 0) nextId = Math.max(...ids) + 1;
       }
       const animalId = String(nextId);
-      const animalRef = dbRef(database, `AnalysisData/${speciesKey}/${animalId}`);
+      const documentId = `${speciesKey}_${animalId}`;
+      const animalRef = dbRef(database, `AnalysisData/${documentId}`);
       await set(animalRef, {
         ...animalDetails,
         columnMappings,
@@ -185,7 +185,7 @@ const AnalysisInput = () => {
       // --- Upload data rows to Firestore in batches of 100 ---
       await uploadRowsToFirestore(
         fileData,
-        speciesKey,
+        documentId,
         animalId,
         animalDetails,
         setUploadProgress,

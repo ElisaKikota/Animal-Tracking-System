@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Paper, FormControl, InputLabel, Select, MenuItem, TextField, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { database } from '../firebase';
-import { ref as dbRef, onValue, set } from 'firebase/database';
-import Papa from 'papaparse';
+import { database, firestore } from '../firebase';
+import { ref as dbRef, set } from 'firebase/database';
+import { collection, getDocs } from 'firebase/firestore';
 
 const FeatureEngineering = () => {
   const [animals, setAnimals] = useState([]);
@@ -16,87 +16,80 @@ const FeatureEngineering = () => {
   const [locationLoading, setLocationLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Recursively fetch all animals under AnalysisData
+  // Recursively fetch all animals under AnalysisData from Firestore
   useEffect(() => {
-    const animalsRef = dbRef(database, 'AnalysisData');
-    onValue(animalsRef, (snapshot) => {
-      const data = snapshot.val() || {};
-      const animalList = [];
-      // Recursively traverse species and animal IDs
-      Object.entries(data).forEach(([species, animalsObj]) => {
-        if (typeof animalsObj === 'object') {
-          Object.entries(animalsObj).forEach(([id, animal]) => {
-            if (animal && animal.csvDownloadURL) {
-              animalList.push({
-                key: `${species}/${id}`,
-                species,
-                id,
-                name: animal.name || id,
-                csvDownloadURL: animal.csvDownloadURL
-              });
-            }
-          });
+    const fetchAnimals = async () => {
+      try {
+        const analysisDataCol = collection(firestore, 'AnalysisData');
+        const speciesSnapshot = await getDocs(analysisDataCol);
+        const animalList = [];
+
+        for (const speciesDoc of speciesSnapshot.docs) {
+          const species = speciesDoc.id;
+          // Skip metadata documents
+          if (species === '_metadata') continue;
+
+          const animalsCol = collection(firestore, 'AnalysisData', species);
+          const animalsSnapshot = await getDocs(animalsCol);
+
+          for (const animalDoc of animalsSnapshot.docs) {
+            const id = animalDoc.id;
+            const animal = animalDoc.data();
+            // Skip metadata documents
+            if (id === '_metadata') continue;
+
+            animalList.push({
+              key: `${species}/${id}`,
+              species,
+              id,
+              name: animal.name || id
+            });
+          }
         }
-      });
-      setAnimals(animalList);
-    });
+
+        setAnimals(animalList);
+      } catch (error) {
+        console.error('Error fetching animals:', error);
+      }
+    };
+
+    fetchAnimals();
   }, []);
 
-  // Fetch and parse CSV when animal changes, with robust logging and user error message
+  // Fetch and parse data from Firestore when animal changes
   useEffect(() => {
     setErrorMsg('');
     if (!selectedAnimal) return;
     const animal = animals.find(a => a.key === selectedAnimal);
-    if (!animal || !animal.csvDownloadURL) return;
+    if (!animal) return;
 
     setLoading(true);
-    console.log('Fetching CSV from:', animal.csvDownloadURL);
-    fetch(animal.csvDownloadURL)
-      .then(resp => {
-        if (!resp.ok) {
-          const msg = `Failed to fetch CSV: ${resp.status} ${resp.statusText}`;
-          setErrorMsg(msg);
-          console.error(msg);
-          setLoading(false);
-          return '';
+    console.log('Fetching data from Firestore for:', animal.species, animal.id);
+
+    const fetchData = async () => {
+      try {
+        const dataCol = collection(firestore, 'AnalysisData', animal.species, animal.id, 'data');
+        const dataSnapshot = await getDocs(dataCol);
+
+        let rows = dataSnapshot.docs.map(doc => doc.data());
+        console.log('Fetched data rows:', rows);
+        if (dateRange.start && dateRange.end) {
+          rows = rows.filter(d => {
+            const t = new Date(d.timestamp).getTime();
+            return t >= new Date(dateRange.start).getTime() && t <= new Date(dateRange.end).getTime();
+          });
         }
-        return resp.text();
-      })
-      .then(csvText => {
-        if (!csvText) {
-          setErrorMsg('CSV text is empty or could not be loaded.');
-          console.error('CSV text is empty');
-          setLoading(false);
-          return;
-        }
-        Papa.parse(csvText, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            let rows = results.data;
-            console.log('Parsed CSV rows:', rows);
-            if (dateRange.start && dateRange.end) {
-              rows = rows.filter(d => {
-                const t = new Date(d.timestamp).getTime();
-                return t >= new Date(dateRange.start).getTime() && t <= new Date(dateRange.end).getTime();
-              });
-            }
-            setAnimalData(rows);
-            setLoading(false);
-            if (!rows.length) setErrorMsg('No data rows found in the CSV.');
-          },
-          error: (err) => {
-            setErrorMsg('Failed to parse CSV file.');
-            console.error('PapaParse error:', err);
-            setLoading(false);
-          }
-        });
-      })
-      .catch((err) => {
-        setErrorMsg('Fetch error: ' + err.message);
+        setAnimalData(rows);
+        setLoading(false);
+        if (!rows.length) setErrorMsg('No data rows found.');
+      } catch (err) {
+        setErrorMsg('Error fetching data: ' + err.message);
         console.error('Fetch error:', err);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [selectedAnimal, dateRange, animals]);
 
   // Fetch environment data for each point

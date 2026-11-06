@@ -116,14 +116,6 @@ const MapControls = ({
               checked={isRealTimeMode}
               onChange={handleTrackingChange}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label={isRealTimeMode ? "Real-Time Tracking" : "Last Known Location"}
@@ -144,14 +136,6 @@ const MapControls = ({
               checked={showReports}
               onChange={handleReportsChange}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Reports"
@@ -171,14 +155,6 @@ const MapControls = ({
               checked={showPatrols}
               onChange={handlePatrolsChange}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Patrol Officers"
@@ -198,14 +174,6 @@ const MapControls = ({
               checked={showAnimals}
               onChange={handleAnimalsChange}
               color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#1F76CE',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#1F76CE',
-                },
-              }}
             />
           }
           label="Animals"

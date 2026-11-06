@@ -27,7 +27,7 @@
   bottom: 0;
   width: 70px;
   height:100vh-64px;
-  background-color: rgba(31, 118, 206, 0.6);
+  background-color: rgba(var(--color-primary-rgb), 0.6);
   padding: 10px 0;
   flex-direction: column;
   align-items: center;
@@ -216,7 +216,7 @@ padding-right: 10px;
 }
 .report-header {
   color: rgb(255, 255, 255);
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   display: flex;
   padding:8px;
   justify-content: space-between;
@@ -227,7 +227,7 @@ padding-right: 10px;
 
 .patrol-header {
   color: rgb(255, 255, 255);
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   display: flex;
   padding:8px;
   justify-content: space-between;
@@ -238,7 +238,7 @@ padding-right: 10px;
 
 .animal-header {
   color: rgb(255, 255, 255);
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   display: flex;
   padding:8px;
   justify-content: space-between;
@@ -249,7 +249,7 @@ padding-right: 10px;
 
 .remote-control-header {
   color: rgb(255, 255, 255);
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   display: flex;
   padding:8px;
   justify-content: space-between;
@@ -380,14 +380,14 @@ padding-right: 10px;
 }
 
 .report-item {
-  background-color: #1f76ce41;
+  background-color: rgba(var(--color-primary-rgb), 0.25);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .patrol-item {
-  background-color: #1f76ce41;
+  background-color: rgba(var(--color-primary-rgb), 0.25);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -395,7 +395,7 @@ padding-right: 10px;
 
 .animal-item {
   /* top:100; */
-  background-color: #1f76ce41;
+  background-color: rgba(var(--color-primary-rgb), 0.25);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
@@ -403,14 +403,14 @@ padding-right: 10px;
 
 .remote-control-item {
   /* top:100; */
-  background-color: #1f76ce41;
+  background-color: rgba(var(--color-primary-rgb), 0.25);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .report-image {
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   width: 30px;
   height: 30px;
   padding:8px;
@@ -418,7 +418,7 @@ padding-right: 10px;
 }
 
 .patrol-image {
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   width: 30px;
   height: 30px;
   padding:8px;
@@ -426,7 +426,7 @@ padding-right: 10px;
 }
 
 .animal-image {
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   width: 30px;
   height: 30px;
   padding:8px;
@@ -434,7 +434,7 @@ padding-right: 10px;
 }
 
 .remote-control-image {
-  background-color: #1F76CE;
+  background-color: var(--color-primary);
   width: 30px;
   height: 30px;
   padding:8px;

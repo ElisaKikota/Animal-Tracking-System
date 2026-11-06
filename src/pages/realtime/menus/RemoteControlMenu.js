@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ref, onValue, update } from 'firebase/database';
 import { database } from '../../../firebase';
-import locationIcon from '../../../assets/location.png';
-import elephantIcon from '../../../assets/elephant.png';
-import lionIcon from '../../../assets/lion.png';
-import giraffeIcon from '../../../assets/giraffe.png';
-import rhinoIcon from '../../../assets/rhino.png';
-import leopardIcon from '../../../assets/leopard.png';
+import { MapPin } from 'lucide-react';
+import AnimalSpeciesIcon from '../components/AnimalSpeciesIcon';
 
 const RemoteControlMenu = () => {
   const [animals, setAnimals] = useState([]);
@@ -55,17 +51,7 @@ const RemoteControlMenu = () => {
       <div className="remote-control-list">
         {animals.map(animal => (
           <div key={animal.id} className="animal-item">
-            <img 
-              src={
-                animal.species.toLowerCase() === 'elephant' ? elephantIcon :
-                animal.species.toLowerCase() === 'lion' ? lionIcon :
-                animal.species.toLowerCase() === 'rhino' ? rhinoIcon :
-                animal.species.toLowerCase() === 'leopard' ? leopardIcon :
-                giraffeIcon // Default for giraffe and others
-              }
-              alt={animal.species} 
-              className="animal-image" 
-            />
+            <AnimalSpeciesIcon species={animal.species} className="animal-image" />
             <span className="entry-number">{animal.id}</span>
             <span className="animal-name">{animal.name}</span>
             <input
@@ -79,7 +65,7 @@ const RemoteControlMenu = () => {
               <div>{animal.time}</div>
             </span>
             <button className="locate-icon">
-              <img src={locationIcon} alt="Locate" className="layer-icon" />
+              <MapPin className="layer-icon" aria-hidden="true" />
             </button>
           </div>
         ))}

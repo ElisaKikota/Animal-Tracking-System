@@ -38,10 +38,9 @@ import AnimalDetailsStep from './steps/AnimalDetailsStep';
 import FeatureEngineering from './FeatureEngineering';
 
 // Import utility functions
-import { 
-  validateData, 
+import {
+  validateData,
   processAndUploadData,
-  uploadRowsToFirestore,
   autoDetectColumns,
   fetchAllUploadedDatasets,
   deleteUploadedDataset
@@ -80,20 +79,24 @@ const AnalysisDataPage = () => {
     timeColumn: '',
     temperature: '',
     heartRate: '',
-    animalId: '',
-    species: ''
+    animalId: ''
   });
   
   // Timestamp configuration
   const [timestampConfig, setTimestampConfig] = useState({
-    format: 'auto', // 'auto', 'custom', 'interval'
+    format: 'auto', // 'auto', 'custom', 'interval', 'julian'
     startDate: new Date().toISOString().split('T')[0],
     startTime: '00:00',
     hasDate: true,
     hasTime: true,
     dateColumn: '',
     timeColumn: '',
-    combineColumns: false
+    combineColumns: false,
+    yearColumn: '',
+    julianDayColumn: '',
+    hourColumn: '',
+    minuteColumn: '',
+    secondColumn: ''
   });
 
   // Upload states
@@ -104,12 +107,9 @@ const AnalysisDataPage = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [previewData, setPreviewData] = useState([]);
 
-  const [animalDetails, setAnimalDetails] = useState({
-    category: '',
-    name: '',
-    age: '',
-    sex: ''
-  });
+  const [animalDetails, setAnimalDetails] = useState({});
+  const [currentAnimalId, setCurrentAnimalId] = useState(null);
+  const [uniqueAnimalIds, setUniqueAnimalIds] = useState([]);
 
   const [skipErrors, setSkipErrors] = useState(false);
   const [allRowsInvalid, setAllRowsInvalid] = useState(false);
@@ -125,7 +125,7 @@ const AnalysisDataPage = () => {
   const [loadingDatasets, setLoadingDatasets] = useState(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null); // {species, animalId, csvDownloadURL}
+  const [deleteTarget, setDeleteTarget] = useState(null); // {species, animalId}
   const [deleting, setDeleting] = useState(false);
 
   const steps = [
@@ -167,6 +167,44 @@ const AnalysisDataPage = () => {
       setPreviewData(processedData);
     }
   }, [processedData]);
+
+  // Extract unique animal IDs when data or column mappings change
+  useEffect(() => {
+    if (parsedData && columnMappings.animalId) {
+      const animalIdColumn = columnMappings.animalId;
+      const uniqueIds = [...new Set(parsedData.map(row => row[animalIdColumn]))].filter(Boolean);
+      setUniqueAnimalIds(uniqueIds);
+
+      // Initialize animal details for each unique ID if not already set
+      setAnimalDetails(prev => {
+        const updated = { ...prev };
+        uniqueIds.forEach(id => {
+          if (!updated[id]) {
+            updated[id] = {
+              category: '',
+              name: '',
+              age: '',
+              sex: '',
+              location: '',
+              species: '',
+              locationName: '',
+              geoArea: '',
+              healthStatus: '',
+              weight: '',
+              showUploadInterval: false,
+              upload_interval: ''
+            };
+          }
+        });
+        return updated;
+      });
+
+      // Set current animal ID to the first one if not set
+      if (uniqueIds.length > 0 && !currentAnimalId) {
+        setCurrentAnimalId(uniqueIds[0]);
+      }
+    }
+  }, [parsedData, columnMappings.animalId]);
 
   // Handle file upload with optimized parsing
   const handleFileUpload = async (event) => {
@@ -274,11 +312,11 @@ const AnalysisDataPage = () => {
       setValidationErrors(['No data to upload']);
       return;
     }
-    
+
     try {
       setUploadStatus('uploading');
       setUploadProgress(0);
-      
+
       await processAndUploadData(
         parsedData,
         selectedFile,
@@ -288,20 +326,7 @@ const AnalysisDataPage = () => {
         animalDetails,
         renamedHeaders
       );
-      
-      // Also upload to Firestore with the same structure
-      const species = (animalDetails.species || columnMappings.species || 'UnknownSpecies').replace(/\s+/g, '_');
-      const animalId = String(Math.floor(Math.random() * 1000)); // Generate a random ID for Firestore
-      await uploadRowsToFirestore(
-        parsedData,
-        species,
-        animalId,
-        animalDetails,
-        setUploadProgress,
-        setUploadStatus,
-        (msg) => console.log(msg)
-      );
-      
+
       setUploadProgress(100);
       setUploadStatus('success');
     } catch (error) {
@@ -392,11 +417,9 @@ const AnalysisDataPage = () => {
           />
         );
       case 3:
-        // If both dateColumn and timeColumn are mapped, preselect custom format
-        const autoCustomFormat = columnMappings.dateColumn && columnMappings.timeColumn ? 'custom' : timestampConfig.format;
         return (
-          <TimestampConfigStep 
-            timestampConfig={{ ...timestampConfig, format: autoCustomFormat, dateColumn: columnMappings.dateColumn, timeColumn: columnMappings.timeColumn }}
+          <TimestampConfigStep
+            timestampConfig={timestampConfig}
             setTimestampConfig={setTimestampConfig}
             headerRow={headerRow}
             columnMappings={columnMappings}
@@ -409,6 +432,9 @@ const AnalysisDataPage = () => {
           <AnimalDetailsStep
             animalDetails={animalDetails}
             setAnimalDetails={setAnimalDetails}
+            currentAnimalId={currentAnimalId}
+            setCurrentAnimalId={setCurrentAnimalId}
+            uniqueAnimalIds={uniqueAnimalIds}
           />
         );
       case 5:
@@ -445,7 +471,7 @@ const AnalysisDataPage = () => {
 
   // Add this before the return statement
   const requiredColumnsMapped = columnMappings.latitude && columnMappings.longitude &&
-    (columnMappings.timestamp || (columnMappings.dateColumn && columnMappings.timeColumn));
+    columnMappings.animalId;
 
   useEffect(() => {
     if (tab === 1) {
@@ -468,7 +494,7 @@ const AnalysisDataPage = () => {
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
-    await deleteUploadedDataset(deleteTarget.species, deleteTarget.animalId, deleteTarget.csvDownloadURL);
+    await deleteUploadedDataset(deleteTarget.documentId);
     setDeleting(false);
     setDeleteDialogOpen(false);
     setDeleteTarget(null);
@@ -556,24 +582,18 @@ const AnalysisDataPage = () => {
                       <TableCell>Sex</TableCell>
                       <TableCell>Age</TableCell>
                       <TableCell>Data Points</TableCell>
-                      <TableCell>CSV File</TableCell>
                       <TableCell align="center">Delete</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {uploadedDatasets.map((row, i) => (
-                      <TableRow key={row.species + '-' + row.animalId + '-' + i}>
+                      <TableRow key={row.documentId || row.species + '-' + row.animalId + '-' + i}>
                         <TableCell>{row.species}</TableCell>
                         <TableCell>{row.animalId}</TableCell>
                         <TableCell>{row.name || '-'}</TableCell>
                         <TableCell>{row.sex || '-'}</TableCell>
                         <TableCell>{row.age || '-'}</TableCell>
                         <TableCell>{row.dataPoints ?? '-'}</TableCell>
-                        <TableCell>
-                          {row.csvDownloadURL ? (
-                            <a href={row.csvDownloadURL} target="_blank" rel="noopener noreferrer">Download</a>
-                          ) : '-'}
-                        </TableCell>
                         <TableCell align="center">
                           <IconButton size="small" onClick={() => handleDeleteClick(row)} color="error">
                             <Trash size={18} />

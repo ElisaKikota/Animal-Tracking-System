@@ -1,5 +1,5 @@
 .cluster-icon {
-    background: rgba(31, 118, 206, 0.9);
+    background: rgba(var(--color-primary-rgb), 0.9);
     width: 40px !important;
     height: 40px !important;
     border-radius: 50%;
@@ -37,6 +37,39 @@
     transform: scale(1.1);
   }
 
+  .patrol-marker {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    background-color: #194c34;
+    color: #ffffff;
+    box-sizing: border-box;
+  }
+
+  .patrol-marker__person {
+    display: flex;
+  }
+
+  .patrol-marker__badge {
+    position: absolute;
+    right: -5px;
+    bottom: -3px;
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #194c34;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #194c34;
+  }
+
   .mapboxgl-popup {
     max-width: 200px;
   }
@@ -50,6 +83,22 @@
   .mapboxgl-ctrl-top-right {
     top: 10px;
     right: 10px;
+  }
+
+  .mapboxgl-ctrl-attrib
+  .mapboxgl-ctrl-attrib-inner {
+    font-size: 10px;
+    line-height: 12.48px;
+  }
+
+  .mapboxgl-ctrl-bottom-left {
+    left: 66px;
+    bottom: -4px;
+    right: auto;
+  }
+
+  .mapboxgl-ctrl-bottom-right {
+    right: 102px;
   }
 
   .mapboxgl-ctrl-group {

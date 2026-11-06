@@ -15,7 +15,7 @@
 .analysis-map {
   position: absolute;
   top: 0;
-  left: 0px; /* width of historical sidebar */
+  left: 70px;
   right: 0;
   bottom: 0;
   height: 100%;
@@ -25,15 +25,25 @@
   transition: left 0.3s;
 }
 
+/* Adjust map position when main sidebar is open */
+.app-container.sidebar-open .analysis-map {
+  left: 70px;
+}
+
+/* When main sidebar is closed, map should start from the analysis sidebar */
+.app-container:not(.sidebar-open) .analysis-map {
+  left: 70px;
+}
+
 
 
 .analysis-sidebar {
   position: absolute;
   top: 0;
-  left: 60px; /* Position after collapsed main sidebar */
+  left: 0;
   height: 100%;
   width: 70px;
-  background-color: rgba(31, 118, 206, 0.92); /* More visible */
+  background-color: rgba(var(--color-primary-rgb), 0.92);
   padding: 10px 0;
   display: flex;
   flex-direction: column;
@@ -42,12 +52,7 @@
   z-index: 900;
   transition: left 0.3s;
   box-shadow: 2px 0px 8px rgba(0,0,0,0.18); /* Stronger shadow */
-  border-right: 1px solid #1976d2; /* Optional: subtle border */
-}
-
-/* Adjust when main sidebar is open */
-.sidebar-open .analysis-sidebar {
-  left: 60px; /* Match your main sidebar's open width */
+  border-right: 1px solid var(--color-primary);
 }
 
 .analysis-sidebar .sidebar-button {
@@ -66,12 +71,12 @@
 }
 
 .analysis-sidebar .sidebar-button:hover {
-  background-color: rgba(21, 126, 231, 0.5);
+  background-color: rgba(255, 255, 255, 0.12);
   color: white;
 }
 
 .analysis-sidebar .sidebar-button.active {
-  background-color: rgba(21, 126, 231, 0.7);
+  background-color: rgba(255, 255, 255, 0.2);
   color: white;
   border-left: 3px solid white;
 }
@@ -79,7 +84,11 @@
 .analysis-sidebar .sidebar-button span {
   font-size: 12px;
   margin-top: 5px;
-  display: none;
+  display: block;
+}
+
+.analysis-sidebar .sidebar-button .MuiSvgIcon-root {
+  font-size: 24px;
 }
 
 .controls-panel {
@@ -96,8 +105,114 @@
   overflow-y: auto;
 }
 
+.analysis-workflow-panel {
+  position: absolute;
+  top: 10px;
+  left: 80px;
+  max-height: calc(100vh - 84px);
+  overflow-y: auto;
+  animation: analysis-panel-slide-in 0.3s ease both;
+}
+
+.analysis-train-panel {
+  bottom: 10px;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.analysis-train-animal-step > .animal-selector-card {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-predict-panel {
+  bottom: 10px;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.analysis-predict-selector > .animal-selector-card {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-patterns-panel {
+  bottom: 10px;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.analysis-patterns-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+
+.analysis-patterns-content > .animal-selector-card {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-patterns-content > .date-range-selector {
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.geo-analysis-results {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.geo-analysis-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.geo-analysis-animal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+@keyframes analysis-panel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .controls-panel h2 {
-  color: #1F76CE;
+  color: var(--color-primary);
   font-size: 18px;
   margin-top: 0;
   margin-bottom: 15px;
@@ -127,7 +242,7 @@
   display: flex !important;
   align-items: center !important;
   gap: 8px;
-  color: #1F76CE !important;
+  color: var(--color-primary) !important;
   font-size: 16px !important;
   margin-bottom: 12px !important;
 }
@@ -211,8 +326,7 @@
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .analysis-sidebar,
-  .sidebar-open .analysis-sidebar {
+  .analysis-sidebar {
     left: 0;
   }
   
@@ -222,5 +336,9 @@
   
   .controls-panel {
     width: calc(100% - 90px);
+  }
+
+  .analysis-workflow-panel {
+    width: calc(100vw - 100px);
   }
 }

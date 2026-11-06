@@ -56,7 +56,7 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
 
   return (
     <Fade in timeout={400}>
-      <Paper elevation={1} sx={{ p: 1.5, borderRadius: 2, background: '#fff', width: '100%', minWidth: 340, maxWidth: 420, boxSizing: 'border-box', overflowX: 'hidden' }}>
+      <Paper className="animal-selector-card" elevation={1} sx={{ p: 1.5, borderRadius: 2, background: '#fff', width: '100%', minWidth: 340, maxWidth: 420, boxSizing: 'border-box', overflowX: 'hidden' }}>
         <Typography variant="subtitle2" className="section-title" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, fontWeight: 600, fontSize: 15 }}>
           <PawPrint size={18} /> Select Animal to Track
         </Typography>
@@ -85,7 +85,19 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
             />
           </FormControl>
         </Box>
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 320, overflowY: 'auto' }}>
+        <Box
+          className="animal-selector-list"
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            flex: '1 1 auto',
+            minHeight: 0,
+            overflowY: 'auto',
+            overscrollBehaviorY: 'contain',
+          }}
+        >
           {filteredAnimals.length === 0 && (
             <Typography variant="body2" color="textSecondary" sx={{ fontSize: 13, textAlign: 'center' }}>No animals found.</Typography>
           )}
@@ -98,8 +110,8 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
                 sx={{
                   p: 1.5,
                   borderRadius: 1.5,
-                  border: isSelected ? '2px solid #1976d2' : '1px solid #e0e0e0',
-                  background: isSelected ? '#e3f2fd' : '#fff',
+                  border: isSelected ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
+                  background: isSelected ? 'var(--color-primary-soft)' : 'var(--color-surface)',
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -124,7 +136,7 @@ const AnimalSelector = ({ animals, selectedAnimals, onAnimalSelection, collapsed
                     color="primary"
                     size="small"
                     onClick={() => handleSelectAnimal(animal.id)}
-                    sx={{ minWidth: 80, fontSize: 12, transition: 'all 0.25s', backgroundColor: isSelected ? '#1976d2' : undefined, color: isSelected ? '#fff' : undefined }}
+                    sx={{ minWidth: 80, fontSize: 12, transition: 'all 0.25s' }}
                   >
                     {isSelected ? 'Selected' : 'Select'}
                   </Button>

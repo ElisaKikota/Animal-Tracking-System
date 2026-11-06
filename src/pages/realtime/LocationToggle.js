@@ -12,14 +12,6 @@ const LocationToggle = ({ isRealTimeMode, onToggle }) => {
             checked={isRealTimeMode}
             onChange={onToggle}
             color="primary"
-            sx={{
-              '& .MuiSwitch-switchBase.Mui-checked': {
-                color: '#1F76CE',
-              },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: '#1F76CE',
-              },
-            }}
           />
         }
         label={isRealTimeMode ? "Real-Time Tracking" : "Last Known Location"}

@@ -1,7 +1,9 @@
 import React from 'react';
+import { getReportDateTime } from '../utils/reportDateUtils';
 
 const ReportModal = ({ report, onClose }) => {
   if (!report) return null;
+  const reportDateTime = getReportDateTime(report);
 
   return (
     <div className="modal">
@@ -9,7 +11,8 @@ const ReportModal = ({ report, onClose }) => {
         <span className="close" onClick={onClose}>&times;</span>
         <h2>{report.category.replace(/_/g, ' ')}</h2>
         <p><strong>Reported by:</strong> {report.reported_by}</p>
-        <p><strong>Report Time:</strong> {report.time}</p>
+        <p><strong>Report Date:</strong> {reportDateTime.date}</p>
+        <p><strong>Report Time:</strong> {reportDateTime.time}</p>
         <p><strong>Location:</strong> Lat: {report.location.Lat}, Long: {report.location.Lng}</p>
         {report.species && <p><strong>Species:</strong> {report.species}</p>}
         {report.cause_of_injury && <p><strong>Cause of Injury:</strong> {report.cause_of_injury}</p>}

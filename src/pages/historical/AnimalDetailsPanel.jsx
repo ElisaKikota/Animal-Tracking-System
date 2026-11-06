@@ -117,9 +117,9 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
 
 
   // Helper: Write training details to Firebase
-  const writeTrainingDetails = async ({ animalId, species, modelName, modelType, version, status, accuracy, trainSize, testSize }) => {
-    // Animal node: AnalysisData/{species}/{animalId}/trainings/{pushId}
-    const animalTrainingsRef = dbRef(database, `AnalysisData/${species}/${animalId}/trainings`);
+  const writeTrainingDetails = async ({ animalId, species, documentId, modelName, modelType, version, status, accuracy, trainSize, testSize }) => {
+    // Animal node: AnalysisData/{documentId}/trainings/{pushId}
+    const animalTrainingsRef = dbRef(database, `AnalysisData/${documentId}/trainings`);
     const newTrainingRef = push(animalTrainingsRef);
     await set(newTrainingRef, {
       model: modelName,
@@ -169,6 +169,7 @@ const AnimalDetailsPanel = ({ animal, onBack, dataSource }) => {
       await writeTrainingDetails({
         animalId: animal.id,
         species: animal.species,
+        documentId: animal.documentId,
         modelName: selectedModel || `${animal.name.replace(/\s+/g, '')}_RF`,
         modelType,
         version,

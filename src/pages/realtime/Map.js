@@ -1,40 +1,44 @@
 import { ref, onValue } from 'firebase/database';
 import React, { useEffect, useState, useRef } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { ShieldCheck, UserRound } from 'lucide-react';
 import { database } from '../../firebase';
-
-import elephantIcon from '../../assets/elephant.png';
-import lionIcon from '../../assets/lion.png';
-import giraffeIcon from '../../assets/giraffe.png';
-import rhinoIcon from '../../assets/rhino.png';
-import leopardIcon from '../../assets/leopard.png';
-import animalIcon from '../../assets/animal.png';
-import fireIcon from '../../assets/Fire.png';
-import rainfallIcon from '../../assets/Rainfall.png';
-import cameraTrapIcon from '../../assets/CT_Icon_Sighting.png';
-import humanWildlifeIcon from '../../assets/Human_Wildlife_Contact.png';
-import injuredAnimalIcon from '../../assets/Injured_Animal.png';
-import invasiveSpeciesIcon from '../../assets/Invasive_Species_Sighting.png';
-import rhinoSightingIcon from '../../assets/Rhino_Sighting.png';
-import wildlifeSightingIcon from '../../assets/Wildlife_Sighting.png';
+import { extractLocationHistory } from './utils/scienceUtils';
+import { getAnimalSpeciesIconDataUrl } from './utils/animalSpeciesIcons';
+import { getReportDateTime, getReportTimestamp } from './utils/reportDateUtils';
+import {
+  getReportMapIconDataUrl,
+  getReportMapIconId,
+  REPORT_ICONS,
+} from './utils/reportIcons';
+import { getLatestPatrolLocation, getPatrolStatus } from './utils/patrolUtils';
+import { isWithinLastHour } from './utils/locationFreshness';
+import './Map.css';
 
 // Replace with your Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxpc2FraWtvdGEiLCJhIjoiY2x6MTkwYWRiMnE0ZTJpcjR5bzFjMzNrZyJ9.HRBoAER-bGLPEcdhbUsW_A';
 
-const Map = ({ 
-  isRealTimeMode, 
-  selectedAnimalLocation, 
+const Map = ({
+  isRealTimeMode,
+  selectedAnimalLocation,
   mapStyle,
   showReports,
   showPatrols,
-  showAnimals 
+  showAnimals,
+  onPatrolDataChange,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const currentMapStyle = useRef('mapbox/outdoors-v11');
+  const styleLoadGeneration = useRef(0);
+  const mapInteractionsRegistered = useRef(false);
   const [animalData, setAnimalData] = useState([]);
   const [patrolData, setPatrolData] = useState([]);
   const [reportData, setReportData] = useState([]);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const markersRef = useRef({
     animals: {},
     patrols: {},
@@ -46,51 +50,104 @@ const Map = ({
   // eslint-disable-next-line no-unused-vars
   const [predictedPath, setPredictedPath] = useState([]);
 
+  useEffect(() => {
+    const interval = window.setInterval(() => setCurrentTime(Date.now()), 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
   // Initialize map
   useEffect(() => {
     if (map.current) return;
 
+    const baseStyle = 'mapbox/outdoors-v11';
+    currentMapStyle.current = baseStyle;
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/outdoors-v11',
+      style: `mapbox://styles/${baseStyle}`,
       center: [34.1677, -1.9485],
-      zoom: 16
+      zoom: 16,
+      customAttribution: 'Animal icons: Twemoji (CC BY 4.0)',
     });
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Load all icons into the map
-    const loadImage = (url, id) => {
-      return new Promise((resolve, reject) => {
-        map.current.loadImage(url, (error, image) => {
-          if (error || !image) {
-            console.warn(`Failed to load image for ${id}:`, error);
-            resolve(); // Don't reject, just skip this icon
-            return;
-          }
-          if (!map.current.hasImage(id)) map.current.addImage(id, image);
-          resolve();
-        });
-      });
-    };
+    map.current.on('style.load', async () => {
+      const generation = ++styleLoadGeneration.current;
+      const speciesIcons = [
+        ['Elephants', 'animal-elephant'],
+        ['Giraffes', 'animal-giraffe'],
+        ['Lions', 'animal-lion'],
+        ['Leopards', 'animal-leopard'],
+        ['Rhinos', 'animal-rhino'],
+      ];
 
-    // Load all images before adding layers
-    Promise.all([
-      loadImage(elephantIcon, 'elephant-icon'),
-      loadImage(lionIcon, 'lion-icon'),
-      loadImage(giraffeIcon, 'giraffe-icon'),
-      loadImage(rhinoIcon, 'rhino-icon'),
-      loadImage(leopardIcon, 'leopard-icon'),
-      loadImage(animalIcon, 'animal-icon'),
-      loadImage(fireIcon, 'fire-icon'),
-      loadImage(rainfallIcon, 'rainfall-icon'),
-      loadImage(cameraTrapIcon, 'camera-trap-icon'),
-      loadImage(humanWildlifeIcon, 'human-wildlife-icon'),
-      loadImage(injuredAnimalIcon, 'injured-animal-icon'),
-      loadImage(invasiveSpeciesIcon, 'invasive-species-icon'),
-      loadImage(rhinoSightingIcon, 'rhino-sighting-icon'),
-      loadImage(wildlifeSightingIcon, 'wildlife-sighting-icon')
-    ]).then(() => {
+      try {
+        await Promise.all(speciesIcons.map(([species, imageId]) => new Promise((resolve, reject) => {
+          const iconUrl = getAnimalSpeciesIconDataUrl(species);
+          const image = new Image();
+          image.onload = () => {
+            if (!map.current || generation !== styleLoadGeneration.current) {
+              resolve();
+              return;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const context = canvas.getContext('2d');
+            if (!context) {
+              reject(new Error(`Unable to create a canvas for ${species} map icon`));
+              return;
+            }
+            context.drawImage(image, 0, 0);
+            if (!map.current.hasImage(imageId)) {
+              map.current.addImage(imageId, context.getImageData(0, 0, canvas.width, canvas.height));
+            }
+            resolve();
+          };
+          image.onerror = () => reject(new Error(`Unable to load map icon for ${species}`));
+          image.src = iconUrl;
+        })));
+      } catch (error) {
+        console.error('Unable to load animal species map icons:', error);
+        return;
+      }
+
+      try {
+        await Promise.all(Object.keys(REPORT_ICONS).map((category) => new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => {
+            if (!map.current || generation !== styleLoadGeneration.current) {
+              resolve();
+              return;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const context = canvas.getContext('2d');
+            if (!context) {
+              reject(new Error(`Unable to create a canvas for ${category} report icon`));
+              return;
+            }
+            context.drawImage(image, 0, 0);
+            const imageId = getReportMapIconId(category);
+            if (!map.current.hasImage(imageId)) {
+              map.current.addImage(
+                imageId,
+                context.getImageData(0, 0, canvas.width, canvas.height)
+              );
+            }
+            resolve();
+          };
+          image.onerror = () => reject(new Error(`Unable to load ${category} report icon`));
+          image.src = getReportMapIconDataUrl(category);
+        })));
+      } catch (error) {
+        console.error('Unable to load report map icons:', error);
+        return;
+      }
+
+      if (!map.current || generation !== styleLoadGeneration.current) return;
+
       // Add sources
       map.current.addSource('animals', {
         type: 'geojson',
@@ -101,6 +158,11 @@ const Map = ({
         cluster: true,
         clusterMaxZoom: 14,
         clusterRadius: 50
+      });
+
+      map.current.addSource('animals-heatmap', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
       });
 
       map.current.addSource('reports', {
@@ -140,6 +202,52 @@ const Map = ({
             40
           ]
         }
+      });
+
+      map.current.addLayer({
+        id: 'animal-heatmap',
+        type: 'heatmap',
+        source: 'animals-heatmap',
+        layout: {
+          visibility: 'none',
+        },
+        paint: {
+          'heatmap-weight': 1,
+          'heatmap-intensity': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            5,
+            0.7,
+            15,
+            2,
+          ],
+          'heatmap-radius': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            5,
+            14,
+            15,
+            30,
+          ],
+          'heatmap-opacity': 0.8,
+          'heatmap-color': [
+            'interpolate',
+            ['linear'],
+            ['heatmap-density'],
+            0,
+            'rgba(33,102,172,0)',
+            0.2,
+            '#67a9cf',
+            0.4,
+            '#f7f7a1',
+            0.6,
+            '#fdae61',
+            1,
+            '#d7191c',
+          ],
+        },
       });
 
       map.current.addLayer({
@@ -200,29 +308,28 @@ const Map = ({
         }
       });
 
-      // Add unclustered animal points
-        map.current.addLayer({
+      map.current.addLayer({
         id: 'unclustered-animal-points',
-          type: 'symbol',
-          source: 'animals',
-          filter: ['!', ['has', 'point_count']],
-          layout: {
-            'icon-image': [
-              'match',
-              ['get', 'species'],
-              'Elephants', 'elephant-icon',
-              'Lions', 'lion-icon',
-              'Giraffes', 'giraffe-icon',
-              'Rhinos', 'rhino-icon',
-              'Leopards', 'leopard-icon',
-              'animal-icon' // default
-            ],
-          'icon-size': 0.07,
-          'icon-allow-overlap': true
-        }
+        type: 'symbol',
+        source: 'animals',
+        filter: ['!', ['has', 'point_count']],
+        layout: {
+          'icon-image': [
+            'match',
+            ['get', 'species'],
+            'Elephants', 'animal-elephant',
+            'Giraffes', 'animal-giraffe',
+            'Lions', 'animal-lion',
+            'Leopards', 'animal-leopard',
+            'Rhinos', 'animal-rhino',
+            'animal-elephant',
+          ],
+          'icon-size': 0.8,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+        },
       });
 
-      // Add unclustered report points
       map.current.addLayer({
         id: 'unclustered-report-points',
         type: 'symbol',
@@ -232,22 +339,20 @@ const Map = ({
           'icon-image': [
             'match',
             ['get', 'category'],
-            'CT_Icon_Sighting', 'camera-trap-icon',
-            'Fire', 'fire-icon',
-            'Human_Wildlife_Contact', 'human-wildlife-icon',
-            'Injured_Animal', 'injured-animal-icon',
-            'Invasive_Species_Sighting', 'invasive-species-icon',
-            'Rainfall', 'rainfall-icon',
-            'Rhino_Sighting', 'rhino-sighting-icon',
-            'Wildlife_Sighting', 'wildlife-sighting-icon',
-            'wildlife-sighting-icon' // default
+            ...Object.keys(REPORT_ICONS).flatMap((category) => [
+              category,
+              getReportMapIconId(category),
+            ]),
+            getReportMapIconId('Wildlife_Sighting'),
           ],
-          'icon-size': 0.07,
-          'icon-allow-overlap': true
-        }
+          'icon-size': 0.9,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+        },
       });
 
       // Add click handlers for unclustered points
+      if (!mapInteractionsRegistered.current) {
       map.current.on('click', 'unclustered-animal-points', (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const properties = e.features[0].properties;
@@ -309,7 +414,7 @@ const Map = ({
                 </div>
                 <div class="detail-row">
                   <span class="label">Reported:</span>
-                  <span class="value">${new Date(properties.timestamp).toLocaleString()}</span>
+                  <span class="value">${properties.date} ${properties.time}</span>
                   </div>
                 </div>
               </div>
@@ -379,9 +484,13 @@ const Map = ({
       map.current.on('mouseleave', 'report-clusters', () => {
         map.current.getCanvas().style.cursor = '';
       });
-    }).catch(console.error);
+        mapInteractionsRegistered.current = true;
+      }
+      setIsMapReady(true);
+    });
 
     return () => {
+      setIsMapReady(false);
       map.current.remove();
       map.current = null;
     };
@@ -395,46 +504,49 @@ const Map = ({
     }
 
     const animalSpecies = ['Elephants', 'Giraffes', 'Lions', 'Leopards', 'Rhinos'];
-    const fetchedData = {};  // Use an object to track all animals by ID
+    const fetchedData = {};
 
-    console.log('Starting to fetch animal data...');
-
-    // Create a separate listener for each species
     const unsubscribes = animalSpecies.map(species => {
-        const speciesRef = ref(database, `Animals/${species}`);
-        console.log(`Setting up listener for ${species}`);
+      const speciesRef = ref(database, `Animals/${species}`);
       return onValue(speciesRef, (snapshot) => {
-          const data = snapshot.val();
-          console.log(`Received data for ${species}:`, data);
-          if (data) {
-            Object.entries(data).forEach(([id, animal]) => {
-            const latestDate = Object.keys(animal.location || {}).sort().pop();
-            const latestTime = latestDate ? Object.keys(animal.location[latestDate]).sort().pop() : null;
-            
-            if (latestDate && latestTime) {
-                const location = animal.location[latestDate][latestTime];
+        const data = snapshot.val();
+        Object.keys(fetchedData)
+          .filter((key) => key.startsWith(`${species}-`))
+          .forEach((key) => delete fetchedData[key]);
+
+        if (data && typeof data === 'object') {
+          Object.entries(data).forEach(([id, animal]) => {
+            const history = extractLocationHistory(animal?.location);
+            const latestPoint = history.slice().reverse()
+              .find((point) => point.timestamp !== null) || history[history.length - 1];
+
+            if (latestPoint) {
               fetchedData[`${species}-${id}`] = {
                 id: `${species}-${id}`,
                 species,
-                    name: animal.name,
+                name: animal.name || `${species.slice(0, -1)} ${id}`,
                 age: animal.age,
-                    sex: animal.sex,
-                date: latestDate,
-                time: latestTime,
-                    location: {
-                      Lat: parseFloat(location.Lat),
-                  Lng: parseFloat(location.Long),
-                  activity: location.activity,
-                  temperature: location.temperature
+                sex: animal.sex || 'Unknown',
+                date: latestPoint.timestamp === null ? 'Unknown' : new Date(latestPoint.timestamp).toISOString().slice(0, 10),
+                time: latestPoint.timestamp === null ? 'Unknown' : new Date(latestPoint.timestamp).toISOString().slice(11, 19),
+                timestamp: latestPoint.timestamp,
+                history,
+                location: {
+                  Lat: latestPoint.latitude,
+                  Lng: latestPoint.longitude,
+                  activity: latestPoint.activity,
+                  temperature: latestPoint.temperature,
+                  heart_rate: latestPoint.heartRate,
+                  satellites: latestPoint.satellites,
+                  altitude: latestPoint.altitude,
+                  speed_knots: latestPoint.recordedSpeedKnots,
                 }
               };
-              // Update state with all accumulated data
-              setAnimalData(Object.values(fetchedData));
             }
           });
-        } else {
-          console.log(`No data found for ${species}`);
         }
+
+        setAnimalData(Object.values(fetchedData));
       }, (error) => {
         console.error(`Error fetching data for ${species}:`, error);
         if (error.code === 'PERMISSION_DENIED') {
@@ -445,35 +557,97 @@ const Map = ({
       });
     });
 
-    // Cleanup function to unsubscribe all listeners
     return () => {
-      console.log('Cleaning up animal data listeners');
       unsubscribes.forEach(unsubscribe => unsubscribe());
     };
   }, []);
 
+  useEffect(() => {
+    onPatrolDataChange?.(patrolData);
+  }, [patrolData, onPatrolDataChange]);
+
+  useEffect(() => {
+    if (!map.current || !selectedAnimalLocation) return;
+    const latitude = Number(selectedAnimalLocation.Lat ?? selectedAnimalLocation.latitude);
+    const longitude = Number(selectedAnimalLocation.Lng ?? selectedAnimalLocation.Long ?? selectedAnimalLocation.longitude);
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+    const moveToLocation = () => {
+      map.current?.easeTo({
+        center: [longitude, latitude],
+        zoom: Math.max(map.current.getZoom(), 13),
+        duration: 700,
+      });
+    };
+
+    if (map.current.loaded()) moveToLocation();
+    else map.current.once('load', moveToLocation);
+  }, [isMapReady, selectedAnimalLocation]);
+
   // Fetch patrol data
   useEffect(() => {
     const patrolRef = ref(database, 'PatrolOfficers');
-    onValue(patrolRef, (snapshot) => {
+    return onValue(patrolRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
+      if (data && typeof data === 'object') {
         const patrolArray = Object.entries(data)
-          .filter(([_, patrol]) => patrol && patrol.location && patrol.location.Lat && patrol.location.Long)
-          .map(([id, patrol]) => ({
-            id,
-            name: patrol.name || 'Unknown Officer',
-            status: patrol.status || 'Unknown',
-            timestamp: patrol.timestamp || Date.now(),
-            location: {
-              Lat: parseFloat(patrol.location.Lat),
-              Lng: parseFloat(patrol.location.Long)
-            }
-          }));
+          .map(([id, patrol]) => {
+            const latestFix = getLatestPatrolLocation(patrol?.location);
+            if (!latestFix) return null;
+            return {
+              id,
+              name: patrol.name || 'Unknown Officer',
+              status: getPatrolStatus(patrol),
+              timestamp: latestFix.timestamp,
+              date: latestFix.date,
+              time: latestFix.time,
+              location: latestFix.location,
+            };
+          })
+          .filter(Boolean);
         setPatrolData(patrolArray);
+      } else {
+        setPatrolData([]);
       }
+    }, (error) => {
+      console.error('Error fetching patrol officer locations:', error);
     });
   }, []);
+
+  useEffect(() => {
+    if (!map.current) return;
+    const nextStyle = mapStyle === 'heatmap' || mapStyle === '3d'
+      ? 'mapbox/outdoors-v11'
+      : mapStyle;
+    if (!nextStyle || nextStyle === currentMapStyle.current) return;
+
+    try {
+    map.current.setStyle(`mapbox://styles/${nextStyle}`, { diff: false });
+    currentMapStyle.current = nextStyle;
+    setIsMapReady(false);
+    } catch (error) {
+    console.error(`Unable to apply map style "${nextStyle}":`, error);
+    }
+  }, [mapStyle]);
+
+  useEffect(() => {
+    if (!isMapReady || !map.current) return;
+
+    if (mapStyle === '3d') {
+      if (!map.current.getSource('mapbox-dem')) {
+        map.current.addSource('mapbox-dem', {
+          type: 'raster-dem',
+          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          tileSize: 512,
+          maxzoom: 14,
+        });
+      }
+      map.current.setTerrain({ source: 'mapbox-dem', exaggeration: 1.35 });
+      return;
+    }
+
+    map.current.setTerrain(null);
+  }, [isMapReady, mapStyle]);
 
   // Fetch report data
   useEffect(() => {
@@ -495,24 +669,32 @@ const Map = ({
       const reportsRef = ref(database, `Reports/${category}`);
       return onValue(reportsRef, (snapshot) => {
         const data = snapshot.val();
-        if (data) {
+        if (data && typeof data === 'object') {
+          Object.keys(fetchedReports)
+            .filter((key) => key.startsWith(`${category}-`))
+            .forEach((key) => delete fetchedReports[key]);
           Object.entries(data)
-            .filter(([_, report]) => report && report.location && report.location.Lat && report.location.Long)
             .forEach(([id, report]) => {
+              const latitude = Number(report?.location?.Lat);
+              const longitude = Number(report?.location?.Lng ?? report?.location?.Long);
+              if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+                  !Number.isFinite(longitude) || longitude < -180 || longitude > 180) return;
+              const reportDateTime = getReportDateTime(report);
               fetchedReports[`${category}-${id}`] = {
                 id: `${category}-${id}`,
                 title: report.title || 'Untitled Report',
                 category,
-                timestamp: report.timestamp || Date.now(),
+                date: reportDateTime.date,
+                time: reportDateTime.time,
+                timestamp: getReportTimestamp(report),
                 location: {
-                  Lat: parseFloat(report.location.Lat),
-                  Lng: parseFloat(report.location.Long)
+                  Lat: latitude,
+                  Lng: longitude
                 }
               };
-              // Update state with all accumulated data
-              setReportData(Object.values(fetchedReports));
             });
         }
+        setReportData(Object.values(fetchedReports));
       });
     });
 
@@ -524,9 +706,12 @@ const Map = ({
 
   // Update animal source data
   useEffect(() => {
-    if (!map.current || !map.current.loaded() || !map.current.getSource('animals')) return;
+    if (!isMapReady || !map.current || !map.current.getSource('animals')) return;
 
-    const features = animalData.map(animal => ({
+    const visibleAnimals = isRealTimeMode
+      ? animalData.filter((animal) => isWithinLastHour(animal.timestamp, currentTime))
+      : animalData;
+    const features = visibleAnimals.map(animal => ({
         type: 'Feature',
         geometry: {
           type: 'Point',
@@ -541,28 +726,46 @@ const Map = ({
           date: animal.date,
           time: animal.time,
           activity: animal.location.activity,
-          temperature: animal.location.temperature
+          temperature: animal.location.temperature,
+          heart_rate: animal.location.heart_rate,
+          satellites: animal.location.satellites,
+          altitude: animal.location.altitude,
+          speed_knots: animal.location.speed_knots
         }
     }));
 
-    if (showAnimals) {
-      map.current.getSource('animals').setData({
-        type: 'FeatureCollection',
-        features: features
-      });
-    } else {
-      map.current.getSource('animals').setData({
-        type: 'FeatureCollection',
-        features: []
-      });
+    const visibleFeatures = showAnimals ? features : [];
+    const featureCollection = { type: 'FeatureCollection', features: visibleFeatures };
+    map.current.getSource('animals').setData(featureCollection);
+    map.current.getSource('animals-heatmap').setData(featureCollection);
+
+    const isHeatmap = mapStyle === 'heatmap';
+    ['animal-clusters', 'animal-cluster-count', 'unclustered-animal-points'].forEach((layerId) => {
+      if (map.current.getLayer(layerId)) {
+        map.current.setLayoutProperty(
+          layerId,
+          'visibility',
+          showAnimals && !isHeatmap ? 'visible' : 'none'
+        );
+      }
+    });
+    if (map.current.getLayer('animal-heatmap')) {
+      map.current.setLayoutProperty(
+        'animal-heatmap',
+        'visibility',
+        showAnimals && isHeatmap ? 'visible' : 'none'
+      );
     }
-  }, [animalData, showAnimals]);
+  }, [animalData, currentTime, isMapReady, isRealTimeMode, mapStyle, showAnimals]);
 
   // Update report source data
   useEffect(() => {
-    if (!map.current || !map.current.loaded() || !map.current.getSource('reports')) return;
+    if (!isMapReady || !map.current || !map.current.getSource('reports')) return;
 
-    const features = reportData.map(report => ({
+    const visibleReports = isRealTimeMode
+      ? reportData.filter((report) => isWithinLastHour(report.timestamp, currentTime))
+      : reportData;
+    const features = visibleReports.map(report => ({
       type: 'Feature',
       geometry: {
         type: 'Point',
@@ -572,7 +775,8 @@ const Map = ({
         id: report.id,
         title: report.title,
         category: report.category,
-        timestamp: report.timestamp
+        date: report.date,
+        time: report.time
       }
     }));
 
@@ -587,21 +791,41 @@ const Map = ({
         features: []
       });
     }
-  }, [reportData, showReports]);
+  }, [currentTime, isMapReady, isRealTimeMode, reportData, showReports]);
 
   // Handle patrol markers
   useEffect(() => {
-    if (!map.current || !map.current.loaded()) return;
+    if (!isMapReady || !map.current) return;
 
     // Remove existing patrol markers
     Object.values(markersRef.current.patrols).forEach(marker => marker.remove());
     markersRef.current.patrols = {};
 
     if (showPatrols) {
-      patrolData.forEach(patrol => {
+      const visiblePatrols = isRealTimeMode
+        ? patrolData.filter((patrol) => isWithinLastHour(patrol.timestamp, currentTime))
+        : patrolData;
+      visiblePatrols.forEach(patrol => {
         if (patrol.location) {
           const el = document.createElement('div');
           el.className = 'marker patrol-marker';
+          el.setAttribute('aria-label', `Patrol officer ${patrol.name}`);
+          el.innerHTML = `
+            <span class="patrol-marker__person">
+              ${renderToStaticMarkup(React.createElement(UserRound, {
+                size: 22,
+                strokeWidth: 2,
+                'aria-hidden': true,
+              }))}
+            </span>
+            <span class="patrol-marker__badge">
+              ${renderToStaticMarkup(React.createElement(ShieldCheck, {
+                size: 12,
+                strokeWidth: 2,
+                'aria-hidden': true,
+              }))}
+            </span>
+          `;
           
           const marker = new mapboxgl.Marker(el)
             .setLngLat([patrol.location.Lng, patrol.location.Lat])
@@ -616,7 +840,7 @@ const Map = ({
                     </div>
                     <div class="detail-row">
                       <span class="label">Last update:</span>
-                      <span class="value">${new Date(patrol.timestamp).toLocaleString()}</span>
+                      <span class="value">${patrol.date} ${patrol.time}</span>
                     </div>
                   </div>
                 </div>
@@ -627,7 +851,7 @@ const Map = ({
         }
       });
     }
-  }, [patrolData, showPatrols]);
+  }, [currentTime, isMapReady, isRealTimeMode, patrolData, showPatrols]);
 
   // Function to trigger prediction mode
   // eslint-disable-next-line no-unused-vars

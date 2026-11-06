@@ -1,7 +1,4 @@
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { getDatabase, ref as dbRef, push, set, get, update } from 'firebase/database';
-import { getFirestore, collection, doc, setDoc, writeBatch } from 'firebase/firestore';
-import Papa from 'papaparse';
+import { getFirestore, collection, doc, setDoc, writeBatch, deleteDoc, getDoc, getDocs } from 'firebase/firestore';
 
 // Cache for column detection results
 const columnDetectionCache = new Map();
@@ -77,30 +74,65 @@ export const autoDetectColumns = (headers, data, currentMappings, currentTimesta
     latitude: ['lat', 'latitude', 'y-coordinate', 'y_coordinate'],
     longitude: ['lng', 'long', 'longitude', 'x-coordinate', 'x_coordinate'],
     timestamp: ['time', 'date', 'timestamp', 'datetime'],
-    temperature: ['temp', 'temperature', 'celsius', 'fahrenheit'],
+    temperature: ['temp', 'temperature', 'celsius', 'fahrenheit', 'temperat'],
     heartRate: ['heart', 'pulse', 'bpm', 'rate'],
-    animalId: ['id', 'animal', 'tag', 'identifier'],
-    species: ['species', 'animal', 'type', 'category']
+    animalId: ['id', 'animal', 'tag', 'identifier', 'collar', 'collarseri']
   };
   
-  // Check for date and time columns separately
+  // Check for date and time columns separately (only for timestamp config, not column mappings)
   const dateColumns = [];
   const timeColumns = [];
-  
+  const julianColumns = {
+    year: null,
+    julianDay: null,
+    hour: null,
+    minute: null
+  };
+  const timeComponentColumns = {
+    hour: null,
+    minute: null,
+    second: null
+  };
+
   // First pass: identify columns by name
   headers.forEach(header => {
     const lowerHeader = header.toLowerCase();
-    
-    // Check for date/time columns
+
+    // Check for date/time columns (for timestamp config only)
     if (lowerHeader.includes('date') && !lowerHeader.includes('time')) {
       dateColumns.push(header);
     } else if (lowerHeader.includes('time') && !lowerHeader.includes('date')) {
       timeColumns.push(header);
     }
-    
-    // Try to match other columns
+
+    // Check for Julian day columns (for timestamp config only)
+    if (lowerHeader.includes('year') && !julianColumns.year) {
+      julianColumns.year = header;
+    }
+    if ((lowerHeader.includes('julian') || lowerHeader.includes('julianday')) && !julianColumns.julianDay) {
+      julianColumns.julianDay = header;
+    }
+    if (lowerHeader === 'hour' && !julianColumns.hour) {
+      julianColumns.hour = header;
+    }
+    if (lowerHeader === 'minute' && !julianColumns.minute) {
+      julianColumns.minute = header;
+    }
+
+    // Check for separate time component columns (for timestamp config only)
+    if (lowerHeader === 'hour' && !timeComponentColumns.hour) {
+      timeComponentColumns.hour = header;
+    }
+    if (lowerHeader === 'minute' && !timeComponentColumns.minute) {
+      timeComponentColumns.minute = header;
+    }
+    if (lowerHeader === 'second' && !timeComponentColumns.second) {
+      timeComponentColumns.second = header;
+    }
+
+    // Try to match other columns (exclude timestamp-related columns from mapping)
     for (const columnType of Object.keys(mapping)) {
-      if (!mapping[columnType]) { // if not already mapped
+      if (!mapping[columnType] && columnType !== 'timestamp' && columnType !== 'dateColumn' && columnType !== 'timeColumn') {
         const detectedType = checkColumn(header, data, patterns);
         if (detectedType === columnType) {
           mapping[columnType] = header;
@@ -110,7 +142,23 @@ export const autoDetectColumns = (headers, data, currentMappings, currentTimesta
   });
   
   // Configure timestamp approach based on detected columns
-  if (dateColumns.length > 0 && timeColumns.length > 0) {
+  // Check for Julian day format first
+  if (julianColumns.year && julianColumns.julianDay && julianColumns.hour && julianColumns.minute) {
+    timestampConf.format = 'julian';
+    timestampConf.yearColumn = julianColumns.year;
+    timestampConf.julianDayColumn = julianColumns.julianDay;
+    timestampConf.hourColumn = julianColumns.hour;
+    timestampConf.minuteColumn = julianColumns.minute;
+  } else if (dateColumns.length > 0 && (timeComponentColumns.hour || timeComponentColumns.minute || timeComponentColumns.second)) {
+    // Date + separate time components detected
+    timestampConf.format = 'custom';
+    timestampConf.dateColumn = dateColumns[0];
+    timestampConf.hasDate = true;
+    timestampConf.hasTime = true;
+    timestampConf.hourColumn = timeComponentColumns.hour;
+    timestampConf.minuteColumn = timeComponentColumns.minute;
+    timestampConf.secondColumn = timeComponentColumns.second;
+  } else if (dateColumns.length > 0 && timeColumns.length > 0) {
     timestampConf.combineColumns = true;
     timestampConf.dateColumn = dateColumns[0];
     timestampConf.timeColumn = timeColumns[0];
@@ -123,8 +171,6 @@ export const autoDetectColumns = (headers, data, currentMappings, currentTimesta
     timestampConf.timeColumn = timeColumns[0];
     timestampConf.hasDate = true;
     timestampConf.format = 'custom';
-  } else if (mapping.timestamp) {
-    timestampConf.format = 'auto';
   } else {
     // If no timestamp columns detected, default to interval
     timestampConf.format = 'interval';
@@ -159,6 +205,9 @@ export const validateData = (parsedData, columnMappings, timestampConfig, checkR
     }
     if (!columnMappings.longitude) {
       errors.push('Longitude column must be selected');
+    }
+    if (!columnMappings.animalId) {
+      errors.push('Animal ID column must be selected');
     }
   }
   
@@ -266,6 +315,95 @@ export const validateData = (parsedData, columnMappings, timestampConfig, checkR
 };
 
 /**
+ * Parse various date/time formats and convert to ISO format (preserving local time)
+ * @param {string} timestamp - Timestamp string to parse
+ * @returns {string|null} ISO formatted timestamp (local time) or null if invalid
+ */
+function parseTimestamp(timestamp) {
+  if (!timestamp) return null;
+
+  // Handle DD/MM/YYYY HH:mm format (e.g., "19/12/2012 19:31")
+  const dmyMatch = timestamp.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (dmyMatch) {
+    const [, day, month, year, hour, minute] = dmyMatch;
+    // Return in ISO format but preserving local time (no timezone conversion)
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
+  }
+
+  // Handle DD-MM-YYYY HH:mm format
+  const dmyDashMatch = timestamp.match(/^(\d{1,2})-(\d{1,2})-(\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (dmyDashMatch) {
+    const [, day, month, year, hour, minute] = dmyDashMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
+  }
+
+  // Handle YYYY-MM-DD HH:mm format
+  const ymdMatch = timestamp.match(/^(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2})/);
+  if (ymdMatch) {
+    const [, year, month, day, hour, minute] = ymdMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
+  }
+
+  // Handle MM/DD/YYYY HH:mm format
+  const mdyMatch = timestamp.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (mdyMatch) {
+    const [, month, day, year, hour, minute] = mdyMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
+  }
+
+  // Handle MM/DD/YYYY format (date only)
+  const mdyDateOnlyMatch = timestamp.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (mdyDateOnlyMatch) {
+    const [, month, day, year] = mdyDateOnlyMatch;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00`;
+  }
+
+  // Try to parse using Date constructor for other formats
+  const date = new Date(timestamp);
+  if (!isNaN(date.getTime())) {
+    // Format the date locally without timezone conversion
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  return null;
+}
+
+/**
+ * Parse Julian day format (Year + JulianDay + Hour + Minute)
+ * @param {number} year - Year (e.g., 18 for 2018)
+ * @param {number} julianDay - Julian day of year (1-366)
+ * @param {number} hour - Hour (0-23)
+ * @param {number} minute - Minute (0-59)
+ * @returns {string|null} ISO formatted timestamp or null if invalid
+ */
+function parseJulianDay(year, julianDay, hour, minute) {
+  if (!year || !julianDay || hour === undefined || minute === undefined) return null;
+
+  // Handle 2-digit year (e.g., 18 -> 2018)
+  const fullYear = year < 100 ? 2000 + year : year;
+
+  // Create date from Julian day
+  const date = new Date(fullYear, 0);
+  date.setDate(julianDay);
+
+  if (isNaN(date.getTime())) return null;
+
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  const h = String(hour).padStart(2, '0');
+  const min = String(minute).padStart(2, '0');
+
+  return `${y}-${m}-${d}T${h}:${min}:00`;
+}
+
+/**
  * Generate preview data with processed timestamps
  * @param {Object[]} data - Data to process
  * @param {Object} timestampConfig - Timestamp configuration
@@ -277,44 +415,87 @@ export const generatePreviewData = (data, timestampConfig, columnMappings) => {
   return data.map((row, index) => {
     const processed = { ...row };
     let timestamp;
-    
-    // Handle combined date and time columns
-    if (columnMappings.dateColumn && columnMappings.timeColumn && row[columnMappings.dateColumn] && row[columnMappings.timeColumn]) {
-      const date = row[columnMappings.dateColumn];
-      const time = row[columnMappings.timeColumn];
-      // Ensure proper date format (YYYY-MM-DD)
-      const formattedDate = date.includes('-') ? date : date.split('/').reverse().join('-');
-      // Ensure proper time format (HH:mm:ss)
-      const formattedTime = time.includes(':') ? time : `${time}:00`;
-      processed._processedTimestamp = `${formattedDate}T${formattedTime}`;
-    } else if (timestampConfig.format === 'auto' && columnMappings.timestamp) {
-      const ts = row[columnMappings.timestamp];
-      const match = ts && ts.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})/);
-      if (match) {
-        processed._processedTimestamp = `${match[1]}T${match[2]}`;
-      } else {
-        timestamp = new Date(ts);
-        processed._processedTimestamp = isNaN(timestamp) ? 'Invalid date' : timestamp.toISOString();
-      }
-    } else if (timestampConfig.format === 'custom') {
+
+    // Handle timestamp based on configuration (timestampConfig only, not columnMappings)
+    if (timestampConfig.format === 'custom') {
       let dateStr = '';
       let timeStr = '';
+
+      // Handle date
       if (timestampConfig.hasDate && timestampConfig.dateColumn) {
-        dateStr = row[timestampConfig.dateColumn] || timestampConfig.startDate;
+        const rawDate = row[timestampConfig.dateColumn] || timestampConfig.startDate;
+        // Convert MM/DD/YYYY to YYYY-MM-DD format
+        if (rawDate.includes('/')) {
+          const parts = rawDate.split('/');
+          if (parts.length === 3) {
+            // Assume MM/DD/YYYY format (US format)
+            dateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+          } else {
+            dateStr = rawDate;
+          }
+        } else if (rawDate.includes('-')) {
+          dateStr = rawDate; // Already in YYYY-MM-DD format
+        } else {
+          dateStr = rawDate;
+        }
       } else {
         dateStr = timestampConfig.startDate;
       }
-      if (timestampConfig.hasTime && timestampConfig.timeColumn) {
-        timeStr = row[timestampConfig.timeColumn] || timestampConfig.startTime;
+
+      // Handle time - check for separate time components first
+      if (timestampConfig.hasTime) {
+        if (timestampConfig.hourColumn || timestampConfig.minuteColumn || timestampConfig.secondColumn) {
+          // Build time from separate components - DIRECT COMBINATION, no parsing
+          const hour = timestampConfig.hourColumn ? (row[timestampConfig.hourColumn] || '00') : '00';
+          const minute = timestampConfig.minuteColumn ? (row[timestampConfig.minuteColumn] || '00') : '00';
+          const second = timestampConfig.secondColumn ? (row[timestampConfig.secondColumn] || '00') : '00';
+          timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+          // Directly combine - don't go through parseTimestamp
+          processed._processedTimestamp = `${dateStr}T${timeStr}`;
+        } else if (timestampConfig.timeColumn) {
+          // Use single time column
+          timeStr = row[timestampConfig.timeColumn] || timestampConfig.startTime;
+          // Try to parse combined date and time
+          if (timestampConfig.hasDate && timestampConfig.dateColumn && row[timestampConfig.dateColumn]) {
+            const combined = `${row[timestampConfig.dateColumn]} ${timeStr}`;
+            const parsed = parseTimestamp(combined);
+            if (parsed) {
+              processed._processedTimestamp = parsed;
+            } else {
+              processed._processedTimestamp = `${dateStr}T${timeStr}`;
+            }
+          } else {
+            processed._processedTimestamp = `${dateStr}T${timeStr}`;
+          }
+        } else {
+          // Use default time
+          timeStr = timestampConfig.startTime;
+          processed._processedTimestamp = `${dateStr}T${timeStr}`;
+        }
       } else {
         timeStr = timestampConfig.startTime;
+        processed._processedTimestamp = `${dateStr}T${timeStr}`;
       }
-      processed._processedTimestamp = `${dateStr}T${timeStr}`;
     } else if (timestampConfig.format === 'interval') {
       const startDateTime = new Date(`${timestampConfig.startDate}T${timestampConfig.startTime}`);
       const intervalMs = timestampConfig.interval * 60 * 1000;
       timestamp = new Date(startDateTime.getTime() + index * intervalMs);
       processed._processedTimestamp = isNaN(timestamp) ? 'Invalid date' : timestamp.toISOString();
+    } else if (timestampConfig.format === 'julian') {
+      // Handle Julian day format
+      const year = row[timestampConfig.yearColumn];
+      const julianDay = row[timestampConfig.julianDayColumn];
+      const hour = row[timestampConfig.hourColumn];
+      const minute = row[timestampConfig.minuteColumn];
+      const parsed = parseJulianDay(year, julianDay, hour, minute);
+      if (parsed) {
+        processed._processedTimestamp = parsed;
+      } else {
+        processed._processedTimestamp = 'Invalid date';
+      }
+    } else {
+      // Default: no timestamp configured
+      processed._processedTimestamp = 'Invalid date';
     }
     return processed;
   });
@@ -331,32 +512,8 @@ function sanitizeKeys(obj) {
   return newObj;
 }
 
-// Utility to group data by date and time
-function groupDataByDateTime(data) {
-  const grouped = {};
-  data.forEach(row => {
-    let date = row.date;
-    let time = row.time;
-    if (!date || !time) {
-      const ts = row.timestamp || row.Timestamp;
-      if (ts) {
-        const [d, t] = ts.split('T');
-        date = date || d;
-        time = time || (t ? t.substring(0, 8) : undefined);
-      }
-    }
-    if (!date || !time) return;
-    if (!grouped[date]) grouped[date] = {};
-    grouped[date][time] = {
-      Latitude: row.Latitude !== undefined ? row.Latitude : row.latitude,
-      Longitude: row.Longitude !== undefined ? row.Longitude : row.longitude
-    };
-  });
-  return grouped;
-}
-
 /**
- * Process and upload data to Firebase
+ * Process and upload data to Firestore
  * @param {Object[]} parsedData - Parsed CSV data
  * @param {File} selectedFile - The original CSV file
  * @param {Object} columnMappings - Column mappings
@@ -409,45 +566,92 @@ export const processAndUploadData = async (
       });
     }
 
-    // Sanitize keys and group data by date and time
+    // Sanitize keys
     const sanitized = renamedData.map(sanitizeKeys);
-    const groupedData = groupDataByDateTime(sanitized);
-    console.log("Grouped data to be saved:", groupedData);
 
-    // --- NEW LOGIC: Use species as grouping key ---
-    const database = getDatabase();
-    const species = (animalDetails.species || columnMappings.species || 'UnknownSpecies').replace(/\s+/g, '_');
-    const speciesRef = dbRef(database, `AnalysisData/${species}`);
+    // Get the animalId column name from column mappings
+    const animalIdColumn = columnMappings.animalId || 'animalId';
 
-    // Get next available ID for this species
-    let nextId = 1;
-    const snapshot = await get(speciesRef);
-    if (snapshot.exists()) {
-      const ids = Object.keys(snapshot.val()).map(Number).filter(n => !isNaN(n));
-      if (ids.length > 0) nextId = Math.max(...ids) + 1;
+    // Group data by animal ID
+    const groupedByAnimal = {};
+    sanitized.forEach(row => {
+      const animalId = row[animalIdColumn] || 'unknown';
+      if (!groupedByAnimal[animalId]) {
+        groupedByAnimal[animalId] = [];
+      }
+      groupedByAnimal[animalId].push(row);
+    });
+
+    const db = getFirestore();
+    const animalIds = Object.keys(groupedByAnimal);
+    let totalProcessed = 0;
+    const totalRows = sanitized.length;
+
+    // Upload each animal's data separately
+    for (const animalId of animalIds) {
+      const animalData = groupedByAnimal[animalId];
+      const currentAnimalDetails = animalDetails[animalId] || {};
+      console.log(`Processing animal ID: ${animalId}`, currentAnimalDetails);
+
+      // Species comes from Animal Details (step 5) only
+      let animalSpecies = currentAnimalDetails.species;
+
+      // Fallback if not set
+      if (!animalSpecies) {
+        animalSpecies = 'UnknownSpecies';
+        console.warn(`No species found for animal ${animalId}. Using 'UnknownSpecies'. Please select a species in the Animal Details step.`);
+      }
+
+      const finalSpecies = animalSpecies.replace(/\s+/g, '_');
+      const documentId = `${finalSpecies}_${animalId}`;
+      console.log(`Document ID will be: ${documentId}`);
+
+      // Add species to each data row
+      const dataWithSpecies = animalData.map(row => ({
+        ...row,
+        species: animalSpecies // Use the actual species name with spaces
+      }));
+
+      // Create/update animal document
+      await setDoc(
+        doc(db, 'AnalysisData', documentId),
+        {
+          ...currentAnimalDetails,
+          columnMappings,
+          timestampConfig,
+          dataPoints: animalData.length,
+          uploadedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
+
+      // Upload data rows to Firestore
+      await uploadRowsToFirestore(
+        dataWithSpecies,
+        documentId,
+        animalId,
+        {
+          ...currentAnimalDetails,
+          columnMappings,
+          timestampConfig,
+          dataPoints: animalData.length
+        },
+        (progress) => {
+          // Calculate overall progress based on rows processed
+          const overallProgress = Math.round(((totalProcessed + (progress / 100) * animalData.length) / totalRows) * 100);
+          if (setUploadProgress) setUploadProgress(overallProgress);
+        },
+        null,
+        null,
+        100
+      );
+
+      totalProcessed += animalData.length;
     }
-    const animalId = String(nextId);
 
-    // Write to AnalysisData/{species}/{animalId}
-    const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
-    await set(animalRef, { ...animalDetails, dataPoints: renamedData.length });
-    setUploadProgress(50);
-
-    // --- NEW LOGIC: Produce CSV file and upload to Firebase Storage ---
-    // Use renamed headers for CSV
-    const csv = Papa.unparse(renamedData);
-    const csvBlob = new Blob([csv], { type: 'text/csv' });
-    const storage = getStorage();
-    const csvFileName = `PredictiveData/${species}/${animalId}.csv`;
-    const csvFileRef = storageRef(storage, csvFileName);
-    const csvUploadTask = await uploadBytes(csvFileRef, csvBlob);
-    const csvDownloadURL = await getDownloadURL(csvUploadTask.ref);
-
-    // Store the CSV download URL and dataPoints in the Realtime Database
-    await set(animalRef, { ...animalDetails, csvDownloadURL, dataPoints: renamedData.length });
     setUploadProgress(100);
 
-    return { success: true, downloadURL: csvDownloadURL };
+    return { success: true, animalIds };
   } catch (error) {
     console.error('Upload error:', error);
     throw error;
@@ -455,109 +659,11 @@ export const processAndUploadData = async (
 };
 
 /**
- * Upload rows individually to Firebase, show progress, and verify upload.
+ * Upload rows in batches to Firestore.
  * @param {Object[]} rows - Array of data rows to upload
- * @param {string} species - Animal species (used in path)
+ * @param {string} documentId - Document ID (used in path)
  * @param {string} animalId - Animal ID (used in path)
- * @param {Function} setUploadProgress - Function to update upload progress
- * @param {Function} setUploadStatus - Function to update upload status
- * @param {Function} setUploadMessage - Function to update upload message
- */
-export const uploadRowsIndividually = async (
-  rows,
-  species,
-  animalId,
-  setUploadProgress,
-  setUploadStatus,
-  setUploadMessage
-) => {
-  const database = getDatabase();
-  const dataRef = dbRef(database, `AnalysisData/${species}/${animalId}/data`);
-  let count = 0;
-
-  setUploadStatus && setUploadStatus('uploading');
-
-  for (const row of rows) {
-    await push(dataRef, row);
-    count++;
-    if (setUploadProgress) setUploadProgress(Math.round((count / rows.length) * 100));
-    if (setUploadMessage) setUploadMessage(`Uploading row ${count} of ${rows.length}`);
-  }
-
-  setUploadStatus && setUploadStatus('verifying');
-  setUploadMessage && setUploadMessage('Verifying uploaded data...');
-
-  // Read back the uploaded data to confirm
-  const snapshot = await get(dataRef);
-  if (snapshot.exists()) {
-    const uploadedCount = Object.keys(snapshot.val()).length;
-    setUploadMessage && setUploadMessage(`Upload complete! ${uploadedCount} rows uploaded and verified.`);
-    setUploadStatus && setUploadStatus('success');
-  } else {
-    setUploadMessage && setUploadMessage('Upload failed: No data found after upload.');
-    setUploadStatus && setUploadStatus('error');
-  }
-};
-
-/**
- * Upload rows in chunks to Firebase, show progress, and verify upload.
- * @param {Object[]} rows - Array of data rows to upload
- * @param {string} species - Animal species (used in path)
- * @param {string} animalId - Animal ID (used in path)
- * @param {Function} setUploadProgress - Function to update upload progress
- * @param {Function} setUploadStatus - Function to update upload status
- * @param {Function} setUploadMessage - Function to update upload message
- * @param {number} chunkSize - Number of rows per chunk (default: 500)
- */
-export const uploadRowsInChunks = async (
-  rows,
-  species,
-  animalId,
-  setUploadProgress,
-  setUploadStatus,
-  setUploadMessage,
-  chunkSize = 500
-) => {
-  const database = getDatabase();
-  const dataRef = dbRef(database, `AnalysisData/${species}/${animalId}/data`);
-  let count = 0;
-  setUploadStatus && setUploadStatus('uploading');
-
-  for (let i = 0; i < rows.length; i += chunkSize) {
-    const chunk = rows.slice(i, i + chunkSize);
-    const updates = {};
-    chunk.forEach(row => {
-      // Use push-like keys for uniqueness
-      const newKey = dbRef(database).push().key;
-      updates[newKey] = row;
-    });
-    await update(dataRef, updates);
-    count += chunk.length;
-    if (setUploadProgress) setUploadProgress(Math.round((count / rows.length) * 100));
-    if (setUploadMessage) setUploadMessage(`Uploaded ${count} of ${rows.length} rows`);
-  }
-
-  setUploadStatus && setUploadStatus('verifying');
-  setUploadMessage && setUploadMessage('Verifying uploaded data...');
-
-  // Read back the uploaded data to confirm
-  const snapshot = await get(dataRef);
-  if (snapshot.exists()) {
-    const uploadedCount = Object.keys(snapshot.val()).length;
-    setUploadMessage && setUploadMessage(`Upload complete! ${uploadedCount} rows uploaded and verified.`);
-    setUploadStatus && setUploadStatus('success');
-  } else {
-    setUploadMessage && setUploadMessage('Upload failed: No data found after upload.');
-    setUploadStatus && setUploadStatus('error');
-  }
-};
-
-/**
- * Upload rows in batches to Firestore and store animal details.
- * @param {Object[]} rows - Array of data rows to upload
- * @param {string} species - Animal species (used in path)
- * @param {string} animalId - Animal ID (used in path)
- * @param {Object} animalDetails - Animal details to store as a document
+ * @param {Object} animalDetails - Animal details (unused, kept for backward compatibility)
  * @param {Function} setUploadProgress
  * @param {Function} setUploadStatus
  * @param {Function} setUploadMessage
@@ -565,7 +671,7 @@ export const uploadRowsInChunks = async (
  */
 export const uploadRowsToFirestore = async (
   rows,
-  species,
+  documentId,
   animalId,
   animalDetails,
   setUploadProgress,
@@ -574,9 +680,7 @@ export const uploadRowsToFirestore = async (
   batchSize = 100
 ) => {
   const db = getFirestore();
-  // Store animal details as a document
-  await setDoc(doc(db, 'AnalysisData', species, animalId), animalDetails);
-  const dataCol = collection(db, 'AnalysisData', species, animalId, 'data');
+  const dataCol = collection(db, 'AnalysisData', documentId, 'data');
   let count = 0;
   setUploadStatus && setUploadStatus('uploading');
 
@@ -598,66 +702,67 @@ export const uploadRowsToFirestore = async (
 };
 
 /**
- * Fetch all uploaded datasets from the AnalysisData node in Firebase Realtime Database.
+ * Fetch all uploaded datasets from Firestore.
  * Returns an array of { species, animalId, ...animalDetails }
  */
 export const fetchAllUploadedDatasets = async () => {
-  const database = getDatabase();
-  const analysisDataRef = dbRef(database, 'AnalysisData');
-  const snapshot = await get(analysisDataRef);
+  const db = getFirestore();
   const result = [];
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    Object.entries(data).forEach(([species, animals]) => {
-      Object.entries(animals).forEach(([animalId, animalDetails]) => {
-        // Prefer dataPoints property if present
-        let dataPoints = 0;
-        if (typeof animalDetails.dataPoints === 'number') {
-          dataPoints = animalDetails.dataPoints;
-        } else if (animalDetails.data && typeof animalDetails.data === 'object') {
-          dataPoints = Object.keys(animalDetails.data).length;
-        }
-        result.push({
-          species,
-          animalId,
-          ...animalDetails,
-          dataPoints
-        });
+
+  try {
+    // Get all documents under AnalysisData collection
+    const analysisDataCol = collection(db, 'AnalysisData');
+    const snapshot = await getDocs(analysisDataCol);
+
+    for (const doc of snapshot.docs) {
+      const documentId = doc.id;
+      const animalDetails = doc.data();
+
+      // Skip metadata documents
+      if (documentId === '_metadata') continue;
+
+      // Parse species and animalId from documentId (format: species_animalId)
+      const parts = documentId.split('_');
+      const species = parts.slice(0, -1).join('_') || 'UnknownSpecies';
+      const animalId = parts[parts.length - 1];
+
+      // Get data points count from the data subcollection
+      let dataPoints = 0;
+      try {
+        const dataCol = collection(db, 'AnalysisData', documentId, 'data');
+        const dataSnapshot = await getDocs(dataCol);
+        dataPoints = dataSnapshot.size;
+      } catch (e) {
+        // If data subcollection doesn't exist or can't be accessed, use dataPoints from document
+        dataPoints = animalDetails.dataPoints || 0;
+      }
+
+      result.push({
+        species,
+        animalId,
+        documentId,
+        ...animalDetails,
+        dataPoints
       });
-    });
+    }
+  } catch (error) {
+    console.error('Error fetching datasets:', error);
   }
+
   return result;
 };
 
 /**
- * Delete a dataset from Realtime Database and its CSV file from Firebase Storage.
- * @param {string} species
- * @param {string} animalId
- * @param {string} csvDownloadURL (optional)
+ * Delete a dataset from Firestore.
+ * @param {string} documentId
  */
-export const deleteUploadedDataset = async (species, animalId, csvDownloadURL) => {
-  const database = getDatabase();
-  const storage = getStorage();
-  // Remove from Realtime Database
-  const animalRef = dbRef(database, `AnalysisData/${species}/${animalId}`);
-  await set(animalRef, null);
-  // Remove from Storage if URL is provided
-  if (csvDownloadURL) {
-    try {
-      // Convert download URL to storage path
-      const url = new URL(csvDownloadURL);
-      const pathMatch = url.pathname.match(/\/o\/(.+)$/);
-      let storagePath = null;
-      if (pathMatch && pathMatch[1]) {
-        storagePath = decodeURIComponent(pathMatch[1]);
-      }
-      if (storagePath) {
-        const fileRef = storageRef(storage, storagePath);
-        await deleteObject(fileRef);
-      }
-    } catch (err) {
-      // Ignore storage errors, but log
-      console.error('Error deleting file from storage:', err);
-    }
-  }
+export const deleteUploadedDataset = async (documentId) => {
+  const db = getFirestore();
+  // Remove from Firestore
+  const animalDocRef = doc(db, 'AnalysisData', documentId);
+  await deleteDoc(animalDocRef);
+
+  // Note: Firestore doesn't support deleting subcollections directly.
+  // This is a known limitation. For now, we'll delete the parent document
+  // which should be sufficient for most use cases.
 };

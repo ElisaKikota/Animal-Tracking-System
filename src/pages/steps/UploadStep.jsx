@@ -20,16 +20,16 @@ const UploadStep = ({ selectedFile, handleFileUpload, isValidating }) => {
       </Typography>
       
       <Box sx={{ 
-        border: '2px dashed #ccc', 
+        border: '2px dashed var(--color-border)',
         borderRadius: 2, 
         p: 4, 
         textAlign: 'center',
         mb: 3,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: 'var(--color-canvas)',
         transition: 'all 0.3s',
         '&:hover': {
-          borderColor: '#1976d2',
-          backgroundColor: '#f0f7ff'
+          borderColor: 'var(--color-primary)',
+          backgroundColor: 'var(--color-primary-soft)'
         }
       }}>
         <input
